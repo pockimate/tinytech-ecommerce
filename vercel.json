@@ -15,21 +15,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "VITE_SUPABASE_URL": "@supabase-url",
-    "VITE_SUPABASE_ANON_KEY": "@supabase-anon-key",
-    "VITE_PAYPAL_CLIENT_ID": "@paypal-client-id",
-    "VITE_PAYPAL_CLIENT_SECRET": "@paypal-client-secret",
-    "VITE_PAYPAL_API_BASE": "@paypal-api-base"
-  },
-  "build": {
-    "env": {
-      "VITE_SUPABASE_URL": "@supabase-url",
-      "VITE_SUPABASE_ANON_KEY": "@supabase-anon-key",
-      "VITE_PAYPAL_CLIENT_ID": "@paypal-client-id",
-      "VITE_PAYPAL_CLIENT_SECRET": "@paypal-client-secret",
-      "VITE_PAYPAL_API_BASE": "@paypal-api-base"
-    }
-  }
+  ]
 }
