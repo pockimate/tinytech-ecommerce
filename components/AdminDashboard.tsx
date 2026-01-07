@@ -469,7 +469,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {orders.slice(0, 5).map(order => (
                       <tr key={ order.id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="py-3 px-2 font-bold text-sm text-gray-900">{ order.id}</td>
-                        <td className="py-3 px-2 text-sm text-gray-600">{ order.address.split(',')[0]}</td>
+                        <td className="py-3 px-2 text-sm text-gray-600">{order.address ? order.address.split(',')[0] : 'No address'}</td>
                         <td className="py-3 px-2 font-black text-sm text-gray-900">€{ order.total.toFixed(2)}</td>
                         <td className="py-3 px-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -573,7 +573,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             </div>
                             <div className="flex items-center gap-2 text-gray-500">
                               <i className="fa-solid fa-palette"></i>
-                              <span>Background: {banner.backgroundColor.split(' ')[0].replace('from-', '')}</span>
+                              <span>Background: {banner.backgroundColor ? banner.backgroundColor.split(' ')[0].replace('from-', '') : 'default'}</span>
                             </div>
                             <div className="flex items-center gap-2 text-gray-500">
                               <i className="fa-solid fa-image"></i>
