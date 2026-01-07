@@ -1,0 +1,27 @@
+{
+  "backupTimestamp": "2026-01-07T18:40:20",
+  "backupVersion": "pre-astro-migration-2026-01-07",
+  "system": {
+    "os": "Windows",
+    "platform": "win32",
+    "shell": "cmd",
+    "nodeVersion": "v24.12.0",
+    "npmVersion": "11.6.2"
+  },
+  "project": {
+    "name": "tinytech-|-the-micro-electronics-studio",
+    "type": "React + Vite SPA",
+    "languages": 17,
+    "hasPayPalIntegration": true,
+    "hasTranslationSystem": true
+  },
+  "backupScope": [
+    "source-code",
+    "configuration-files", 
+    "documentation",
+    "static-assets",
+    "build-output",
+    "dependencies",
+    "application-data"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "TinyTech | The Micro Electronics Studio",
+  "description": "Premium boutique for world-class mini smartphones, 4G smartwatches, and minimalist accessories. Experience high-performance computing in the palm of your hand.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
