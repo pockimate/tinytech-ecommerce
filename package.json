@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.34.0",
+    "@supabase/supabase-js": "^2.90.0",
     "chrome-remote-interface": "^0.33.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
