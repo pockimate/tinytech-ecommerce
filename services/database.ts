@@ -54,7 +54,7 @@ export const productAPI = {
       throw error;
     }
     
-    return data || [];
+    return (data || []).map(this.mapDatabaseToProduct);
   },
 
   // 根据 ID 获取产品
@@ -70,7 +70,7 @@ export const productAPI = {
       return null;
     }
     
-    return data;
+    return data ? this.mapDatabaseToProduct(data) : null;
   },
 
   // 创建产品
