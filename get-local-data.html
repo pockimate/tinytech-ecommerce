@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>获取本地数据</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .data-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .data-output { background: #f5f5f5; padding: 10px; border-radius: 3px; font-family: monospace; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+        button { padding: 10px 20px; margin: 5px; background: #007cba; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .copy-btn { background: #28a745; }
+        .copy-btn:hover { background: #1e7e34; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 获取本地localStorage数据</h1>
+        <p>这个页面会帮你获取本地存储的横幅和产品数据，然后同步到数据库。</p>
+        
+        <div class="data-section">
+            <h3>📋 横幅数据 (Banners)</h3>
+            <button onclick="getBanners()">获取横幅数据</button>
+            <button class="copy-btn" onclick="copyToClipboard('banners-output')">复制数据</button>
+            <div id="banners-output" class="data-output">点击"获取横幅数据"按钮...</div>
+        </div>
+        
+        <div class="data-section">
+            <h3>📦 产品数据 (Products)</h3>
+            <button onclick="getProducts()">获取产品数据</button>
+            <button class="copy-btn" onclick="copyToClipboard('products-output')">复制数据</button>
+            <div id="products-output" class="data-output">点击"获取产品数据"按钮...</div>
+        </div>
+        
+        <div class="data-section">
+            <h3>🚀 同步到数据库</h3>
+            <p>获取数据后，点击下面的按钮将数据同步到Supabase数据库：</p>
+            <button onclick="syncToDatabase()" style="background: #dc3545;">同步到数据库</button>
+            <div id="sync-output" class="data-output">等待同步...</div>
+        </div>
+    </div>
+
+    <script>
+        function getBanners() {
+            try {
+                const banners = JSON.parse(localStorage.getItem('tinytech_banners') || '[]');
+                document.getElementById('banners-output').textContent = JSON.stringify(banners, null, 2);
+                console.log('Banners:', banners);
+            } catch (error) {
+                document.getElementById('banners-output').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        function getProducts() {
+            try {
+                const products = JSON.parse(localStorage.getItem('tinytech_products') || '[]');
+                document.getElementById('products-output').textContent = JSON.stringify(products, null, 2);
+                console.log('Products:', products);
+            } catch (error) {
+                document.getElementById('products-output').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('数据已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                // 备用方法
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('数据已复制到剪贴板！');
+            });
+        }
+        
+        async function syncToDatabase() {
+            const syncOutput = document.getElementById('sync-output');
+            syncOutput.textContent = '正在同步数据到数据库...';
+            
+            try {
+                // 获取本地数据
+                const banners = JSON.parse(localStorage.getItem('tinytech_banners') || '[]');
+                const products = JSON.parse(localStorage.getItem('tinytech_products') || '[]');
+                
+                if (banners.length === 0 && products.length === 0) {
+                    syncOutput.textContent = '错误: 没有找到本地数据。请先获取横幅和产品数据。';
+                    return;
+                }
+                
+                // 这里需要调用后端API来同步数据
+                // 由于浏览器安全限制，我们不能直接连接Supabase
+                syncOutput.textContent = `找到数据:\n- 横幅: ${banners.length} 条\n- 产品: ${products.length} 条\n\n请将这些数据复制并使用Node.js脚本同步到数据库。`;
+                
+            } catch (error) {
+                syncOutput.textContent = '同步失败: ' + error.message;
+            }
+        }
+        
+        // 页面加载时自动获取数据
+        window.onload = function() {
+            getBanners();
+            getProducts();
+        };
+    </script>
+</body>
+</html>

@@ -34,7 +34,7 @@ import { PRODUCTS, BLOG_POSTS, ALL_REVIEWS } from './data';
 import { Product, CartItem, User, Order, Banner, Feature, BrandStoryContent, VideoContent, NewsletterContent, SizeComparisonContent, FAQItem, Review, BlogPost, WhyMiniScene, WhyMiniContent, LogoSettings } from './types';
 import { isValidEmail, safeGetLocalStorage, isValidProductArray } from './utils/security';
 import { productSchema, blogPostSchema } from './utils/jsonld';
-import { useContent } from './hooks/useDatabase';
+import { useContent, useProducts } from './hooks/useDatabase';
 
 const App: React.FC = () => {
   type View = 'home' | 'products' | 'blog' | 'blog-detail' | 'product-detail' | 'track' | 'checkout' | 'order-success' | 'account' | 'admin' | 'contact' | 'refund' | 'privacy' | 'about' | 'lifestyle' | 'wishlist';
@@ -235,10 +235,18 @@ const App: React.FC = () => {
     safeGetLocalStorage('tinytech_wishlist', [], (val) => Array.isArray(val) && val.every(id => typeof id === 'string'))
   );
   
-  // Load data from localStorage or use defaults
-  const [allProducts, setAllProducts] = useState<Product[]>(() => 
-    safeGetLocalStorage('tinytech_products', PRODUCTS, isValidProductArray)
-  );
+  // Load product data from database
+  const { 
+    products: allProducts, 
+    loading: productsLoading, 
+    error: productsError,
+    updateProduct: updateProductInDB,
+    deleteProduct: deleteProductInDB,
+    createProduct: createProductInDB
+  } = useProducts();
+  
+  // Fallback products for when database is loading or empty
+  const fallbackProducts = PRODUCTS;
   
   // Load banner data from database
   const { 
@@ -768,10 +776,7 @@ const App: React.FC = () => {
     }
   };
 
-  // Save data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('tinytech_products', JSON.stringify(allProducts));
-  }, [allProducts]);
+  // Note: Product data is now managed by database, no localStorage sync needed
 
   // Note: Banner data is now managed by database, no localStorage sync needed
 
@@ -943,18 +948,36 @@ const App: React.FC = () => {
   };
 
   // Admin functions
-  const handleUpdateProduct = (product: Product) => {
-    setAllProducts(prev => prev.map(p => p.id === product.id ? product : p));
-  };
-
-  const handleDeleteProduct = (id: string) => {
-    if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-      setAllProducts(prev => prev.filter(p => p.id !== id));
+  const handleUpdateProduct = async (product: Product) => {
+    try {
+      await updateProductInDB(product.id, product);
+      console.log('✅ Product updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update product:', error);
+      alert('Failed to update product. Please try again.');
     }
   };
 
-  const handleAddProduct = (product: Product) => {
-    setAllProducts(prev => [...prev, product]);
+  const handleDeleteProduct = async (id: string) => {
+    if (confirm('Are you sure you want to delete this product?')) {
+      try {
+        await deleteProductInDB(id);
+        console.log('✅ Product deleted from database');
+      } catch (error) {
+        console.error('❌ Failed to delete product:', error);
+        alert('Failed to delete product. Please try again.');
+      }
+    }
+  };
+
+  const handleAddProduct = async (product: Product) => {
+    try {
+      await createProductInDB(product);
+      console.log('✅ Product added to database');
+    } catch (error) {
+      console.error('❌ Failed to add product:', error);
+      alert('Failed to add product. Please try again.');
+    }
   };
 
   const handleUpdateOrder = (order: Order) => {
