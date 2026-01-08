@@ -169,15 +169,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const pendingOrders = orders.filter(o => o.status === 'Processing').length;
 
   const tabs = [
-    { id: 'overview', label: 'Data Overview', icon: 'fa-chart-line' },
-    { id: 'homepage', label: 'Homepage Management', icon: 'fa-home' },
-    { id: 'products', label: 'Product Management', icon: 'fa-box' },
-    { id: 'blog', label: 'Blog Management', icon: 'fa-blog' },
-    { id: 'whymini', label: 'Why Mini Management', icon: 'fa-lightbulb' },
-    { id: 'orders', label: 'Order Management', icon: 'fa-shopping-cart' },
-    { id: 'users', label: 'User Management', icon: 'fa-users' },
-    { id: 'reviews', label: 'Review Management', icon: 'fa-star' },
-    { id: 'settings', label: 'System Settings', icon: 'fa-cog' }
+    { id: 'overview', label: '数据概览', icon: 'fa-chart-line' },
+    { id: 'homepage', label: '首页管理', icon: 'fa-home' },
+    { id: 'products', label: '商品管理', icon: 'fa-box' },
+    { id: 'blog', label: '博客管理', icon: 'fa-blog' },
+    { id: 'whymini', label: 'Why Mini', icon: 'fa-lightbulb' },
+    { id: 'orders', label: '订单管理', icon: 'fa-shopping-cart' },
+    { id: 'users', label: '用户管理', icon: 'fa-users' },
+    { id: 'reviews', label: '评价管理', icon: 'fa-star' },
+    { id: 'settings', label: '系统设置', icon: 'fa-cog' }
   ];
 
   const handleProductSubmit = (e: React.FormEvent, product: Partial<Product>) => {
