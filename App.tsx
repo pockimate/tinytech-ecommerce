@@ -998,10 +998,21 @@ const App: React.FC = () => {
   const handleDeleteBanner = async (id: string) => {
     if (confirm('Are you sure you want to delete this banner?')) {
       try {
-        // Import contentAPI for delete operation
-        const { contentAPI } = await import('./services/database');
-        await contentAPI.delete(id);
-        console.log('✅ Banner deleted from database');
+        // Import supabase client directly
+        const { supabase } = await import('./services/database');
+        
+        // 直接删除数据库中的 site_content 记录
+        const { error } = await supabase
+          .from('site_content')
+          .delete()
+          .eq('content->>id', id);
+        
+        if (error) {
+          console.error('❌ Failed to delete banner:', error);
+          alert('Failed to delete banner. Please try again.');
+        } else {
+          console.log('✅ Banner deleted from database');
+        }
       } catch (error) {
         console.error('❌ Failed to delete banner:', error);
         alert('Failed to delete banner. Please try again.');

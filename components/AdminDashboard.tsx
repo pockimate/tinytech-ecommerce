@@ -2,7 +2,6 @@
 import { Product, Order, User, Banner, Feature, BrandStoryContent, VideoContent, NewsletterContent, SizeComparisonContent, FAQItem, Review, BlogPost, WhyMiniScene, WhyMiniContent, LogoSettings } from '../types';
 import { sanitizeUserInput, isValidURL, limitStringLength } from '../utils/security';
 import LogoEditor from './LogoEditor';
-import DatabaseMigration from './DatabaseMigration';
 
 interface AdminDashboardProps {
   products: Product[];
@@ -124,7 +123,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     return url || '';
   };
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'database' | 'homepage' | 'products' | 'orders' | 'users' | 'reviews' | 'blog' | 'whyMini' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'homepage' | 'products' | 'orders' | 'users' | 'reviews' | 'blog' | 'whyMini' | 'settings'>('overview');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
@@ -171,7 +170,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const tabs = [
     { id: 'overview', label: 'Data Overview', icon: 'fa-chart-line' },
-    { id: 'database', label: 'Database Migration', icon: 'fa-database' },
     { id: 'homepage', label: 'Homepage Management', icon: 'fa-home' },
     { id: 'products', label: 'Product Management', icon: 'fa-box' },
     { id: 'blog', label: 'Blog Management', icon: 'fa-blog' },
@@ -195,10 +193,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const newProduct: Product = {
         id: `product-${Date.now()}`,
         name: product.name || '',
+        category: product.category || 'phone',
         price: product.price || 0,
         image: product.image || '',
         rating: 4.8,
-        Review: productReviews,
+        reviews: productReviews,
         variants: productVariants,
         colorOptions: productColors,
         bundles: productBundles,
@@ -486,20 +485,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </table>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Database Migration Tab */}
-        {activeTab === 'database' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-black text-gray-900">Database Integration</h2>
-                <p className="text-gray-500 mt-1">Migrate your data from localStorage to Supabase database</p>
-              </div>
-            </div>
-            
-            <DatabaseMigration />
           </div>
         )}
 
