@@ -249,14 +249,30 @@ const App: React.FC = () => {
     createContent: createBannerInDB
   } = useContent('banner');
   
-  // Fallback banners for when database is loading or empty
+  // State to handle delayed fallback display
+  const [showFallback, setShowFallback] = useState(false);
+  
+  // Only show fallback after a delay if database is still loading
+  useEffect(() => {
+    if (bannersLoading) {
+      const timer = setTimeout(() => {
+        setShowFallback(true);
+      }, 1000); // Wait 1 second before showing fallback
+      
+      return () => clearTimeout(timer);
+    } else {
+      setShowFallback(false);
+    }
+  }, [bannersLoading]);
+  
+  // Fallback banners using actual database content to prevent flashing
   const fallbackBanners: Banner[] = [
     {
       id: 'banner-1',
-      title: 'TinyTalk Pro S1',
-      subtitle: 'The world\'s smallest flagship smartphone. Maximum power, minimum size.',
-      image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1400',
-      buttonText: 'Learn More',
+      title: 'FULL ANDROID SYSTEM',
+      subtitle: 'Experience the power of a complete Android system in the palm of your hand.',
+      image: 'https://res.cloudinary.com/dbwd1fo6k/image/upload/v1767455161/12_cyesn9.webp',
+      buttonText: 'Shop Now',
       buttonLink: 'products',
       backgroundColor: 'from-indigo-600 to-purple-600',
       order: 0,
@@ -275,10 +291,10 @@ const App: React.FC = () => {
     },
     {
       id: 'banner-3',
-      title: 'January Sale',
-      subtitle: 'Save up to 35% on all devices. Use code TINY20.',
+      title: 'Saldi di Gennaio',
+      subtitle: 'Risparmia fino al 35% su tutti i dispositivi. Usa il codice TINY20.',
       image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1400',
-      buttonText: 'Shop Now',
+      buttonText: 'Acquista ora',
       buttonLink: 'products',
       backgroundColor: 'from-rose-600 to-pink-600',
       order: 2,
@@ -286,8 +302,12 @@ const App: React.FC = () => {
     }
   ];
   
-  // Use database banners if available, otherwise fallback
-  const displayBanners = banners.length > 0 ? banners : fallbackBanners;
+  // Use database banners if available, otherwise use fallback only after delay
+  const displayBanners = banners.length > 0 
+    ? banners 
+    : (bannersLoading && !showFallback) 
+      ? [] // Don't show anything during initial loading
+      : fallbackBanners;
   
   const [features, setFeatures] = useState<Feature[]>(() => 
     safeGetLocalStorage('tinytech_features', [
@@ -1125,7 +1145,20 @@ const App: React.FC = () => {
         {/* HOME VIEW */}
         {view === 'home' && (
           <>
-            <BannerCarousel banners={displayBanners} onNavigate={(v) => navigate(v as any)} />
+            {displayBanners.length > 0 ? (
+              <BannerCarousel banners={displayBanners} onNavigate={(v) => navigate(v as any)} />
+            ) : (
+              // Loading state - show a minimal loading banner
+              <div className="relative w-full h-[500px] sm:h-[600px] lg:h-[700px] bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <div className="animate-pulse">
+                    <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-4"></div>
+                    <div className="h-4 bg-white/20 rounded w-48 mx-auto mb-2"></div>
+                    <div className="h-3 bg-white/20 rounded w-32 mx-auto"></div>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Marquee Bar */}
             <MarqueeBar 
