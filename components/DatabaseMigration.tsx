@@ -49,11 +49,57 @@ const DatabaseMigration: React.FC = () => {
       setMigrationStatus(prev => ({ ...prev, content: 'running' }));
       addLog('开始迁移网站内容...');
       
-      // 这里可以添加更多内容类型的迁移
-      // 目前先跳过，因为需要从 localStorage 获取数据
+      // 从localStorage获取各种内容数据
+      const banners = JSON.parse(localStorage.getItem('banners') || '[]');
+      const features = JSON.parse(localStorage.getItem('features') || '[]');
+      const faqs = JSON.parse(localStorage.getItem('faqs') || '[]');
+      const brandStory = JSON.parse(localStorage.getItem('brandStory') || '{}');
+      const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+      
+      // 构建内容数据对象
+      const contentData: any = {};
+      let migratedCount = 0;
+      
+      if (banners.length > 0) {
+        contentData.banners = banners;
+        migratedCount += banners.length;
+        addLog(`准备迁移 ${banners.length} 个横幅`);
+      }
+      
+      if (features.length > 0) {
+        contentData.features = features;
+        migratedCount += features.length;
+        addLog(`准备迁移 ${features.length} 个功能介绍`);
+      }
+      
+      if (faqs.length > 0) {
+        contentData.faqs = faqs;
+        migratedCount += faqs.length;
+        addLog(`准备迁移 ${faqs.length} 个FAQ`);
+      }
+      
+      if (Object.keys(brandStory).length > 0) {
+        contentData.brandStory = brandStory;
+        migratedCount += 1;
+        addLog(`准备迁移品牌故事`);
+      }
+      
+      if (videos.length > 0) {
+        contentData.videos = videos;
+        migratedCount += videos.length;
+        addLog(`准备迁移 ${videos.length} 个视频`);
+      }
+      
+      // 执行迁移
+      if (migratedCount > 0) {
+        await migrationAPI.migrateContent(contentData);
+        addLog(`✅ 成功迁移 ${migratedCount} 项内容到数据库`);
+      } else {
+        addLog(`⚠️ 没有找到需要迁移的内容数据`);
+      }
       
       setMigrationStatus(prev => ({ ...prev, content: 'success' }));
-      addLog('✅ 网站内容迁移完成');
+      addLog(`✅ 网站内容迁移完成`);
     } catch (error) {
       setMigrationStatus(prev => ({ ...prev, content: 'error' }));
       addLog(`❌ 内容迁移失败: ${error instanceof Error ? error.message : '未知错误'}`);
