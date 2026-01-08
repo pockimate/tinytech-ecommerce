@@ -362,15 +362,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-500 font-medium mt-2">Manage Your E-commerce Platform</p>
+              <h1 className="text-3xl sm:text-4xl font-black text-gray-900">管理后台</h1>
+              <p className="text-gray-500 font-medium mt-2">管理您的电商平台</p>
             </div>
             <button
               onClick={() => onNavigate('home')}
               className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:bg-gray-800 transition-all flex items-center gap-2"
             >
               <i className="fa-solid fa-arrow-left"></i>
-              <span className="hidden sm:inline">Back to Website</span>
+              <span className="hidden sm:inline">返回网站</span>
             </button>
           </div>
 
@@ -406,7 +406,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="text-xs font-bold text-green-600">+12%</span>
                 </div>
                 <p className="text-2xl sm:text-3xl font-black text-gray-900">€{totalRevenue.toFixed(0)}</p>
-                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Total Revenue</p>
+                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">总收入</p>
               </div>
 
               <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
@@ -417,7 +417,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="text-xs font-bold text-blue-600">+8%</span>
                 </div>
                 <p className="text-2xl sm:text-3xl font-black text-gray-900">{totalOrders}</p>
-                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Total Orders</p>
+                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">总订单</p>
               </div>
 
               <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
@@ -428,7 +428,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="text-xs font-bold text-purple-600">+15%</span>
                 </div>
                 <p className="text-2xl sm:text-3xl font-black text-gray-900">{totalUsers}</p>
-                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Registered User</p>
+                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">注册用户</p>
               </div>
 
               <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
@@ -439,36 +439,36 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="text-xs font-bold text-orange-600">{pendingOrders}</span>
                 </div>
                 <p className="text-2xl sm:text-3xl font-black text-gray-900">{totalProducts}</p>
-                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Product on Sale</p>
+                <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">在售商品</p>
               </div>
             </div>
 
             {/* Recent Orders */}
             <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-black text-gray-900">Recent Orders</h2>
+                <h2 className="text-xl font-black text-gray-900">最近订单</h2>
                 <button
                   onClick={() => setActiveTab('Orders')}
                   className="text-indigo-600 hover:text-indigo-700 font-bold text-sm"
                 >
-                  View All
+                  查看全部
                 </button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-100">
-                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">Order ID</th>
-                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">Customer</th>
-                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">Total</th>
-                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">Status</th>
+                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">订单号</th>
+                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">客户</th>
+                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">金额</th>
+                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">状态</th>
                     </tr>
                   </thead>
                   <tbody>
                     {orders.slice(0, 5).map(order => (
                       <tr key={ order.id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="py-3 px-2 font-bold text-sm text-gray-900">{ order.id}</td>
-                        <td className="py-3 px-2 text-sm text-gray-600">{order.address ? order.address.split(',')[0] : 'No address'}</td>
+                        <td className="py-3 px-2 text-sm text-gray-600">{order.address ? order.address.split(',')[0] : '无地址'}</td>
                         <td className="py-3 px-2 font-black text-sm text-gray-900">€{ order.total.toFixed(2)}</td>
                         <td className="py-3 px-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -492,17 +492,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'homepage' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900">Homepage Section Management</h2>
+              <h2 className="text-2xl font-black text-gray-900">首页内容管理</h2>
             </div>
 
             {/* Banner Management Section */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-xl font-black text-gray-900">Banner Management</h3>
+                  <h3 className="text-xl font-black text-gray-900">轮播图管理</h3>
                   <p className="text-sm text-gray-500 mt-1">
                     <i className="fa-solid fa-info-circle mr-1"></i>
-                    Recommended size: <span className="font-bold text-indigo-600">1400×600px</span> or higher resolution, ratio <span className="font-bold text-indigo-600">7:3</span>
+                    推荐尺寸: <span className="font-bold text-indigo-600">1400×600px</span> 或更高分辨率，比例 <span className="font-bold text-indigo-600">7:3</span>
                   </p>
                 </div>
                 <button
@@ -510,7 +510,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2"
                 >
                   <i className="fa-solid fa-plus"></i>
-                  Add Banner
+                  添加轮播图
                 </button>
               </div>
 
@@ -534,10 +534,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                             banner.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                           }`}>
-                            {banner.isActive ? 'Enabled' : 'Disabled'}
+                            {banner.isActive ? '已启用' : '已禁用'}
                           </span>
                           <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
-                            order: {index + 1}
+                            顺序: {index + 1}
                           </span>
                         </div>
                       </div>
@@ -1080,13 +1080,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'products' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900">产品管理</h2>
+              <h2 className="text-2xl font-black text-gray-900">商品管理</h2>
               <button
                 onClick={() => setShowAddProduct(true)}
                 className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2"
               >
                 <i className="fa-solid fa-plus"></i>
-                添加Product
+                添加商品
               </button>
             </div>
 
@@ -1473,7 +1473,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-black text-gray-900">
-                {editingProduct ? '编辑Product' : '添加Product'}
+                {editingProduct ? '编辑商品' : '添加商品'}
               </h3>
               <button
                 onClick={() => {
@@ -2188,7 +2188,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="submit"
                   className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all"
                 >
-                  {editingProduct ? '保存修改' : '添加Product'}
+                  {editingProduct ? '保存修改' : '添加商品'}
                 </button>
               </div>
             </form>
@@ -3543,7 +3543,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-black text-gray-900">
-                {editingProductReview ? '编辑Product Review' : 'add商品Review'}
+                {editingProductReview ? '编辑商品评价' : '添加商品评价'}
               </h3>
               <button
                 onClick={() => {
