@@ -288,15 +288,33 @@ export const contentAPI = {
     return data?.map(item => ({ id: item.id, ...item.content })) || [];
   },
 
-  // 更新内容
-  async update(id: string, content: any): Promise<void> {
+  // 更新内容（通过内容ID查找数据库记录）
+  async update(contentId: string, content: any): Promise<void> {
+    // 首先通过内容ID找到数据库记录
+    const { data: existingRecords, error: findError } = await supabase
+      .from(TABLES.SITE_CONTENT)
+      .select('id')
+      .eq('content->>id', contentId)
+      .limit(1);
+    
+    if (findError) {
+      console.error('Error finding content record:', findError);
+      throw findError;
+    }
+    
+    if (!existingRecords || existingRecords.length === 0) {
+      throw new Error(`Content with ID ${contentId} not found`);
+    }
+    
+    const dbRecordId = existingRecords[0].id;
+    
     const { error } = await supabase
       .from(TABLES.SITE_CONTENT)
       .update({
         content,
         updated_at: new Date().toISOString()
       })
-      .eq('id', id);
+      .eq('id', dbRecordId);
     
     if (error) {
       console.error('Error updating content:', error);
@@ -304,7 +322,66 @@ export const contentAPI = {
     }
   },
 
-  // 创建内容
+  // 创建或更新内容（upsert功能）
+  async upsert(type: string, content: any, orderIndex: number = 0): Promise<void> {
+    const contentId = content.id;
+    
+    if (!contentId) {
+      throw new Error('Content must have an id field');
+    }
+    
+    // 检查是否已存在
+    const { data: existingRecords, error: findError } = await supabase
+      .from(TABLES.SITE_CONTENT)
+      .select('id')
+      .eq('type', type)
+      .eq('content->>id', contentId)
+      .limit(1);
+    
+    if (findError) {
+      console.error('Error checking existing content:', findError);
+      throw findError;
+    }
+    
+    if (existingRecords && existingRecords.length > 0) {
+      // 更新现有记录
+      const dbRecordId = existingRecords[0].id;
+      const { error } = await supabase
+        .from(TABLES.SITE_CONTENT)
+        .update({
+          content,
+          order_index: orderIndex,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', dbRecordId);
+      
+      if (error) {
+        console.error('Error updating existing content:', error);
+        throw error;
+      }
+      
+      console.log(`✅ Updated existing ${type} content: ${contentId}`);
+    } else {
+      // 创建新记录
+      const { error } = await supabase
+        .from(TABLES.SITE_CONTENT)
+        .insert({
+          type,
+          content,
+          order_index: orderIndex,
+          is_active: true
+        });
+      
+      if (error) {
+        console.error('Error creating new content:', error);
+        throw error;
+      }
+      
+      console.log(`✅ Created new ${type} content: ${contentId}`);
+    }
+  },
+
+  // 创建内容（保留原方法用于向后兼容）
   async create(type: string, content: any, orderIndex: number = 0): Promise<void> {
     const { error } = await supabase
       .from(TABLES.SITE_CONTENT)
@@ -317,6 +394,41 @@ export const contentAPI = {
     
     if (error) {
       console.error('Error creating content:', error);
+      throw error;
+    }
+  },
+
+  // 删除内容（通过内容ID）
+  async delete(contentId: string): Promise<void> {
+    // 首先通过内容ID找到数据库记录
+    const { data: existingRecords, error: findError } = await supabase
+      .from(TABLES.SITE_CONTENT)
+      .select('id')
+      .eq('content->>id', contentId)
+      .limit(1);
+    
+    if (findError) {
+      console.error('Error finding content record:', findError);
+      throw findError;
+    }
+    
+    if (!existingRecords || existingRecords.length === 0) {
+      throw new Error(`Content with ID ${contentId} not found`);
+    }
+    
+    const dbRecordId = existingRecords[0].id;
+    
+    // 软删除：标记为不活跃
+    const { error } = await supabase
+      .from(TABLES.SITE_CONTENT)
+      .update({
+        is_active: false,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', dbRecordId);
+    
+    if (error) {
+      console.error('Error deleting content:', error);
       throw error;
     }
   }

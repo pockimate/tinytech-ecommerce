@@ -955,12 +955,10 @@ const App: React.FC = () => {
   const handleDeleteBanner = async (id: string) => {
     if (confirm('Are you sure you want to delete this banner?')) {
       try {
-        // For now, we'll mark as inactive instead of deleting
-        const bannerToUpdate = banners.find(b => b.id === id);
-        if (bannerToUpdate) {
-          await updateBannerInDB(id, { ...bannerToUpdate, isActive: false });
-          console.log('✅ Banner marked as inactive in database');
-        }
+        // Import contentAPI for delete operation
+        const { contentAPI } = await import('./services/database');
+        await contentAPI.delete(id);
+        console.log('✅ Banner deleted from database');
       } catch (error) {
         console.error('❌ Failed to delete banner:', error);
         alert('Failed to delete banner. Please try again.');
@@ -970,7 +968,9 @@ const App: React.FC = () => {
 
   const handleAddBanner = async (banner: Banner) => {
     try {
-      await createBannerInDB(banner, banner.order);
+      // Import contentAPI for upsert operation
+      const { contentAPI } = await import('./services/database');
+      await contentAPI.upsert('banner', banner, banner.order);
       console.log('✅ Banner added to database');
     } catch (error) {
       console.error('❌ Failed to add banner:', error);
