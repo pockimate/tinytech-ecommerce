@@ -256,6 +256,54 @@ const App: React.FC = () => {
     updateContent: updateBannerInDB,
     createContent: createBannerInDB
   } = useContent('banner');
+
+  // Load features from database
+  const { 
+    content: dbFeatures, 
+    loading: featuresLoading,
+    updateContent: updateFeatureInDB,
+    createContent: createFeatureInDB
+  } = useContent('feature');
+
+  // Load FAQ from database
+  const { 
+    content: dbFaqs, 
+    loading: faqsLoading,
+    updateContent: updateFaqInDB,
+    createContent: createFaqInDB
+  } = useContent('faq');
+
+  // Load Why Mini scenes from database
+  const { 
+    content: dbWhyMiniScenes, 
+    loading: whyMiniScenesLoading,
+    updateContent: updateWhyMiniSceneInDB,
+    createContent: createWhyMiniSceneInDB
+  } = useContent('why_mini_scene');
+
+  // Load blog posts from database
+  const { 
+    content: dbBlogPosts, 
+    loading: blogPostsLoading,
+    updateContent: updateBlogPostInDB,
+    createContent: createBlogPostInDB
+  } = useContent('blog_post');
+
+  // Load homepage reviews from database
+  const { 
+    content: dbHomepageReviews, 
+    loading: reviewsLoading,
+    updateContent: updateReviewInDB,
+    createContent: createReviewInDB
+  } = useContent('homepage_review');
+
+  // Load videos from database
+  const { 
+    content: dbVideos, 
+    loading: videosLoading,
+    updateContent: updateVideoInDB,
+    createContent: createVideoInDB
+  } = useContent('video');
   
   // State to handle delayed fallback display
   const [showFallback, setShowFallback] = useState(false);
@@ -780,6 +828,43 @@ const App: React.FC = () => {
 
   // Note: Banner data is now managed by database, no localStorage sync needed
 
+  // Sync database data to local state
+  useEffect(() => {
+    if (dbFeatures && dbFeatures.length > 0) {
+      setFeatures(dbFeatures);
+    }
+  }, [dbFeatures]);
+
+  useEffect(() => {
+    if (dbFaqs && dbFaqs.length > 0) {
+      setFaqs(dbFaqs);
+    }
+  }, [dbFaqs]);
+
+  useEffect(() => {
+    if (dbWhyMiniScenes && dbWhyMiniScenes.length > 0) {
+      setWhyMiniScenes(dbWhyMiniScenes);
+    }
+  }, [dbWhyMiniScenes]);
+
+  useEffect(() => {
+    if (dbBlogPosts && dbBlogPosts.length > 0) {
+      setBlogPosts(dbBlogPosts);
+    }
+  }, [dbBlogPosts]);
+
+  useEffect(() => {
+    if (dbHomepageReviews && dbHomepageReviews.length > 0) {
+      setHomepageReviews(dbHomepageReviews);
+    }
+  }, [dbHomepageReviews]);
+
+  useEffect(() => {
+    if (dbVideos && dbVideos.length > 0) {
+      setVideos(dbVideos);
+    }
+  }, [dbVideos]);
+
   useEffect(() => {
     localStorage.setItem('tinytech_features', JSON.stringify(features));
   }, [features]);
@@ -1033,18 +1118,30 @@ const App: React.FC = () => {
   };
 
   // Feature Management Functions
-  const handleUpdateFeature = (feature: Feature) => {
+  const handleUpdateFeature = async (feature: Feature) => {
     setFeatures(prev => prev.map(f => f.id === feature.id ? feature : f));
+    try {
+      await updateFeatureInDB(feature.id, feature);
+      console.log('✅ Feature updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update feature:', error);
+    }
   };
 
   const handleDeleteFeature = (id: string) => {
-    if (confirm('Are you sure you want to delete this feature?')) {
+    if (confirm('确定要删除这个特性吗？')) {
       setFeatures(prev => prev.filter(f => f.id !== id));
     }
   };
 
-  const handleAddFeature = (feature: Feature) => {
+  const handleAddFeature = async (feature: Feature) => {
     setFeatures(prev => [...prev, feature]);
+    try {
+      await createFeatureInDB(feature, feature.order || 0);
+      console.log('✅ Feature added to database');
+    } catch (error) {
+      console.error('❌ Failed to add feature:', error);
+    }
   };
 
   // Brand Story Management
@@ -1053,18 +1150,30 @@ const App: React.FC = () => {
   };
 
   // Video Management Functions
-  const handleUpdateVideo = (video: VideoContent) => {
+  const handleUpdateVideo = async (video: VideoContent) => {
     setVideos(prev => prev.map(v => v.id === video.id ? video : v));
+    try {
+      await updateVideoInDB(video.id, video);
+      console.log('✅ Video updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update video:', error);
+    }
   };
 
   const handleDeleteVideo = (id: string) => {
-    if (confirm('Are you sure you want to delete this video?')) {
+    if (confirm('确定要删除这个视频吗？')) {
       setVideos(prev => prev.filter(v => v.id !== id));
     }
   };
 
-  const handleAddVideo = (video: VideoContent) => {
+  const handleAddVideo = async (video: VideoContent) => {
     setVideos(prev => [...prev, video]);
+    try {
+      await createVideoInDB(video, video.order || 0);
+      console.log('✅ Video added to database');
+    } catch (error) {
+      console.error('❌ Failed to add video:', error);
+    }
   };
 
   // Newsletter Management
@@ -1078,60 +1187,109 @@ const App: React.FC = () => {
   };
 
   // FAQ Management Functions
-  const handleUpdateFAQ = (faq: FAQItem) => {
+  const handleUpdateFAQ = async (faq: FAQItem) => {
     setFaqs(prev => prev.map(f => f.id === faq.id ? faq : f));
+    try {
+      await updateFaqInDB(faq.id, faq);
+      console.log('✅ FAQ updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update FAQ:', error);
+    }
   };
 
   const handleDeleteFAQ = (id: string) => {
-    if (confirm('Are you sure you want to delete this FAQ?')) {
+    if (confirm('确定要删除这个FAQ吗？')) {
       setFaqs(prev => prev.filter(f => f.id !== id));
     }
   };
 
-  const handleAddFAQ = (faq: FAQItem) => {
+  const handleAddFAQ = async (faq: FAQItem) => {
     setFaqs(prev => [...prev, faq]);
+    try {
+      await createFaqInDB(faq, faq.order || 0);
+      console.log('✅ FAQ added to database');
+    } catch (error) {
+      console.error('❌ Failed to add FAQ:', error);
+    }
   };
 
   // Homepage Review Management Functions
-  const handleUpdateReview = (review: Review) => {
+  const handleUpdateReview = async (review: Review) => {
     setHomepageReviews(prev => prev.map(r => r.id === review.id ? review : r));
+    try {
+      await updateReviewInDB(review.id, review);
+      console.log('✅ Review updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update review:', error);
+    }
   };
 
   const handleDeleteReview = (id: string) => {
-    if (confirm('Are you sure you want to delete this review?')) {
+    if (confirm('确定要删除这个评价吗？')) {
       setHomepageReviews(prev => prev.filter(r => r.id !== id));
     }
   };
 
-  const handleAddReview = (review: Review) => {
+  const handleAddReview = async (review: Review) => {
     setHomepageReviews(prev => [...prev, review]);
+    try {
+      await createReviewInDB(review, 0);
+      console.log('✅ Review added to database');
+    } catch (error) {
+      console.error('❌ Failed to add review:', error);
+    }
   };
 
-  const handleUpdateBlogPost = (post: BlogPost) => {
+  const handleUpdateBlogPost = async (post: BlogPost) => {
     setBlogPosts(prev => prev.map(p => p.id === post.id ? post : p));
+    try {
+      await updateBlogPostInDB(post.id, post);
+      console.log('✅ Blog post updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update blog post:', error);
+    }
   };
 
   const handleDeleteBlogPost = (id: string) => {
     setBlogPosts(prev => prev.filter(p => p.id !== id));
   };
 
-  const handleAddBlogPost = (post: BlogPost) => {
+  const handleAddBlogPost = async (post: BlogPost) => {
     setBlogPosts(prev => [...prev, post]);
-  };
-
-  // Why Mini Management Functions
-  const handleUpdateWhyMiniScene = (scene: WhyMiniScene) => {
-    setWhyMiniScenes(prev => prev.map(s => s.id === scene.id ? scene : s));
-  };
-
-  const handleDeleteWhyMiniScene = (id: string) => {
-    if (confirm('Are you sure you want to delete this scene?')) {
-      setWhyMiniScenes(prev => prev.filter(s => s.id !== id));
+    try {
+      await createBlogPostInDB(post, 0);
+      console.log('✅ Blog post added to database');
+    } catch (error) {
+      console.error('❌ Failed to add blog post:', error);
     }
   };
 
-  const handleAddWhyMiniScene = (scene: WhyMiniScene) => {
+  // Why Mini Management Functions
+  const handleUpdateWhyMiniScene = async (scene: WhyMiniScene) => {
+    setWhyMiniScenes(prev => prev.map(s => s.id === scene.id ? scene : s));
+    try {
+      await updateWhyMiniSceneInDB(scene.id, scene);
+      console.log('✅ Why Mini scene updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update Why Mini scene:', error);
+    }
+  };
+
+  const handleDeleteWhyMiniScene = async (id: string) => {
+    if (confirm('确定要删除这个场景吗？')) {
+      setWhyMiniScenes(prev => prev.filter(s => s.id !== id));
+      // Note: Delete from database would need a delete function in useContent
+    }
+  };
+
+  const handleAddWhyMiniScene = async (scene: WhyMiniScene) => {
     setWhyMiniScenes(prev => [...prev, scene]);
+    try {
+      await createWhyMiniSceneInDB(scene, scene.order || 0);
+      console.log('✅ Why Mini scene added to database');
+    } catch (error) {
+      console.error('❌ Failed to add Why Mini scene:', error);
+    }
   };
 
   const handleUpdateWhyMiniContent = (content: WhyMiniContent) => {
