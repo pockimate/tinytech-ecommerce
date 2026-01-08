@@ -34,6 +34,7 @@ import { PRODUCTS, BLOG_POSTS, ALL_REVIEWS } from './data';
 import { Product, CartItem, User, Order, Banner, Feature, BrandStoryContent, VideoContent, NewsletterContent, SizeComparisonContent, FAQItem, Review, BlogPost, WhyMiniScene, WhyMiniContent, LogoSettings } from './types';
 import { isValidEmail, safeGetLocalStorage, isValidProductArray } from './utils/security';
 import { productSchema, blogPostSchema } from './utils/jsonld';
+import { useContent } from './hooks/useDatabase';
 
 const App: React.FC = () => {
   type View = 'home' | 'products' | 'blog' | 'blog-detail' | 'product-detail' | 'track' | 'checkout' | 'order-success' | 'account' | 'admin' | 'contact' | 'refund' | 'privacy' | 'about' | 'lifestyle' | 'wishlist';
@@ -239,43 +240,54 @@ const App: React.FC = () => {
     safeGetLocalStorage('tinytech_products', PRODUCTS, isValidProductArray)
   );
   
-  const [banners, setBanners] = useState<Banner[]>(() => 
-    safeGetLocalStorage('tinytech_banners', [
-      {
-        id: 'banner-1',
-        title: 'TinyTalk Pro S1',
-        subtitle: 'The world\'s smallest flagship smartphone. Maximum power, minimum size.',
-        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1400',
-        buttonText: 'Learn More',
-        buttonLink: 'products',
-        backgroundColor: 'from-indigo-600 to-purple-600',
-        order: 0,
-        isActive: true
-      },
-      {
-        id: 'banner-2',
-        title: 'ZenWatch Ultra',
-        subtitle: 'The complete smartwatch that replaces your phone. Integrated 4G LTE.',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1400',
-        buttonText: 'Explore Now',
-        buttonLink: 'products',
-        backgroundColor: 'from-blue-600 to-cyan-600',
-        order: 1,
-        isActive: true
-      },
-      {
-        id: 'banner-3',
-        title: 'January Sale',
-        subtitle: 'Save up to 35% on all devices. Use code TINY20.',
-        image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1400',
-        buttonText: 'Shop Now',
-        buttonLink: 'products',
-        backgroundColor: 'from-rose-600 to-pink-600',
-        order: 2,
-        isActive: true
-      }
-    ])
-  );
+  // Load banner data from database
+  const { 
+    content: banners, 
+    loading: bannersLoading, 
+    error: bannersError,
+    updateContent: updateBannerInDB,
+    createContent: createBannerInDB
+  } = useContent('banner');
+  
+  // Fallback banners for when database is loading or empty
+  const fallbackBanners: Banner[] = [
+    {
+      id: 'banner-1',
+      title: 'TinyTalk Pro S1',
+      subtitle: 'The world\'s smallest flagship smartphone. Maximum power, minimum size.',
+      image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1400',
+      buttonText: 'Learn More',
+      buttonLink: 'products',
+      backgroundColor: 'from-indigo-600 to-purple-600',
+      order: 0,
+      isActive: true
+    },
+    {
+      id: 'banner-2',
+      title: 'ZenWatch Ultra',
+      subtitle: 'The complete smartwatch that replaces your phone. Integrated 4G LTE.',
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1400',
+      buttonText: 'Explore Now',
+      buttonLink: 'products',
+      backgroundColor: 'from-blue-600 to-cyan-600',
+      order: 1,
+      isActive: true
+    },
+    {
+      id: 'banner-3',
+      title: 'January Sale',
+      subtitle: 'Save up to 35% on all devices. Use code TINY20.',
+      image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1400',
+      buttonText: 'Shop Now',
+      buttonLink: 'products',
+      backgroundColor: 'from-rose-600 to-pink-600',
+      order: 2,
+      isActive: true
+    }
+  ];
+  
+  // Use database banners if available, otherwise fallback
+  const displayBanners = banners.length > 0 ? banners : fallbackBanners;
   
   const [features, setFeatures] = useState<Feature[]>(() => 
     safeGetLocalStorage('tinytech_features', [
@@ -741,9 +753,7 @@ const App: React.FC = () => {
     localStorage.setItem('tinytech_products', JSON.stringify(allProducts));
   }, [allProducts]);
 
-  useEffect(() => {
-    localStorage.setItem('tinytech_banners', JSON.stringify(banners));
-  }, [banners]);
+  // Note: Banner data is now managed by database, no localStorage sync needed
 
   useEffect(() => {
     localStorage.setItem('tinytech_features', JSON.stringify(features));
@@ -932,18 +942,40 @@ const App: React.FC = () => {
   };
 
   // Banner Management Functions
-  const handleUpdateBanner = (banner: Banner) => {
-    setBanners(prev => prev.map(b => b.id === banner.id ? banner : b));
-  };
-
-  const handleDeleteBanner = (id: string) => {
-    if (confirm('Are you sure you want to delete this banner?')) {
-      setBanners(prev => prev.filter(b => b.id !== id));
+  const handleUpdateBanner = async (banner: Banner) => {
+    try {
+      await updateBannerInDB(banner.id, banner);
+      console.log('✅ Banner updated in database');
+    } catch (error) {
+      console.error('❌ Failed to update banner:', error);
+      alert('Failed to update banner. Please try again.');
     }
   };
 
-  const handleAddBanner = (banner: Banner) => {
-    setBanners(prev => [...prev, banner]);
+  const handleDeleteBanner = async (id: string) => {
+    if (confirm('Are you sure you want to delete this banner?')) {
+      try {
+        // For now, we'll mark as inactive instead of deleting
+        const bannerToUpdate = banners.find(b => b.id === id);
+        if (bannerToUpdate) {
+          await updateBannerInDB(id, { ...bannerToUpdate, isActive: false });
+          console.log('✅ Banner marked as inactive in database');
+        }
+      } catch (error) {
+        console.error('❌ Failed to delete banner:', error);
+        alert('Failed to delete banner. Please try again.');
+      }
+    }
+  };
+
+  const handleAddBanner = async (banner: Banner) => {
+    try {
+      await createBannerInDB(banner, banner.order);
+      console.log('✅ Banner added to database');
+    } catch (error) {
+      console.error('❌ Failed to add banner:', error);
+      alert('Failed to add banner. Please try again.');
+    }
   };
 
   // Feature Management Functions
@@ -1093,7 +1125,7 @@ const App: React.FC = () => {
         {/* HOME VIEW */}
         {view === 'home' && (
           <>
-            <BannerCarousel banners={banners} onNavigate={(v) => navigate(v as any)} />
+            <BannerCarousel banners={displayBanners} onNavigate={(v) => navigate(v as any)} />
             
             {/* Marquee Bar */}
             <MarqueeBar 
@@ -2351,7 +2383,7 @@ const App: React.FC = () => {
           products={allProducts}
           orders={allOrders}
           users={allUsers}
-          banners={banners}
+          banners={displayBanners}
           features={features}
           brandStory={brandStory}
           videos={videos}
