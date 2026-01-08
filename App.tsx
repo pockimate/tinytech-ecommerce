@@ -1266,12 +1266,16 @@ const App: React.FC = () => {
 
   // Why Mini Management Functions
   const handleUpdateWhyMiniScene = async (scene: WhyMiniScene) => {
+    console.log('🔄 handleUpdateWhyMiniScene called with:', scene.id);
     setWhyMiniScenes(prev => prev.map(s => s.id === scene.id ? scene : s));
     try {
+      console.log('📤 Calling updateWhyMiniSceneInDB...');
       await updateWhyMiniSceneInDB(scene.id, scene);
       console.log('✅ Why Mini scene updated in database');
+      alert('保存成功！');
     } catch (error) {
       console.error('❌ Failed to update Why Mini scene:', error);
+      alert('保存失败: ' + (error instanceof Error ? error.message : '未知错误'));
     }
   };
 
