@@ -154,63 +154,64 @@ export const ALL_REVIEWS: Review[] = [
     id: 'ar1',
     user: 'Emma N.',
     rating: 5,
-    comment: 'Ho comprato il pocketX Pro per mia sorella, lo porta sempre in borsa e lo trova comodissimo per lavoro e social.',
-    date: '2 giorni fa',
+    comment: 'I bought the PocketX Pro for my sister, she always carries it in her bag and finds it super convenient for work and social media.',
+    date: '2 days ago',
     reviewImages: ['https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar2',
-    user: 'Mattia G.',
+    user: 'Matt G.',
     rating: 5,
-    comment: 'Il PocketX Pro è il regalo di Natale ideale per bambini: piccolo, leggero e completo. Comprandone più di uno, ho anche risparmiato sul totale.',
-    date: '1 settimana fa',
+    comment: 'The PocketX Pro is the ideal Christmas gift for kids: small, lightweight and complete. By buying more than one, I also saved on the total.',
+    date: '1 week ago',
     reviewImages: ['https://images.unsplash.com/photo-1556656793-062ff9878258?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar3',
-    user: 'Ginevra C.',
+    user: 'Jenny C.',
     rating: 5,
-    comment: 'Il mio pocketX pro è perfetto come mini smartphone da portare ovunque, soprattutto quando viaggio in città.',
-    date: '3 giorni fa',
+    comment: 'My PocketX Pro is perfect as a mini smartphone to carry everywhere, especially when traveling in the city.',
+    date: '3 days ago',
     reviewImages: ['https://images.unsplash.com/photo-1601784551446-20c9e07cdbea?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar4',
     user: 'Alice S.',
     rating: 5,
-    comment: 'Ho preso tre PocketX Pro per Natale e ho risparmiato molto comprando più dispositivi. I bambini li adorano!',
-    date: 'Adesso',
+    comment: 'I got three PocketX Pros for Christmas and saved a lot by buying multiple devices. The kids love them!',
+    date: 'Just now',
     reviewImages: ['https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar5',
-    user: 'Marco R.',
+    user: 'Mark R.',
     rating: 5,
-    comment: 'Finalmente uno smartphone tascabile che non sacrifica nulla! Perfetto per il running e la palestra.',
-    date: '5 giorni fa',
+    comment: 'Finally a pocket smartphone that doesn\'t sacrifice anything! Perfect for running and the gym.',
+    date: '5 days ago',
     reviewImages: ['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar6',
-    user: 'Sofia L.',
+    user: 'Sophie L.',
     rating: 4,
-    comment: 'Ottimo prodotto, dimensioni incredibili. Unico neo: ci vuole un po\' per abituarsi allo schermo piccolo.',
-    date: '2 settimane fa'
+    comment: 'Great product, incredible dimensions. Only downside: it takes a bit to get used to the small screen.',
+    date: '2 weeks ago'
   },
   {
     id: 'ar7',
-    user: 'Luca T.',
+    user: 'Luke T.',
     rating: 5,
-    comment: 'Lo uso come secondo telefono per il lavoro. Leggero, veloce e la batteria dura tutto il giorno!',
-    date: '1 mese fa',
+    comment: 'I use it as a second phone for work. Lightweight, fast and the battery lasts all day!',
+    date: '1 month ago',
     reviewImages: ['https://images.unsplash.com/photo-1520923179270-ee0e79f9fa06?auto=format&fit=crop&q=80&w=600']
   },
   {
     id: 'ar8',
-    user: 'Francesca M.',
+    user: 'Fran M.',
     rating: 5,
-    comment: 'Perfetto per le serate fuori quando non voglio portare la borsa. Sta nel taschino!',
-    date: '3 settimane fa',
+    comment: 'Perfect for nights out when I don\'t want to carry a bag. Fits in my pocket!',
+    date: '3 weeks ago',
     reviewImages: ['https://images.unsplash.com/photo-1605236453806-6ff36851218e?auto=format&fit=crop&q=80&w=600']
   }
 ];
+

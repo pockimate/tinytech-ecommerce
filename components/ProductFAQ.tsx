@@ -10,36 +10,36 @@ const ProductFAQ: React.FC = () => {
 
   const faqs: FAQItem[] = [
     {
-      question: 'Quale versione Android viene preinstallata?',
-      answer: 'Il dispositivo viene fornito con Android 14 pre-installato, con aggiornamenti garantiti per 4 anni di versioni major e 5 anni di patch di sicurezza.'
+      question: 'Which Android version is pre-installed?',
+      answer: 'The device comes with Android 14 pre-installed, with guaranteed updates for 4 years of major versions and 5 years of security patches.'
     },
     {
-      question: 'La batteria è sostituibile?',
-      answer: 'La batteria non è sostituibile dall\'utente per mantenere il design ultra-compatto. È comunque coperta da garanzia di 2 anni e mantiene l\'80% della capacità dopo 800 cicli di ricarica.'
+      question: 'Is the battery replaceable?',
+      answer: 'The battery is not user-replaceable to maintain the ultra-compact design. However, it is covered by a 2-year warranty and maintains 80% capacity after 800 charge cycles.'
     },
     {
-      question: 'È compatibile con le eSIM?',
-      answer: 'Sì, il dispositivo supporta dual SIM: 1 nano-SIM fisica + 1 eSIM. Puoi utilizzare entrambe contemporaneamente per lavoro e uso personale.'
+      question: 'Is it compatible with eSIM?',
+      answer: 'Yes, the device supports dual SIM: 1 physical nano-SIM + 1 eSIM. You can use both simultaneously for work and personal use.'
     },
     {
-      question: 'Posso usarlo con una sola mano?',
-      answer: 'Assolutamente sì! Con dimensioni di 89.5 x 45mm e peso di soli 125g, è progettato specificamente per l\'uso con una mano, perfetto anche per tasche piccole.'
+      question: 'Can I use it with one hand?',
+      answer: 'Absolutely! With dimensions of 89.5 x 45mm and weighing only 125g, it is specifically designed for one-hand use, perfect even for small pockets.'
     },
     {
-      question: 'Come funziona la garanzia?',
-      answer: 'Garanzia ufficiale di 2 anni del produttore inclusa. Copre difetti di fabbricazione e malfunzionamenti hardware. Assistenza in italiano con centro riparazioni in Italia.'
+      question: 'How does the warranty work?',
+      answer: 'Official 2-year manufacturer warranty included. Covers manufacturing defects and hardware malfunctions. Support available with repair center.'
     },
     {
-      question: 'Quali metodi di pagamento accettate?',
-      answer: 'Accettiamo carte di credito/debito (Visa, Mastercard, Amex), PayPal, Apple Pay, Google Pay e bonifico bancario. Pagamento sicuro con crittografia SSL.'
+      question: 'What payment methods do you accept?',
+      answer: 'We accept credit/debit cards (Visa, Mastercard, Amex), PayPal, Apple Pay, Google Pay and bank transfer. Secure payment with SSL encryption.'
     },
     {
-      question: 'Quanto tempo richiede la spedizione?',
-      answer: 'Spedizione express gratuita in tutta Italia. Consegna in 24-48h per le principali città, 2-3 giorni per isole e zone remote. Tracking incluso.'
+      question: 'How long does shipping take?',
+      answer: 'Free express shipping worldwide. Delivery in 24-48h for major cities, 2-3 days for remote areas. Tracking included.'
     },
     {
-      question: 'Posso restituire il prodotto?',
-      answer: 'Sì, hai 30 giorni per il reso gratuito senza dover fornire motivazioni. Il prodotto deve essere nelle condizioni originali con confezione integra. Rimborso completo entro 5-7 giorni lavorativi.'
+      question: 'Can I return the product?',
+      answer: 'Yes, you have 30 days for free returns without having to provide reasons. The product must be in original condition with intact packaging. Full refund within 5-7 business days.'
     }
   ];
 
@@ -48,13 +48,13 @@ const ProductFAQ: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8 sm:mb-12">
           <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-indigo-600 block mb-2 sm:mb-3">
-            Domande Frequenti
+            Frequently Asked Questions
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 mb-3 sm:mb-4">
-            Hai Domande? Rispondiamo Qui
+            Have Questions? We Answer Here
           </h2>
           <p className="text-sm sm:text-base text-gray-500">
-            Non trovi la risposta? Contatta il nostro supporto clienti
+            Can't find the answer? Contact our customer support
           </p>
         </div>
 
@@ -90,19 +90,19 @@ const ProductFAQ: React.FC = () => {
         {/* Contact Support CTA */}
         <div className="mt-10 sm:mt-12 text-center p-6 sm:p-8 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl border border-indigo-100">
           <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-2 sm:mb-3">
-            Hai ancora dubbi?
+            Still have questions?
           </h3>
           <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 font-medium">
-            Il nostro team di supporto è qui per aiutarti
+            Our support team is here to help you
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button className="bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-indigo-600 transition-all inline-flex items-center justify-center gap-2">
               <i className="fa-solid fa-comments"></i>
-              Chat dal Vivo
+              Live Chat
             </button>
             <button className="bg-white text-gray-900 px-6 py-3 rounded-2xl font-black text-sm border-2 border-gray-200 hover:border-indigo-600 transition-all inline-flex items-center justify-center gap-2">
               <i className="fa-solid fa-envelope"></i>
-              Invia Email
+              Send Email
             </button>
           </div>
         </div>

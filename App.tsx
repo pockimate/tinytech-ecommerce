@@ -28,6 +28,7 @@ import PromoModal from './components/PromoModal';
 import FeaturedProductsSlider from './components/FeaturedProductsSlider';
 import AdminDashboard from './components/AdminDashboard';
 import Wishlist from './components/Wishlist';
+import * as authService from './services/auth';
 import LogoEditor from './components/LogoEditor';
 import SEO from './components/SEO';
 import { PRODUCTS, BLOG_POSTS, ALL_REVIEWS } from './data';
@@ -160,6 +161,9 @@ const App: React.FC = () => {
   const [trackingResult, setTrackingResult] = useState<Order | null>(null);
   const [currentOrderId, setCurrentOrderId] = useState<string>('');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [showPromoModal, setShowPromoModal] = useState(false);
   const [hasSeenPromo, setHasSeenPromo] = useState(false);
   const [checkoutDiscount, setCheckoutDiscount] = useState(0); // 传递给 checkout 的折扣比例
@@ -174,6 +178,24 @@ const App: React.FC = () => {
     checkSize();
     window.addEventListener('resize', checkSize);
     return () => window.removeEventListener('resize', checkSize);
+  }, []);
+
+  // Listen to auth state changes
+  useEffect(() => {
+    const { data: { subscription } } = authService.onAuthStateChange((authUser) => {
+      if (authUser) {
+        setUser({ name: authUser.name || 'User', email: authUser.email, wishlist: [], orders: [] });
+      }
+    });
+
+    // Check if user is already logged in
+    authService.getCurrentUser().then((authUser) => {
+      if (authUser) {
+        setUser({ name: authUser.name || 'User', email: authUser.email, wishlist: [], orders: [] });
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // 汇率状态
@@ -347,10 +369,10 @@ const App: React.FC = () => {
     },
     {
       id: 'banner-3',
-      title: 'Saldi di Gennaio',
-      subtitle: 'Risparmia fino al 35% su tutti i dispositivi. Usa il codice TINY20.',
+      title: 'January Sale',
+      subtitle: 'Save up to 35% on all devices. Use code TINY20.',
       image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1400',
-      buttonText: 'Acquista ora',
+      buttonText: 'Shop Now',
       buttonLink: 'products',
       backgroundColor: 'from-rose-600 to-pink-600',
       order: 2,
@@ -987,22 +1009,79 @@ const App: React.FC = () => {
 
   const subtotal = cart.reduce((s, i) => s + getItemPrice(i) * i.quantity, 0);
 
-  const handleLogin = (email?: string, password?: string) => {
-    // 基本的输入验证
-    if (email && password) {
-      // 验证email格式
-      if (!isValidEmail(email)) {
-        alert('请输入有效的邮箱地址');
+  const handleLogin = async (email?: string, password?: string) => {
+    if (!email || !password) {
+      setAuthError('Please enter email and password');
+      return;
+    }
+    
+    // 验证email格式
+    if (!isValidEmail(email)) {
+      setAuthError('Please enter a valid email address');
+      return;
+    }
+    // 验证密码长度
+    if (password.length < 6) {
+      setAuthError('Password must be at least 6 characters');
+      return;
+    }
+
+    setAuthLoading(true);
+    setAuthError(null);
+
+    if (isSignUpMode) {
+      // Sign up
+      const { user, error } = await authService.signUp(email, password);
+      if (error) {
+        setAuthError(error.message);
+        setAuthLoading(false);
         return;
       }
-      // 验证密码长度
-      if (password.length < 6) {
-        alert('密码至少需要6个字符');
+      if (user) {
+        setUser({ name: user.name || 'User', email: user.email, wishlist: [], orders: [] });
+        setIsLoginModalOpen(false);
+        setAuthError(null);
+      }
+    } else {
+      // Sign in
+      const { user, error } = await authService.signIn(email, password);
+      if (error) {
+        setAuthError(error.message);
+        setAuthLoading(false);
         return;
+      }
+      if (user) {
+        setUser({ name: user.name || 'User', email: user.email, wishlist: [], orders: [] });
+        setIsLoginModalOpen(false);
+        setAuthError(null);
       }
     }
-    setUser({ name: 'Minimalist User', email: email || 'hello@tinytech.com', wishlist: [], orders: [] });
-    setIsLoginModalOpen(false);
+    setAuthLoading(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    setAuthLoading(true);
+    setAuthError(null);
+    const { error } = await authService.signInWithGoogle();
+    if (error) {
+      setAuthError(error.message);
+    }
+    setAuthLoading(false);
+  };
+
+  const handleFacebookLogin = async () => {
+    setAuthLoading(true);
+    setAuthError(null);
+    const { error } = await authService.signInWithFacebook();
+    if (error) {
+      setAuthError(error.message);
+    }
+    setAuthLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await authService.signOut();
+    setUser(null);
   };
 
   const handleOrderComplete = (orderId: string) => {
@@ -1665,7 +1744,7 @@ const App: React.FC = () => {
                     {selectedProduct.fullDescription && (
                       <section className="py-8">
                         <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-gray-100">
-                          <h2 className="text-3xl font-black text-gray-900 mb-4">产品详情</h2>
+                          <h2 className="text-3xl font-black text-gray-900 mb-4">Product Details</h2>
                           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
                             {selectedProduct.fullDescription}
                           </div>
@@ -2538,51 +2617,80 @@ const App: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-black"><TranslatedText fallback="Welcome Back" /></h2>
+              <h2 className="text-3xl font-black">
+                <TranslatedText fallback={isSignUpMode ? "Create Account" : "Welcome Back"} />
+              </h2>
               <button 
-                onClick={() => setIsLoginModalOpen(false)}
+                onClick={() => {
+                  setIsLoginModalOpen(false);
+                  setAuthError(null);
+                  setIsSignUpMode(false);
+                }}
                 className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all"
               >
                 <i className="fa-solid fa-times text-gray-600"></i>
               </button>
             </div>
-            
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Email" /></label>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Password" /></label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                />
-              </div>
-            </div>
 
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                const emailInput = (e.currentTarget.parentElement?.querySelector('input[type="email"]') as HTMLInputElement)?.value;
-                const passwordInput = (e.currentTarget.parentElement?.querySelector('input[type="password"]') as HTMLInputElement)?.value;
-                handleLogin(emailInput, passwordInput);
-              }}
-              className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 transition-all mb-4"
-            >
-              <TranslatedText fallback="Sign In" />
-            </button>
+            {authError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+                {authError}
+              </div>
+            )}
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              handleLogin(formData.get('email') as string, formData.get('password') as string);
+            }}>
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Email" /></label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    required
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Password" /></label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {authLoading ? (
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                ) : (
+                  <TranslatedText fallback={isSignUpMode ? "Sign Up" : "Sign In"} />
+                )}
+              </button>
+            </form>
 
             <div className="text-center">
               <p className="text-sm text-gray-500">
-                <TranslatedText fallback="Don't have an account?" />{' '}
-                <button className="text-indigo-600 font-bold hover:text-indigo-700">
-                  <TranslatedText fallback="Sign Up" />
+                <TranslatedText fallback={isSignUpMode ? "Already have an account?" : "Don't have an account?"} />{' '}
+                <button 
+                  onClick={() => {
+                    setIsSignUpMode(!isSignUpMode);
+                    setAuthError(null);
+                  }}
+                  className="text-indigo-600 font-bold hover:text-indigo-700"
+                >
+                  <TranslatedText fallback={isSignUpMode ? "Sign In" : "Sign Up"} />
                 </button>
               </p>
             </div>
@@ -2590,11 +2698,21 @@ const App: React.FC = () => {
             <div className="mt-6 pt-6 border-t border-gray-100">
               <p className="text-xs text-gray-500 text-center mb-4">Or continue with</p>
               <div className="grid grid-cols-2 gap-3">
-                <button className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all">
+                <button 
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={authLoading}
+                  className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all disabled:opacity-50"
+                >
                   <i className="fa-brands fa-google mr-2 text-red-500"></i>
                   Google
                 </button>
-                <button className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all">
+                <button 
+                  type="button"
+                  onClick={handleFacebookLogin}
+                  disabled={authLoading}
+                  className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all disabled:opacity-50"
+                >
                   <i className="fa-brands fa-facebook mr-2 text-blue-600"></i>
                   Facebook
                 </button>

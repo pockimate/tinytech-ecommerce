@@ -10,23 +10,23 @@ const FeaturesSection: React.FC = () => {
   const features: Feature[] = [
     {
       icon: 'fa-truck-fast',
-      title: 'Spedizione Gratuita',
-      description: 'Consegna veloce in tutta Italia. Express gratuito su tutti gli ordini.'
+      title: 'Free Shipping',
+      description: 'Fast delivery worldwide. Free express shipping on all orders.'
     },
     {
       icon: 'fa-rotate-left',
-      title: 'Reso Gratuito 30 Giorni',
-      description: 'Non sei soddisfatto? Rimborso completo entro 30 giorni dall\'acquisto.'
+      title: '30-Day Free Returns',
+      description: 'Not satisfied? Full refund within 30 days of purchase.'
     },
     {
       icon: 'fa-shield-halved',
-      title: 'Garanzia 2 Anni',
-      description: 'Garanzia ufficiale del produttore. Assistenza dedicata in italiano.'
+      title: '2-Year Warranty',
+      description: 'Official manufacturer warranty. Dedicated customer support.'
     },
     {
       icon: 'fa-credit-card',
-      title: 'Pagamento Sicuro',
-      description: 'Carta di credito, PayPal o bonifico. Transazioni protette SSL.'
+      title: 'Secure Payment',
+      description: 'Credit card, PayPal or bank transfer. SSL protected transactions.'
     }
   ];
 

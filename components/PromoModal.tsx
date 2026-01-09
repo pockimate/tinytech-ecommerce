@@ -58,10 +58,10 @@ const PromoModal: React.FC<PromoModalProps> = ({ onClose, onClaim }) => {
               <i className="fa-solid fa-gift text-2xl sm:text-4xl"></i>
             </div>
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-center mb-2 sm:mb-3">
-              Offerta Esclusiva!
+              Exclusive Offer!
             </h2>
             <p className="text-center text-white/90 font-medium text-sm sm:text-base lg:text-lg">
-              Ottieni <strong>20% di sconto</strong> sul tuo primo ordine
+              Get <strong>20% off</strong> on your first order
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ const PromoModal: React.FC<PromoModalProps> = ({ onClose, onClaim }) => {
             <div className="flex items-center justify-center gap-2 mb-2">
               <i className="fa-solid fa-clock text-orange-600 animate-pulse text-sm"></i>
               <span className="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide">
-                L'offerta scade tra:
+                Offer expires in:
               </span>
             </div>
             <div className="flex justify-center gap-2">
@@ -95,19 +95,19 @@ const PromoModal: React.FC<PromoModalProps> = ({ onClose, onClaim }) => {
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <i className="fa-solid fa-check text-green-600 text-xs sm:text-sm"></i>
               </div>
-              <span className="text-xs sm:text-sm font-bold text-gray-700">20% di sconto immediato</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-700">20% instant discount</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <i className="fa-solid fa-check text-green-600 text-xs sm:text-sm"></i>
               </div>
-              <span className="text-xs sm:text-sm font-bold text-gray-700">Spedizione express gratuita</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Free express shipping</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <i className="fa-solid fa-check text-green-600 text-xs sm:text-sm"></i>
               </div>
-              <span className="text-xs sm:text-sm font-bold text-gray-700">Accesso a offerte esclusive</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-700">Access to exclusive offers</span>
             </div>
           </div>
 
@@ -129,13 +129,13 @@ const PromoModal: React.FC<PromoModalProps> = ({ onClose, onClaim }) => {
             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 sm:py-4 rounded-xl font-black text-sm sm:text-base lg:text-lg uppercase tracking-wide hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <i className="fa-solid fa-gift"></i>
-            Richiedi lo Sconto
+            Claim Discount
           </button>
 
           {/* Trust Badge */}
           <p className="text-center text-[10px] sm:text-xs text-gray-400 mt-3 sm:mt-4 font-medium">
             <i className="fa-solid fa-lock mr-1"></i>
-            I tuoi dati sono al sicuro. No spam.
+            Your data is safe. No spam.
           </p>
         </div>
       </div>

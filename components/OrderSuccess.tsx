@@ -20,10 +20,10 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
             <i className="fa-solid fa-check text-5xl text-green-600"></i>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
-            Ordine Confermato!
+            Order Confirmed!
           </h1>
           <p className="text-lg text-gray-600 font-medium">
-            Grazie per il tuo acquisto. Il tuo ordine è stato ricevuto con successo.
+            Thank you for your purchase. Your order has been received successfully.
           </p>
         </div>
 
@@ -31,12 +31,12 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
         <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 mb-8">
           <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-100">
             <div>
-              <p className="text-sm text-gray-500 mb-1">Numero Ordine</p>
+              <p className="text-sm text-gray-500 mb-1">Order Number</p>
               <p className="text-2xl font-black text-gray-900">{orderId}</p>
             </div>
             <div className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-sm">
               <i className="fa-solid fa-circle-check mr-2"></i>
-              Confermato
+              Confirmed
             </div>
           </div>
 
@@ -46,9 +46,9 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <i className="fa-solid fa-envelope text-indigo-600 text-xl"></i>
               </div>
               <div>
-                <p className="font-bold text-gray-900 mb-1">Email di Conferma</p>
+                <p className="font-bold text-gray-900 mb-1">Confirmation Email</p>
                 <p className="text-sm text-gray-600">
-                  Ti abbiamo inviato una email di conferma con tutti i dettagli dell'ordine.
+                  We have sent you a confirmation email with all the order details.
                 </p>
               </div>
             </div>
@@ -58,9 +58,9 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <i className="fa-solid fa-truck-fast text-indigo-600 text-xl"></i>
               </div>
               <div>
-                <p className="font-bold text-gray-900 mb-1">Spedizione Stimata</p>
+                <p className="font-bold text-gray-900 mb-1">Estimated Shipping</p>
                 <p className="text-sm text-gray-600">
-                  Il tuo ordine verrà spedito entro 1-2 giorni lavorativi.
+                  Your order will be shipped within 1-2 business days.
                 </p>
               </div>
             </div>
@@ -70,9 +70,9 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <i className="fa-solid fa-box text-indigo-600 text-xl"></i>
               </div>
               <div>
-                <p className="font-bold text-gray-900 mb-1">Tracciamento</p>
+                <p className="font-bold text-gray-900 mb-1">Tracking</p>
                 <p className="text-sm text-gray-600">
-                  Riceverai un numero di tracciamento appena il pacco sarà spedito.
+                  You will receive a tracking number once the package is shipped.
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
 
         {/* Timeline */}
         <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 mb-8">
-          <h3 className="font-black text-xl mb-6">Cosa Succede Ora?</h3>
+          <h3 className="font-black text-xl mb-6">What Happens Next?</h3>
           <div className="space-y-6">
             <div className="flex gap-4">
               <div className="flex flex-col items-center">
@@ -91,8 +91,8 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <div className="w-0.5 h-full bg-green-600 mt-2"></div>
               </div>
               <div className="flex-1 pb-6">
-                <p className="font-bold text-gray-900">Ordine Ricevuto</p>
-                <p className="text-sm text-gray-600">Oggi</p>
+                <p className="font-bold text-gray-900">Order Received</p>
+                <p className="text-sm text-gray-600">Today</p>
               </div>
             </div>
 
@@ -104,8 +104,8 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <div className="w-0.5 h-full bg-gray-200 mt-2"></div>
               </div>
               <div className="flex-1 pb-6">
-                <p className="font-bold text-gray-900">In Elaborazione</p>
-                <p className="text-sm text-gray-600">1-2 giorni</p>
+                <p className="font-bold text-gray-900">Processing</p>
+                <p className="text-sm text-gray-600">1-2 days</p>
               </div>
             </div>
 
@@ -117,8 +117,8 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 <div className="w-0.5 h-full bg-gray-200 mt-2"></div>
               </div>
               <div className="flex-1 pb-6">
-                <p className="font-bold text-gray-600">Spedito</p>
-                <p className="text-sm text-gray-500">2-3 giorni</p>
+                <p className="font-bold text-gray-600">Shipped</p>
+                <p className="text-sm text-gray-500">2-3 days</p>
               </div>
             </div>
 
@@ -129,8 +129,8 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
                 </div>
               </div>
               <div className="flex-1">
-                <p className="font-bold text-gray-600">Consegnato</p>
-                <p className="text-sm text-gray-500">5-7 giorni</p>
+                <p className="font-bold text-gray-600">Delivered</p>
+                <p className="text-sm text-gray-500">5-7 days</p>
               </div>
             </div>
           </div>
@@ -143,30 +143,30 @@ const OrderSuccess: React.FC<OrderSuccessProps> = ({
             className="bg-indigo-600 text-white py-4 px-6 rounded-2xl font-black hover:bg-indigo-700 transition-all shadow-lg"
           >
             <i className="fa-solid fa-receipt mr-2"></i>
-            Visualizza Ordine
+            View Order
           </button>
           <button
             onClick={onContinueShopping}
             className="bg-white text-gray-900 border-2 border-gray-200 py-4 px-6 rounded-2xl font-black hover:bg-gray-50 transition-all"
           >
             <i className="fa-solid fa-arrow-left mr-2"></i>
-            Continua lo Shopping
+            Continue Shopping
           </button>
         </div>
 
         {/* Help Section */}
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
-            Hai bisogno di aiuto? Contattaci
+            Need help? Contact us
           </p>
           <div className="flex items-center justify-center gap-6 text-sm font-bold">
             <a href="mailto:support@tinytech.com" className="text-indigo-600 hover:text-indigo-700">
               <i className="fa-solid fa-envelope mr-2"></i>
               Email
             </a>
-            <a href="tel:+39123456789" className="text-indigo-600 hover:text-indigo-700">
+            <a href="tel:+1234567890" className="text-indigo-600 hover:text-indigo-700">
               <i className="fa-solid fa-phone mr-2"></i>
-              Telefono
+              Phone
             </a>
             <button className="text-indigo-600 hover:text-indigo-700">
               <i className="fa-solid fa-comments mr-2"></i>

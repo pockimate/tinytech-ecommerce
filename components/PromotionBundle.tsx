@@ -234,11 +234,11 @@ const PromotionBundle: React.FC<PromotionBundleProps> = ({
                     <span className="text-lg sm:text-xl font-black text-gray-900">{bundle.name}</span>
                     <div className="flex flex-wrap gap-2">
                       <span className="bg-indigo-100 text-indigo-700 text-[9px] sm:text-[10px] font-black uppercase px-2 py-1 rounded-full border border-indigo-200">
-                        <i className="fa-solid fa-truck-fast mr-1"></i>Spedizione Express Gratuita
+                        <i className="fa-solid fa-truck-fast mr-1"></i>Free Express Shipping
                       </span>
                       {bundle.count > 1 && (
                         <span className="bg-green-100 text-green-700 text-[9px] sm:text-[10px] font-black uppercase px-2 py-1 rounded-full border border-green-200">
-                          <i className="fa-solid fa-gift mr-1"></i>Custodia Gratis
+                          <i className="fa-solid fa-gift mr-1"></i>Free Case
                         </span>
                       )}
                     </div>
