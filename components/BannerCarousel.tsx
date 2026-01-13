@@ -105,6 +105,9 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ banners: propBanners, o
                 src={banner.image}
                 alt={banner.title}
                 className="w-full h-full object-cover object-center"
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                decoding={index === 0 ? "sync" : "async"}
               />
               <div className={`absolute inset-0 bg-gradient-to-r ${banner.backgroundColor || 'from-indigo-600 to-purple-600'} opacity-20`}></div>
             </div>
