@@ -81,7 +81,11 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ banners: propBanners, o
   };
 
   return (
-    <div className="relative w-full h-[500px] sm:h-[600px] lg:h-[700px] overflow-hidden">
+    <div className="relative w-full">
+      {/* Top padding for navbar */}
+      <div className="h-20 sm:h-24 lg:h-28 bg-white"></div>
+      
+      <div className="relative w-full aspect-[1/1] sm:aspect-[16/9] lg:aspect-[2/1] overflow-hidden">
       {/* Slides */}
       <div className="relative w-full h-full">
         {banners.map((banner, index) => (
@@ -100,9 +104,9 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ banners: propBanners, o
               <img
                 src={banner.image}
                 alt={banner.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
-              <div className={`absolute inset-0 bg-gradient-to-r ${banner.backgroundColor || 'from-indigo-600 to-purple-600'} opacity-50`}></div>
+              <div className={`absolute inset-0 bg-gradient-to-r ${banner.backgroundColor || 'from-indigo-600 to-purple-600'} opacity-20`}></div>
             </div>
 
             {/* Content */}
@@ -164,6 +168,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ banners: propBanners, o
         >
           <i className={`fa-solid ${isAutoPlaying ? 'fa-pause' : 'fa-play'} text-sm`}></i>
         </button>
+      </div>
       </div>
     </div>
   );

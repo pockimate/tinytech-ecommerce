@@ -29,6 +29,7 @@ import FeaturedProductsSlider from './components/FeaturedProductsSlider';
 import AdminDashboard from './components/AdminDashboard';
 import Wishlist from './components/Wishlist';
 import * as authService from './services/auth';
+import { mergeGuestOrders } from './services/orders';
 import LogoEditor from './components/LogoEditor';
 import SEO from './components/SEO';
 import { PRODUCTS, BLOG_POSTS, ALL_REVIEWS } from './data';
@@ -182,9 +183,14 @@ const App: React.FC = () => {
 
   // Listen to auth state changes
   useEffect(() => {
-    const { data: { subscription } } = authService.onAuthStateChange((authUser) => {
+    const { data: { subscription } } = authService.onAuthStateChange(async (authUser) => {
       if (authUser) {
         setUser({ name: authUser.name || 'User', email: authUser.email, wishlist: [], orders: [] });
+        // 用户登录后，合并游客订单到用户账户
+        const mergedCount = await mergeGuestOrders();
+        if (mergedCount > 0) {
+          console.log(`[Orders] 已合并 ${mergedCount} 个历史订单`);
+        }
       }
     });
 
@@ -1502,7 +1508,7 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            <BrandStory data={brandStory} />
+            {/* <BrandStory data={brandStory} /> */}
             <VerticalVideoShowcase />
             <SizeComparison />
             <ReviewMasonry reviews={homepageReviews} />
@@ -2402,10 +2408,12 @@ const App: React.FC = () => {
         )}
 
       {view === 'track' && (
-        <section className="pt-40 pb-24 px-6 min-h-screen bg-gray-50">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-5xl font-black mb-8"><TranslatedText fallback="Track Your Order" /></h1>
-            <p className="text-gray-500 mb-12 text-lg"><TranslatedText fallback="Enter your order ID to track your shipment" /></p>
+        <section className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-24">
+          <div className="max-w-3xl w-full">
+            <div className="text-center mb-12">
+              <h1 className="text-5xl font-black mb-4"><TranslatedText fallback="Track Your Order" /></h1>
+              <p className="text-gray-500 text-lg"><TranslatedText fallback="Enter your order ID to track your shipment" /></p>
+            </div>
             
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8">
               <div className="flex gap-4">

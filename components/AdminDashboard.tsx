@@ -193,11 +193,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const newProduct: Product = {
         id: `product-${Date.now()}`,
         name: product.name || '',
-        category: product.category || 'phone',
         price: product.price || 0,
         image: product.image || '',
         rating: 4.8,
-        reviews: productReviews,
+        Review: productReviews,
         variants: productVariants,
         colorOptions: productColors,
         bundles: productBundles,
@@ -363,7 +362,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-black text-gray-900">管理后台</h1>
-              <p className="text-gray-500 font-medium mt-2">管理您的电商平台</p>
+              <p className="text-gray-500 font-medium mt-2">Manage Your E-commerce Platform</p>
             </div>
             <button
               onClick={() => onNavigate('home')}
@@ -405,7 +404,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
                   <span className="text-xs font-bold text-green-600">+12%</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-black text-gray-900">€{totalRevenue.toFixed(0)}</p>
+                <p className="text-2xl sm:text-3xl font-black text-gray-900">${totalRevenue.toFixed(0)}</p>
                 <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">总收入</p>
               </div>
 
@@ -448,10 +447,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-black text-gray-900">最近订单</h2>
                 <button
-                  onClick={() => setActiveTab('Orders')}
+                  onClick={() => setActiveTab('orders')}
                   className="text-indigo-600 hover:text-indigo-700 font-bold text-sm"
                 >
-                  查看全部
+                  View All
                 </button>
               </div>
               <div className="overflow-x-auto">
@@ -460,7 +459,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <tr className="border-b border-gray-100">
                       <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">订单号</th>
                       <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">客户</th>
-                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">金额</th>
+                      <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">Total</th>
                       <th className="text-left py-3 px-2 text-xs font-bold text-gray-500 uppercase">状态</th>
                     </tr>
                   </thead>
@@ -468,8 +467,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {orders.slice(0, 5).map(order => (
                       <tr key={ order.id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="py-3 px-2 font-bold text-sm text-gray-900">{ order.id}</td>
-                        <td className="py-3 px-2 text-sm text-gray-600">{order.address ? order.address.split(',')[0] : '无地址'}</td>
-                        <td className="py-3 px-2 font-black text-sm text-gray-900">€{ order.total.toFixed(2)}</td>
+                        <td className="py-3 px-2 text-sm text-gray-600">{ (order.address || '').split(',')[0]}</td>
+                        <td className="py-3 px-2 font-black text-sm text-gray-900">${ order.total.toFixed(2)}</td>
                         <td className="py-3 px-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                             order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
@@ -492,7 +491,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'homepage' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900">首页内容管理</h2>
+              <h2 className="text-2xl font-black text-gray-900">Homepage Section Management</h2>
             </div>
 
             {/* Banner Management Section */}
@@ -502,7 +501,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <h3 className="text-xl font-black text-gray-900">轮播图管理</h3>
                   <p className="text-sm text-gray-500 mt-1">
                     <i className="fa-solid fa-info-circle mr-1"></i>
-                    推荐尺寸: <span className="font-bold text-indigo-600">1400×600px</span> 或更高分辨率，比例 <span className="font-bold text-indigo-600">7:3</span>
+                    Recommended size: <span className="font-bold text-indigo-600">1400×600px</span> or higher resolution, ratio <span className="font-bold text-indigo-600">7:3</span>
                   </p>
                 </div>
                 <button
@@ -510,17 +509,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2"
                 >
                   <i className="fa-solid fa-plus"></i>
-                  添加轮播图
+                  Add Banner
                 </button>
               </div>
 
               <div className="space-y-4">
-                {banners.sort((a, b) => a.order - b.order).map((banner, index) => (
+                {[...banners].sort((a, b) => a.order - b.order).map((banner, index) => (
                   <div key={banner.id} className="border border-gray-200 rounded-xl p-4 hover:border-indigo-600 transition-all">
                     <div className="flex flex-col lg:flex-row gap-4">
                       {/* Banner Preview */}
                       <div className="lg:w-1/3">
-                        <div className={`aspect-[7/3] rounded-xl overflow-hidden bg-gradient-to-r ${banner.backgroundColor}`}>
+                        <div className={`aspect-[7/3] rounded-xl overflow-hidden bg-gradient-to-r ${banner.backgroundColor || 'from-gray-400 to-gray-600'}`}>
                           <img
                             src={banner.image}
                             alt={banner.title}
@@ -534,10 +533,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                             banner.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                           }`}>
-                            {banner.isActive ? '已启用' : '已禁用'}
+                            {banner.isActive ? 'Enabled' : 'Disabled'}
                           </span>
                           <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
-                            顺序: {index + 1}
+                            order: {index + 1}
                           </span>
                         </div>
                       </div>
@@ -558,11 +557,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             </div>
                             <div className="flex items-center gap-2 text-gray-500">
                               <i className="fa-solid fa-palette"></i>
-                              <span>Background: {banner.backgroundColor ? banner.backgroundColor.split(' ')[0].replace('from-', '') : 'default'}</span>
+                              <span>Background: {(banner.backgroundColor || '').split(' ')[0].replace('from-', '')}</span>
                             </div>
                             <div className="flex items-center gap-2 text-gray-500">
                               <i className="fa-solid fa-image"></i>
-                              <span>image: {banner.image.length > 40 ? banner.image.substring(0, 40) + '...' : banner.image}</span>
+                              <span>image: {(banner.image || '').length > 40 ? (banner.image || '').substring(0, 40) + '...' : (banner.image || '')}</span>
                             </div>
                           </div>
                         </div>
@@ -668,7 +667,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {features.sort((a, b) => a.order - b.order).map((feature, index) => (
+                {[...features].sort((a, b) => a.order - b.order).map((feature, index) => (
                   <div key={feature.id} className="border border-gray-200 rounded-xl p-4 hover:border-indigo-600 transition-all">
                     <div className="flex items-start gap-4">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
@@ -755,8 +754,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <h4 className="font-bold text-gray-700 mb-2">Current Content</h4>
                     <div className="space-y-2 text-sm">
                       <p><strong>Subtitle：</strong>{brandStory.subtitle}</p>
-                      <p><strong>Title:</strong>{brandStory.title.replace('\n', ' ')}</p>
-                      <p><strong>Description:</strong>{brandStory.description.substring(0, 80)}...</p>
+                      <p><strong>Title:</strong>{(brandStory.title || '').replace('\n', ' ')}</p>
+                      <p><strong>Description:</strong>{(brandStory.description || '').substring(0, 80)}...</p>
                       <p><strong>Badge：</strong>{brandStory.badgeText1} / {brandStory.badgeText2}</p>
                     </div>
                   </div>
@@ -808,7 +807,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {videos.sort((a, b) => a.order - b.order).map((video, index) => (
+                {[...videos].sort((a, b) => a.order - b.order).map((video, index) => (
                   <div key={video.id} className="border border-gray-200 rounded-xl overflow-hidden hover:border-indigo-600 transition-all">
                     <div className="aspect-[9/16] bg-gray-100 relative">
                       <img src={video.thumbnail} className="w-full h-full object-cover" alt={video.title} />
@@ -988,7 +987,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div className="space-y-3">
-                {faqs.sort((a, b) => a.order - b.order).map((faq, index) => (
+                {[...faqs].sort((a, b) => a.order - b.order).map((faq, index) => (
                   <div key={faq.id} className="border border-gray-200 rounded-xl p-4 hover:border-indigo-600 transition-all">
                     <div className="flex items-start gap-4">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
@@ -1080,13 +1079,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'products' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900">商品管理</h2>
+              <h2 className="text-2xl font-black text-gray-900">产品管理</h2>
               <button
                 onClick={() => setShowAddProduct(true)}
                 className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2"
               >
                 <i className="fa-solid fa-plus"></i>
-                添加商品
+                添加Product
               </button>
             </div>
 
@@ -1098,7 +1097,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
                   <h3 className="font-black text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-black text-gray-900">€{product.price}</span>
+                    <span className="text-xl font-black text-gray-900">${product.price}</span>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       product.stockLevel > 10 ? 'bg-green-100 text-green-700' :
                       product.stockLevel > 0 ? 'bg-yellow-100 text-yellow-700' :
@@ -1147,9 +1146,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         onChange={(e) => onUpdateOrder({ ...order, status: e.target.value as any })}
                         className="px-4 py-2 rounded-lg border-2 border-gray-200 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
                       >
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Delivered">Delivered</option>
+                        <option value="Processing">处理中</option>
+                        <option value="Shipped">已发货</option>
+                        <option value="Delivered">已送达</option>
                       </select>
                     </div>
                     <div className="space-y-2">
@@ -1162,12 +1161,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <p className="font-bold">{item.name}</p>
                             <p className="text-gray-500">Qty: {item.quantity}</p>
                           </div>
-                          <p className="font-black">€{item.price}</p>
+                          <p className="font-black">${item.price}</p>
                         </div>
                       ))}
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                      <p className="font-black text-lg">Totale: €{ order.total.toFixed(2)}</p>
+                      <p className="font-black text-lg">Totale: ${ order.total.toFixed(2)}</p>
                       <p className="text-sm text-gray-500">{ order.address}</p>
                     </div>
                   </div>
@@ -1199,7 +1198,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <td className="py-3 px-2 text-sm text-gray-600">{user.邮箱}</td>
                         <td className="py-3 px-2 font-bold text-sm text-gray-900">{user.orders.length}</td>
                         <td className="py-3 px-2 font-black text-sm text-gray-900">
-                          €{user.orders.reduce((sum, o) => sum + o.total, 0).toFixed(2)}
+                          ${user.orders.reduce((sum, o) => sum + o.total, 0).toFixed(2)}
                         </td>
                       </tr>
                     ))}
@@ -1395,7 +1394,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {whyMiniScenes
+              {[...whyMiniScenes]
                 .sort((a, b) => a.order - b.order)
                 .map(scene => (
                   <div key={scene.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:border-indigo-600 transition-all">
@@ -1473,7 +1472,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-black text-gray-900">
-                {editingProduct ? '编辑商品' : '添加商品'}
+                {editingProduct ? '编辑Product' : '添加Product'}
               </h3>
               <button
                 onClick={() => {
@@ -1575,7 +1574,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Current price (€)</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Current price ($)</label>
                     <input
                       name="price"
                       type="number"
@@ -1586,7 +1585,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Original price (€) <span className="text-xs text-gray-500">Optional</span></label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Original price ($) <span className="text-xs text-gray-500">Optional</span></label>
                     <input
                       name="originalprice"
                       type="number"
@@ -1651,7 +1650,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <p className="text-sm text-gray-500 mt-1">Add 不同颜色，每个颜色需要一张图片</p>
                     </div>
                     <button
-                      type="按钮"
+                      type="button"
                       onClick={() => {
                         const newColor = {
                           name: '新颜色',
@@ -1704,7 +1703,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               />
                             </div>
                             <button
-                              type="按钮"
+                              type="button"
                               onClick={() => setProductColors(prev => prev.filter((_, i) => i !== index))}
                               className="text-red-600 hover:text-red-700 p-2"
                             >
@@ -1729,7 +1728,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <p className="text-sm text-gray-500 mt-1">add不同规格选项(e.g.capacity、Size、颜色etc)</p>
                     </div>
                     <button
-                      type="按钮"
+                      type="button"
                       onClick={() => {
                         const newVariant = {
                           type: 'storage',
@@ -1798,7 +1797,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               />
                             </div>
                             <button
-                              type="按钮"
+                              type="button"
                               onClick={() => setProductVariants(prev => prev.filter((_, i) => i !== vIndex))}
                               className="self-end text-red-600 hover:text-red-700 px-3 py-2"
                             >
@@ -1810,7 +1809,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <div className="flex items-center justify-between">
                               <label className="text-xs font-bold text-gray-700">Options List</label>
                               <button
-                                type="按钮"
+                                type="button"
                                 onClick={() => {
                                   const newVariants = [...productVariants];
                                   newVariants[vIndex].options.push({
@@ -1864,7 +1863,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   <span className="text-gray-600">In Stock</span>
                                 </label>
                                 <button
-                                  type="按钮"
+                                  type="button"
                                   onClick={() => {
                                     const newVariants = [...productVariants];
                                     newVariants[vIndex].options = newVariants[vIndex].options.filter((_: any, i: number) => i !== oIndex);
@@ -1891,7 +1890,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <p className="text-sm text-gray-500 mt-1">设置不同Quantityof优惠套餐(e.g., single、double packetc)</p>
                     </div>
                     <button
-                      type="按钮"
+                      type="button"
                       onClick={() => {
                         setProductBundles(prev => [...prev, {
                           id: `bundle-${Date.now()}`,
@@ -1991,7 +1990,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-bold text-gray-700 mb-1">Save</label>
+                              <label className="block text-xs font-bold text-gray-700 mb-1">保存</label>
                               <div className="px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-sm font-bold text-green-700">
                                 {(() => {
                                   const price = bundle.price;
@@ -2026,7 +2025,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <div className="flex items-center justify-between mb-2">
                               <label className="block text-xs font-bold text-gray-700">Bundle Includes (one item per line)</label>
                               <button
-                                type="按钮"
+                                type="button"
                                 onClick={() => {
                                   const newBundles = [...productBundles];
                                   if (!newBundles[index].includes) {
@@ -2053,10 +2052,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                         setProductBundles(newBundles);
                                       }}
                                       className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
-                                      placeholder="e.g., Custodia in Silicone (€19)"
+                                      placeholder="e.g., Custodia in Silicone ($19)"
                                     />
                                     <button
-                                      type="按钮"
+                                      type="button"
                                       onClick={() => {
                                         const newBundles = [...productBundles];
                                         newBundles[index].includes = newBundles[index].includes.filter((_: string, i: number) => i !== iIndex);
@@ -2076,7 +2075,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           
                           <div className="flex justify-end mt-3">
                             <button
-                              type="按钮"
+                              type="button"
                               onClick={() => {
                                 if (confirm('确定要删除吗 this bundle?')) {
                                   setProductBundles(prev => prev.filter((_, i) => i !== index));
@@ -2101,7 +2100,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <p className="text-sm text-gray-500 mt-1">Manage user Review for this product</p>
                     </div>
                     <button
-                      type="按钮"
+                      type="button"
                       onClick={() => setShowAddProductReview(true)}
                       className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-all flex items-center gap-2"
                     >
@@ -2137,14 +2136,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <span className="text-xs text-gray-400">{review.date}</span>
                                 <div className="flex gap-2">
                                   <button
-                                    type="按钮"
+                                    type="button"
                                     onClick={() => setEditingProductReview(review)}
                                     className="text-blue-600 hover:text-blue-700 text-xs font-bold"
                                   >
                                     <i className="fa-solid fa-edit mr-1"></i>编辑
                                   </button>
                                   <button
-                                    type="按钮"
+                                    type="button"
                                     onClick={() => {
                                       if (confirm('确定要删除吗 this review?')) {
                                         setProductReviews(prev => prev.filter(r => r.id !== review.id));
@@ -2175,7 +2174,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingProduct(null);
                     setShowAddProduct(false);
@@ -2188,7 +2187,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="submit"
                   className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all"
                 >
-                  {editingProduct ? '保存修改' : '添加商品'}
+                  {editingProduct ? '保存修改' : '添加Product'}
                 </button>
               </div>
             </form>
@@ -2371,7 +2370,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">状态</label>
                     <select
                       name="isActive"
                       defaultValue={String(editingBanner?.isActive ?? true)}
@@ -2386,7 +2385,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingBanner(null);
                     setShowAddBanner(false);
@@ -2481,7 +2480,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Order</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">排序</label>
                     <input
                       name="Order"
                       type="number"
@@ -2492,7 +2491,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">状态</label>
                     <select
                       name="isActive"
                       defaultValue={String(editingFeature?.isActive ?? true)}
@@ -2507,7 +2506,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingFeature(null);
                     setShowAddFeature(false);
@@ -2575,7 +2574,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Subtitle</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">副标题</label>
                     <input
                       name="subtitle"
                       type="text"
@@ -2749,7 +2748,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => setEditingBrandStory(false)}
                   className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all"
                 >
@@ -2887,7 +2886,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Order</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">排序</label>
                     <input
                       name="Order"
                       type="number"
@@ -2898,7 +2897,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">状态</label>
                     <select
                       name="isActive"
                       defaultValue={String(editingVideo?.isActive ?? true)}
@@ -2913,7 +2912,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingVideo(null);
                     setShowAddVideo(false);
@@ -3096,7 +3095,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => setEditingNewsletter(false)}
                   className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all"
                 >
@@ -3279,7 +3278,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => setEditingSizeComparison(false)}
                   className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all"
                 >
@@ -3343,7 +3342,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Question</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">问题</label>
                   <input
                     name="question"
                     type="text"
@@ -3368,7 +3367,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Order</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">排序</label>
                     <input
                       name="Order"
                       type="number"
@@ -3379,7 +3378,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">状态</label>
                     <select
                       name="isActive"
                       defaultValue={String(editingFAQ?.isActive ?? true)}
@@ -3394,7 +3393,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingFAQ(null);
                     setShowAddFAQ(false);
@@ -3516,7 +3515,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingReview(null);
                     setShowAddReview(false);
@@ -3543,7 +3542,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-black text-gray-900">
-                {editingProductReview ? '编辑商品评价' : '添加商品评价'}
+                {editingProductReview ? '编辑Product Review' : 'add商品Review'}
               </h3>
               <button
                 onClick={() => {
@@ -3648,7 +3647,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               
               <div className="flex gap-4 mt-6">
                 <button
-                  type="按钮"
+                  type="button"
                   onClick={() => {
                     setEditingProductReview(null);
                     setShowAddProductReview(false);
