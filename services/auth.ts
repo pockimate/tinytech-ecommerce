@@ -18,26 +18,36 @@ export interface AuthError {
 // Sign up with email and password
 export async function signUp(email: string, password: string, name?: string): Promise<{ user: AuthUser | null; error: AuthError | null }> {
   try {
+    console.log('[Auth] Signing up:', email, name);
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           name: name || email.split('@')[0]
-        }
+        },
+        emailRedirectTo: window.location.origin
       }
     });
 
+    console.log('[Auth] SignUp response:', { data, error });
+
     if (error) {
+      console.error('[Auth] SignUp error:', error);
       return { user: null, error: { message: error.message } };
     }
 
     if (data.user) {
+      // 检查是否需要邮箱确认
+      if (data.user.identities?.length === 0) {
+        return { user: null, error: { message: 'This email is already registered. Please sign in instead.' } };
+      }
+      
       return {
         user: {
           id: data.user.id,
           email: data.user.email || email,
-          name: data.user.user_metadata?.name || email.split('@')[0]
+          name: data.user.user_metadata?.name || name || email.split('@')[0]
         },
         error: null
       };
@@ -45,6 +55,7 @@ export async function signUp(email: string, password: string, name?: string): Pr
 
     return { user: null, error: { message: 'Sign up failed' } };
   } catch (err: any) {
+    console.error('[Auth] SignUp exception:', err);
     return { user: null, error: { message: err.message || 'Sign up failed' } };
   }
 }

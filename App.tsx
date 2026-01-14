@@ -28,6 +28,9 @@ import PromoModal from './components/PromoModal';
 import FeaturedProductsSlider from './components/FeaturedProductsSlider';
 import AdminDashboard from './components/AdminDashboard';
 import Wishlist from './components/Wishlist';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import RefundPolicy from './components/RefundPolicy';
+import TermsOfService from './components/TermsOfService';
 import * as authService from './services/auth';
 import { mergeGuestOrders } from './services/orders';
 import LogoEditor from './components/LogoEditor';
@@ -39,7 +42,7 @@ import { productSchema, blogPostSchema } from './utils/jsonld';
 import { useContent, useProducts } from './hooks/useDatabase';
 
 const App: React.FC = () => {
-  type View = 'home' | 'products' | 'blog' | 'blog-detail' | 'product-detail' | 'track' | 'checkout' | 'order-success' | 'account' | 'admin' | 'contact' | 'refund' | 'privacy' | 'about' | 'lifestyle' | 'wishlist';
+  type View = 'home' | 'products' | 'blog' | 'blog-detail' | 'product-detail' | 'track' | 'checkout' | 'order-success' | 'account' | 'admin' | 'contact' | 'refund' | 'privacy' | 'about' | 'lifestyle' | 'wishlist' | 'privacy-policy' | 'refund-policy' | 'terms-of-service';
   const [view, setView] = useState<View>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<any>(null);
@@ -1015,7 +1018,7 @@ const App: React.FC = () => {
 
   const subtotal = cart.reduce((s, i) => s + getItemPrice(i) * i.quantity, 0);
 
-  const handleLogin = async (email?: string, password?: string) => {
+  const handleLogin = async (email?: string, password?: string, name?: string) => {
     if (!email || !password) {
       setAuthError('Please enter email and password');
       return;
@@ -1037,7 +1040,7 @@ const App: React.FC = () => {
 
     if (isSignUpMode) {
       // Sign up
-      const { user, error } = await authService.signUp(email, password);
+      const { user, error } = await authService.signUp(email, password, name);
       if (error) {
         setAuthError(error.message);
         setAuthLoading(false);
@@ -1413,6 +1416,7 @@ const App: React.FC = () => {
           onNavigate={navigate}
           userLoggedIn={!!user}
           onLoginClick={() => setIsLoginModalOpen(true)}
+          onLogout={handleLogout}
           currency={currency}
           onCurrencyChange={setCurrency}
           logoSettings={logoSettings}
@@ -2541,6 +2545,11 @@ const App: React.FC = () => {
             />
           </div>
         )}
+      
+        {/* Policy Pages */}
+        {view === 'privacy-policy' && <PrivacyPolicy />}
+        {view === 'refund-policy' && <RefundPolicy />}
+        {view === 'terms-of-service' && <TermsOfService />}
       </main>
 
       {/* Footer */}
@@ -2579,8 +2588,9 @@ const App: React.FC = () => {
               <h4 className="font-black mb-8 uppercase text-[10px] tracking-widest text-indigo-400"><TranslatedText fallback="Support" /></h4>
               <ul className="space-y-4 text-sm font-bold">
                 <li><button onClick={() => navigate('track')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Track Order" /></button></li>
-                <li><button onClick={() => navigate('refund')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Return & Refund" /></button></li>
-                <li><button onClick={() => navigate('privacy')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Privacy & ToS" /></button></li>
+                <li><button onClick={() => navigate('refund-policy')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Refund Policy" /></button></li>
+                <li><button onClick={() => navigate('privacy-policy')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Privacy Policy" /></button></li>
+                <li><button onClick={() => navigate('terms-of-service')} className="text-gray-400 hover:text-white transition-colors"><TranslatedText fallback="Terms of Service" /></button></li>
               </ul>
             </div>
             <div>
@@ -2649,9 +2659,36 @@ const App: React.FC = () => {
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              handleLogin(formData.get('email') as string, formData.get('password') as string);
+              const firstName = formData.get('firstName') as string;
+              const lastName = formData.get('lastName') as string;
+              const fullName = isSignUpMode ? `${firstName} ${lastName}`.trim() : undefined;
+              handleLogin(formData.get('email') as string, formData.get('password') as string, fullName);
             }}>
               <div className="space-y-4 mb-6">
+                {isSignUpMode && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="First Name" /></label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        placeholder="John"
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Last Name" /></label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Doe"
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      />
+                    </div>
+                  </>
+                )}
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2"><TranslatedText fallback="Email" /></label>
                   <input
@@ -2701,30 +2738,6 @@ const App: React.FC = () => {
                   <TranslatedText fallback={isSignUpMode ? "Sign In" : "Sign Up"} />
                 </button>
               </p>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <p className="text-xs text-gray-500 text-center mb-4">Or continue with</p>
-              <div className="grid grid-cols-2 gap-3">
-                <button 
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  disabled={authLoading}
-                  className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all disabled:opacity-50"
-                >
-                  <i className="fa-brands fa-google mr-2 text-red-500"></i>
-                  Google
-                </button>
-                <button 
-                  type="button"
-                  onClick={handleFacebookLogin}
-                  disabled={authLoading}
-                  className="py-3 px-4 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all disabled:opacity-50"
-                >
-                  <i className="fa-brands fa-facebook mr-2 text-blue-600"></i>
-                  Facebook
-                </button>
-              </div>
             </div>
           </div>
         </div>

@@ -32,6 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showCurrMenu, setShowCurrMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [navLabels, setNavLabels] = useState<Record<string, string>>({});
 
   const currencies = {
@@ -212,30 +213,48 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Account Icon with Dropdown */}
-          <div className="relative group">
+          <div className="relative">
             <div 
               className="cursor-pointer hover:scale-110 transition-transform p-2 bg-gray-50 rounded-full"
-              onClick={userLoggedIn ? undefined : onLoginClick}
+              onClick={() => {
+                if (userLoggedIn) {
+                  setShowUserMenu(!showUserMenu);
+                } else {
+                  onLoginClick();
+                }
+              }}
             >
               <i className={`fa-regular ${userLoggedIn ? 'fa-circle-user' : 'fa-user'} text-lg sm:text-xl text-gray-700`}></i>
             </div>
-            {userLoggedIn && (
-              <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <button
-                  onClick={() => onNavigate('account')}
-                  className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-t-xl flex items-center gap-2"
-                >
-                  <i className="fa-regular fa-user"></i>
-                  我的账户
-                </button>
-                <button
-                  onClick={onLogout}
-                  className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 rounded-b-xl flex items-center gap-2"
-                >
-                  <i className="fa-solid fa-right-from-bracket"></i>
-                  退出登录
-                </button>
-              </div>
+            {userLoggedIn && showUserMenu && (
+              <>
+                <div 
+                  className="fixed inset-0 z-[9998]"
+                  onClick={() => setShowUserMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 z-[9999]">
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onNavigate('account');
+                    }}
+                    className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-t-xl flex items-center gap-2"
+                  >
+                    <i className="fa-regular fa-user"></i>
+                    我的账户
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onLogout();
+                    }}
+                    className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 rounded-b-xl flex items-center gap-2"
+                  >
+                    <i className="fa-solid fa-right-from-bracket"></i>
+                    退出登录
+                  </button>
+                </div>
+              </>
             )}
           </div>
 
