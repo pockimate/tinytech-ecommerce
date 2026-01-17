@@ -55,63 +55,63 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post, allPosts, onNavigate, onP
           </p>
 
           <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 sm:mb-6 mt-8 sm:mt-12">
-            Il Futuro è Minimalista
+            The Future is Minimalist
           </h2>
           <p className="text-base sm:text-lg text-gray-600 font-medium leading-relaxed mb-4 sm:mb-6">
-            Negli ultimi anni abbiamo assistito a un'evoluzione significativa nel modo in cui pensiamo agli smartphone. 
-            La corsa alle dimensioni sempre più grandi sembra finalmente rallentare, lasciando spazio a una nuova 
-            filosofia: dispositivi compatti che non compromettono le prestazioni.
+            In recent years, we have witnessed a significant evolution in how we think about smartphones. 
+            The race for ever-larger sizes finally seems to be slowing down, making room for a new 
+            philosophy: compact devices that don't compromise on performance.
           </p>
           <p className="text-base sm:text-lg text-gray-600 font-medium leading-relaxed mb-4 sm:mb-6">
-            I mini phone rappresentano questa rivoluzione. Con schermi da 3 pollici e hardware flagship, 
-            questi dispositivi stanno ridefinendo cosa significa "smartphone premium". Non si tratta di compromessi, 
-            ma di scelte consapevoli per uno stile di vita più equilibrato.
+            Mini phones represent this revolution. With 3-inch screens and flagship hardware, 
+            these devices are redefining what "premium smartphone" means. It's not about compromises, 
+            but conscious choices for a more balanced lifestyle.
           </p>
 
           <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 sm:mb-6 mt-8 sm:mt-12">
-            Vantaggi Concreti
+            Real Benefits
           </h2>
           <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
             <li className="flex items-start gap-3">
               <i className="fa-solid fa-circle-check text-indigo-600 mt-1"></i>
               <span className="text-base sm:text-lg text-gray-600 font-medium">
-                <strong>Portabilità estrema:</strong> Entra in qualsiasi tasca senza ingombro
+                <strong>Extreme portability:</strong> Fits in any pocket without bulk
               </span>
             </li>
             <li className="flex items-start gap-3">
               <i className="fa-solid fa-circle-check text-indigo-600 mt-1"></i>
               <span className="text-base sm:text-lg text-gray-600 font-medium">
-                <strong>Uso con una mano:</strong> Totale controllo senza acrobazie
+                <strong>One-hand use:</strong> Total control without acrobatics
               </span>
             </li>
             <li className="flex items-start gap-3">
               <i className="fa-solid fa-circle-check text-indigo-600 mt-1"></i>
               <span className="text-base sm:text-lg text-gray-600 font-medium">
-                <strong>Batteria efficiente:</strong> Display piccolo = autonomia sorprendente
+                <strong>Efficient battery:</strong> Small display = surprising battery life
               </span>
             </li>
             <li className="flex items-start gap-3">
               <i className="fa-solid fa-circle-check text-indigo-600 mt-1"></i>
               <span className="text-base sm:text-lg text-gray-600 font-medium">
-                <strong>Digital detox:</strong> Meno distrazioni, più vita reale
+                <strong>Digital detox:</strong> Less distractions, more real life
               </span>
             </li>
           </ul>
 
           <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 sm:mb-6 mt-8 sm:mt-12">
-            Conclusione
+            Conclusion
           </h2>
           <p className="text-base sm:text-lg text-gray-600 font-medium leading-relaxed mb-4 sm:mb-6">
-            Il movimento verso dispositivi più piccoli e funzionali non è solo una moda passeggera, 
-            ma una risposta concreta alle esigenze di chi cerca un rapporto più sano con la tecnologia. 
-            I mini phone dimostrano che "meno è meglio" non è solo uno slogan, ma una filosofia di design 
-            che funziona davvero.
+            The movement toward smaller, more functional devices is not just a passing trend, 
+            but a concrete response to the needs of those seeking a healthier relationship with technology. 
+            Mini phones prove that "less is more" is not just a slogan, but a design philosophy 
+            that really works.
           </p>
         </article>
 
         {/* Share Buttons */}
         <div className="mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-gray-100">
-          <p className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-widest">Condividi Articolo</p>
+          <p className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-widest">Share Article</p>
           <div className="flex gap-3 sm:gap-4">
             <button className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-all">
               <i className="fa-brands fa-facebook-f"></i>
@@ -131,7 +131,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post, allPosts, onNavigate, onP
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <div className="mt-16 sm:mt-24">
-            <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-8 sm:mb-12">Articoli Correlati</h3>
+            <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-8 sm:mb-12">Related Articles</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {relatedPosts.map(relatedPost => (
                 <div 

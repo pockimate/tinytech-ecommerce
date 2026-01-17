@@ -27,6 +27,7 @@ import BlogDetail from './components/BlogDetail';
 import PromoModal from './components/PromoModal';
 import FeaturedProductsSlider from './components/FeaturedProductsSlider';
 import AdminDashboard from './components/AdminDashboard';
+import AdminLogin from './components/AdminLogin';
 import Wishlist from './components/Wishlist';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import RefundPolicy from './components/RefundPolicy';
@@ -171,6 +172,18 @@ const App: React.FC = () => {
   const [showPromoModal, setShowPromoModal] = useState(false);
   const [hasSeenPromo, setHasSeenPromo] = useState(false);
   const [checkoutDiscount, setCheckoutDiscount] = useState(0); // 传递给 checkout 的折扣比例
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    // 检查 session 中是否已登录，且登录时间在 24 小时内
+    const auth = sessionStorage.getItem('adminAuth');
+    const loginTime = sessionStorage.getItem('adminLoginTime');
+    if (auth === 'true' && loginTime) {
+      const elapsed = Date.now() - parseInt(loginTime);
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      return elapsed < twentyFourHours;
+    }
+    return false;
+  });
 
   // Language & Currency States
   const [currency, setCurrency] = useState<'USD' | 'EUR' | 'GBP' | 'JPY' | 'CNY' | 'KRW' | 'CAD' | 'AUD' | 'CHF' | 'INR' | 'BRL' | 'MXN'>('USD');
@@ -762,13 +775,17 @@ const App: React.FC = () => {
   useEffect(() => {
     const checkHash = () => {
       if (window.location.hash === '#admin') {
-        navigate('admin');
+        if (isAdminAuthenticated) {
+          navigate('admin');
+        } else {
+          setShowAdminLogin(true);
+        }
       }
     };
     checkHash();
     window.addEventListener('hashchange', checkHash);
     return () => window.removeEventListener('hashchange', checkHash);
-  }, []);
+  }, [isAdminAuthenticated]);
 
   // Handle PayPal return
   useEffect(() => {
@@ -2743,7 +2760,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {view === 'admin' && (
+      {view === 'admin' && isAdminAuthenticated && (
         <AdminDashboard
           products={allProducts}
           orders={allOrders}
@@ -2791,8 +2808,31 @@ const App: React.FC = () => {
           onUpdateWhyMiniContent={handleUpdateWhyMiniContent}
           onUpdateLogoSettings={setLogoSettings}
           onNavigate={navigate}
+          onLogout={() => {
+            sessionStorage.removeItem('adminAuth');
+            sessionStorage.removeItem('adminLoginTime');
+            setIsAdminAuthenticated(false);
+            navigate('home');
+            window.location.hash = '';
+          }}
         />
+      )}
 
+      {/* Admin Login Modal */}
+      {showAdminLogin && !isAdminAuthenticated && (
+        <AdminLogin
+          onLogin={(success) => {
+            if (success) {
+              setIsAdminAuthenticated(true);
+              setShowAdminLogin(false);
+              navigate('admin');
+            }
+          }}
+          onCancel={() => {
+            setShowAdminLogin(false);
+            window.location.hash = '';
+          }}
+        />
       )}
 
       {/* Promo Modal */}
@@ -2801,7 +2841,7 @@ const App: React.FC = () => {
           onClose={() => setShowPromoModal(false)}
           onClaim={() => {
             // Handle promo claim - could add to newsletter, apply discount, etc.
-            alert('Sconto del 20% applicato! Codice: WELCOME20');
+            alert('20% discount applied! Code: WELCOME20');
           }}
         />
       )}

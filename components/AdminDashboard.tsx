@@ -1166,7 +1166,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       ))}
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                      <p className="font-black text-lg">Totale: ${ order.total.toFixed(2)}</p>
+                      <p className="font-black text-lg">Total: ${ order.total.toFixed(2)}</p>
                       <p className="text-sm text-gray-500">{ order.address}</p>
                     </div>
                   </div>
@@ -2262,7 +2262,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <textarea
                     name="subtitle"
                     defaultValue={editingBanner?.subtitle}
-                    placeholder="e.g.,, Il più piccolo smartphone flagship al mondo..."
+                    placeholder="e.g., The world's smallest flagship smartphone..."
                     rows={3}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                   />
@@ -2695,7 +2695,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         name="badgeText2"
                         type="text"
                         defaultValue={brandStory.badgeText2}
-                        placeholder="e.g.,, Il più piccolo al mondo"
+                        placeholder="e.g., The world's smallest"
                         className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                         required
                       />

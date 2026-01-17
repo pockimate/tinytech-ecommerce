@@ -44,13 +44,13 @@ const ProductSpecs: React.FC<ProductSpecsProps> = ({ product }) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8 sm:mb-12">
           <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-indigo-600 block mb-2 sm:mb-3">
-            Specifiche Tecniche
+            Technical Specifications
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 mb-3 sm:mb-4">
-            Tutto Ciò che Devi Sapere
+            Everything You Need to Know
           </h2>
           <p className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto">
-            Specifiche complete e dettagliate del dispositivo
+            Complete and detailed device specifications
           </p>
         </div>
 
@@ -81,7 +81,7 @@ const ProductSpecs: React.FC<ProductSpecsProps> = ({ product }) => {
         <div className="text-center mt-8 sm:mt-12">
           <button className="bg-gray-900 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-2xl font-black text-sm sm:text-base hover:bg-indigo-600 transition-all shadow-lg inline-flex items-center gap-2">
             <i className="fa-solid fa-download"></i>
-            Scarica Scheda Tecnica PDF
+            Download Tech Specs PDF
           </button>
         </div>
       </div>

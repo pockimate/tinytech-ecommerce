@@ -12,13 +12,13 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ products, onProductCl
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8 sm:mb-12">
           <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-indigo-600 block mb-2 sm:mb-3">
-            Potrebbe Interessarti Anche
+            You May Also Like
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 mb-3 sm:mb-4">
-            Prodotti Correlati
+            Related Products
           </h2>
           <p className="text-sm sm:text-base text-gray-500">
-            Altri mini phone che i clienti adorano
+            Other mini phones that customers love
           </p>
         </div>
 
@@ -78,7 +78,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ products, onProductCl
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="bg-gray-900 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-2xl font-black text-sm sm:text-base hover:bg-indigo-600 transition-all shadow-lg inline-flex items-center gap-2"
           >
-            Vedi Tutti i Prodotti
+            View All Products
             <i className="fa-solid fa-arrow-right"></i>
           </button>
         </div>
