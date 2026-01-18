@@ -54,7 +54,7 @@ export async function getPayPalAccessToken(): Promise<string | null> {
 export async function createPayPalOrder(
   amount: number,
   currency: string = 'EUR',
-  description: string = 'TinyTech Order'
+  description: string = 'Pockimate Order'
 ): Promise<{ id: string; approvalUrl: string } | null> {
   const config = getPayPalConfig();
   
@@ -87,7 +87,7 @@ export async function createPayPalOrder(
           description
         }],
         application_context: {
-          brand_name: 'TinyTech',
+          brand_name: 'Pockimate',
           landing_page: 'NO_PREFERENCE',
           user_action: 'PAY_NOW',
           return_url: `${window.location.origin}?paypal=success`,

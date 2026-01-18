@@ -6,23 +6,23 @@
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Store",
-  "name": "TinyTech",
+  "name": "Pockimate",
   "url": "https://yourdomain.com",
   "description": "Exquisite Mini Electronics - Compact and Powerful Tech Life",
   "logo": "https://yourdomain.com/logo.png",
   "image": "https://yourdomain.com/og-image.jpg",
   "telephone": "+86-xxx-xxxx-xxxx",
-  "email": "contact@tinytech.com",
+  "email": "contact@pockimate.com",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "CN",
     "addressLocality": "Beijing"
   },
   "sameAs": [
-    "https://www.facebook.com/tinytech",
-    "https://www.instagram.com/tinytech",
-    "https://www.twitter.com/tinytech",
-    "https://www.linkedin.com/company/tinytech"
+    "https://www.facebook.com/pockimate",
+    "https://www.instagram.com/pockimate",
+    "https://www.twitter.com/pockimate",
+    "https://www.linkedin.com/company/pockimate"
   ],
   "contactPoint": {
     "@type": "ContactPoint",
@@ -39,7 +39,7 @@ export const productSchema = (product: any) => ({
   "image": product.image,
   "brand": {
     "@type": "Brand",
-    "name": "TinyTech"
+    "name": "Pockimate"
   },
   "offers": {
     "@type": "Offer",
@@ -89,11 +89,11 @@ export const blogPostSchema = (post: any) => ({
   "dateModified": post.date,
   "author": {
     "@type": "Organization",
-    "name": "TinyTech"
+    "name": "Pockimate"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "TinyTech",
+    "name": "Pockimate",
     "logo": {
       "@type": "ImageObject",
       "url": "https://yourdomain.com/logo.png"

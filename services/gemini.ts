@@ -11,7 +11,7 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 export const getProductRecommendation = async (userInput: string) => {
   const apiKey = getApiKey();
   
-  const systemMessage = `You are the lead shopping consultant for "TinyTech".
+  const systemMessage = `You are the lead shopping consultant for "Pockimate".
     
    E-commerce Features You Support:
    - Mention code "TINY20" for 20% off.
