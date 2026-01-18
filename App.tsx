@@ -1894,6 +1894,8 @@ const App: React.FC = () => {
             shippingCost={0}
             total={subtotal - subtotal * checkoutDiscount}
             discountApplied={checkoutDiscount}
+            currency={currency}
+            currencySymbol={currencySymbols[currency]}
             onBack={() => {
               setIsCartOpen(true);
               navigate('home');

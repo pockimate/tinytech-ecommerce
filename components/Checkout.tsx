@@ -12,6 +12,8 @@ interface CheckoutProps {
   shippingCost: number;
   total: number;
   discountApplied?: number; // Discount ratio (0.2 = 20%)
+  currency?: string; // Currency code (USD, EUR, etc.)
+  currencySymbol?: string; // Currency symbol ($, €, etc.)
   onBack: () => void;
   onOrderComplete: (orderId: string) => void;
 }
@@ -71,6 +73,8 @@ const Checkout: React.FC<CheckoutProps> = ({
   shippingCost,
   total,
   discountApplied = 0,
+  currency = 'USD',
+  currencySymbol = '$',
   onBack,
   onOrderComplete
 }) => {
@@ -339,7 +343,7 @@ const Checkout: React.FC<CheckoutProps> = ({
       button.onclick = async () => {
         try {
           setIsProcessing(true);
-          const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech PayPal Order');
+          const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate PayPal Order');
           if (orderData?.id) {
             await paypalSession.start(
               { presentationMode: "auto" },
@@ -414,7 +418,7 @@ const Checkout: React.FC<CheckoutProps> = ({
       button.onclick = async () => {
         try {
           setIsProcessing(true);
-          const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech Google Pay Order');
+          const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Google Pay Order');
           if (orderData?.id) {
             await googlePaySession.start(
               { presentationMode: "auto" },
@@ -637,7 +641,7 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     try {
       // 创建PayPal订单
-      const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech Order');
+      const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Order');
       
       if (!orderData || !orderData.approvalUrl) {
         throw new Error('Failed to create PayPal order');
@@ -663,7 +667,7 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     try {
       // 直接创建PayPal订单，无需地址验证
-      const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech Express Order');
+      const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Express Order');
       
       if (!orderData || !orderData.approvalUrl) {
         throw new Error('Failed to create PayPal order');
@@ -734,7 +738,7 @@ const Checkout: React.FC<CheckoutProps> = ({
           totalPriceStatus: 'FINAL',
           totalPriceLabel: 'Total',
           totalPrice: actualTotal.toFixed(2),
-          currencyCode: 'EUR'
+          currencyCode: currency
         },
         shippingAddressRequired: true, // 要求用户在Google Pay中填写地址
         emailRequired: true
@@ -768,7 +772,7 @@ const Checkout: React.FC<CheckoutProps> = ({
     console.log('[Google Pay Express] Using PayPal as fallback for express Google Pay');
     
     // 创建PayPal订单，但标记为Google Pay Express
-    const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech Google Pay Express Order');
+    const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Google Pay Express Order');
     
     if (!orderData || !orderData.approvalUrl) {
       throw new Error('Failed to create PayPal order for Google Pay Express');
@@ -847,7 +851,7 @@ const Checkout: React.FC<CheckoutProps> = ({
           totalPriceStatus: 'FINAL',
           totalPriceLabel: 'Total',
           totalPrice: actualTotal.toFixed(2),
-          currencyCode: 'EUR'
+          currencyCode: currency
         }
       };
       
@@ -879,7 +883,7 @@ const Checkout: React.FC<CheckoutProps> = ({
     console.log('[Google Pay] Using PayPal as fallback for Google Pay');
     
     // 创建PayPal订单，但标记为Google Pay
-    const orderData = await createPayPalOrder(actualTotal, 'EUR', 'TinyTech Google Pay Order');
+    const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Google Pay Order');
     
     if (!orderData || !orderData.approvalUrl) {
       throw new Error('Failed to create PayPal order for Google Pay');
@@ -1420,25 +1424,25 @@ const Checkout: React.FC<CheckoutProps> = ({
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600"><TranslatedText fallback="Subtotal" /></span>
-                  <span className="font-bold text-gray-900">€{subtotal.toFixed(2)}</span>
+                  <span className="font-bold text-gray-900">{currencySymbol}{subtotal.toFixed(2)}</span>
                 </div>
                 {discountApplied > 0 && (
                   <div className="flex justify-between text-green-600 font-bold">
                     <span>
                       <TranslatedText fallback="Discount" /> ({(discountApplied * 100).toFixed(0)}%)
                     </span>
-                    <span>-€{(subtotal * discountApplied).toFixed(2)}</span>
+                    <span>-{currencySymbol}{(subtotal * discountApplied).toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="text-gray-600"><TranslatedText fallback="Shipping" /></span>
                   <span className="font-bold text-gray-900">
-                    {actualShippingCost === 0 ? <TranslatedText fallback="Free" /> : `€${actualShippingCost.toFixed(2)}`}
+                    {actualShippingCost === 0 ? <TranslatedText fallback="Free" /> : `${currencySymbol}${actualShippingCost.toFixed(2)}`}
                   </span>
                 </div>
                 <div className="flex justify-between pt-3 border-t border-gray-100">
                   <span className="font-black text-gray-900 text-lg"><TranslatedText fallback="Total" /></span>
-                  <span className="font-black text-2xl text-indigo-600">€{actualTotal.toFixed(2)}</span>
+                  <span className="font-black text-2xl text-indigo-600">{currencySymbol}{actualTotal.toFixed(2)}</span>
                 </div>
               </div>
 
