@@ -1896,6 +1896,7 @@ const App: React.FC = () => {
             discountApplied={checkoutDiscount}
             currency={currency}
             currencySymbol={currencySymbols[currency]}
+            formatPrice={formatPrice}
             onBack={() => {
               setIsCartOpen(true);
               navigate('home');

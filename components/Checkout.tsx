@@ -15,6 +15,7 @@ interface CheckoutProps {
   discountApplied?: number; // Discount ratio (0.2 = 20%)
   currency?: string; // Currency code (USD, EUR, etc.)
   currencySymbol?: string; // Currency symbol ($, €, etc.)
+  formatPrice?: (price: number) => string; // Price formatting function
   onBack: () => void;
   onOrderComplete: (orderId: string) => void;
 }
@@ -76,6 +77,7 @@ const Checkout: React.FC<CheckoutProps> = ({
   discountApplied = 0,
   currency = 'USD',
   currencySymbol = '$',
+  formatPrice,
   onBack,
   onOrderComplete
 }) => {
@@ -1222,7 +1224,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                         <p className="text-sm text-gray-500">2-3 <TranslatedText fallback="business days" /></p>
                       </div>
                     </div>
-                    <p className="font-black text-gray-900">€15.00</p>
+                    <p className="font-black text-gray-900">{currencySymbol}15.00</p>
                   </div>
                 </div>
               </div>
@@ -1466,7 +1468,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                         <p className="text-xs text-gray-500">{item.selectedColor}</p>
                       )}
                     </div>
-                    <p className="font-black text-gray-900">€{item.price}</p>
+                    <p className="font-black text-gray-900">{formatPrice ? formatPrice(item.price) : `${currencySymbol}${item.price}`}</p>
                   </div>
                 ))}
               </div>
