@@ -197,7 +197,7 @@ export function renderCardFields(
   },
   style?: any
 ): void {
-  // Create card field components
+  // Create card field components (only number, expiry, cvv are supported)
   const numberField = session.createCardFieldsComponent({
     type: 'number',
     placeholder: 'Card number',
@@ -243,23 +243,8 @@ export function renderCardFields(
   expiryContainer.appendChild(expiryField);
   cvvContainer.appendChild(cvvField);
 
-  // Optional: Render name field
-  if (containers.name) {
-    const nameField = session.createCardFieldsComponent({
-      type: 'name',
-      placeholder: 'Cardholder name',
-      style
-    });
-
-    const nameContainer = typeof containers.name === 'string'
-      ? document.querySelector(containers.name)
-      : containers.name;
-
-    if (nameContainer) {
-      nameContainer.innerHTML = '';
-      nameContainer.appendChild(nameField);
-    }
-  }
+  // Note: PayPal SDK v6 does not support 'name' field type
+  // Cardholder name should be collected separately if needed
 
   console.log('[PayPal Card Fields] Fields rendered successfully');
 }

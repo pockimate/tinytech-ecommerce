@@ -23,7 +23,6 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
   const numberRef = useRef<HTMLDivElement>(null);
   const expiryRef = useRef<HTMLDivElement>(null);
   const cvvRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLDivElement>(null);
   const [isSetup, setIsSetup] = React.useState(false);
 
   useEffect(() => {
@@ -38,11 +37,11 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
 
         console.log('[PayPalCardFields] Setting up card fields...');
 
+        // Only pass number, expiry, cvv (no name field)
         await onSetupComplete({
           number: numberRef.current,
           expiry: expiryRef.current,
-          cvv: cvvRef.current,
-          name: nameRef.current || undefined
+          cvv: cvvRef.current
         });
 
         setIsSetup(true);
@@ -82,18 +81,6 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
           </label>
           <div
             ref={numberRef}
-            className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white"
-            style={{ minHeight: '56px' }}
-          />
-        </div>
-
-        {/* Cardholder Name Field */}
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">
-            <TranslatedText fallback="Cardholder Name" /> *
-          </label>
-          <div
-            ref={nameRef}
             className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white"
             style={{ minHeight: '56px' }}
           />
