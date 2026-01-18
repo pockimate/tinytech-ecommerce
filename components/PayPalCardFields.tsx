@@ -81,8 +81,8 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
           </label>
           <div
             ref={numberRef}
-            className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white"
-            style={{ minHeight: '56px' }}
+            className="w-full rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white overflow-hidden"
+            style={{ minHeight: '48px', maxHeight: '48px' }}
           />
         </div>
 
@@ -94,8 +94,8 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
             </label>
             <div
               ref={expiryRef}
-              className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white"
-              style={{ minHeight: '56px' }}
+              className="w-full rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white overflow-hidden"
+              style={{ minHeight: '48px', maxHeight: '48px' }}
             />
           </div>
 
@@ -106,8 +106,8 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
             </label>
             <div
               ref={cvvRef}
-              className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white"
-              style={{ minHeight: '56px' }}
+              className="w-full rounded-xl border-2 border-gray-200 focus-within:border-indigo-600 transition-colors bg-white overflow-hidden"
+              style={{ minHeight: '48px', maxHeight: '48px' }}
             />
           </div>
         </div>
