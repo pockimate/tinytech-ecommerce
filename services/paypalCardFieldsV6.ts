@@ -169,6 +169,14 @@ export async function initializePayPalSDKV6(): Promise<any> {
     });
 
     console.log('[PayPal Card Fields] SDK initialized successfully');
+    console.log('[PayPal Card Fields] SDK instance type:', typeof sdkInstance);
+    console.log('[PayPal Card Fields] SDK instance keys:', Object.keys(sdkInstance));
+    
+    // Log available methods
+    for (const key of Object.keys(sdkInstance)) {
+      console.log(`[PayPal Card Fields] sdkInstance.${key}:`, typeof sdkInstance[key]);
+    }
+    
     return sdkInstance;
   } catch (error) {
     console.error('[PayPal Card Fields] Initialization error:', error);
@@ -201,9 +209,27 @@ export function createCardFieldsSession(): any {
     throw new Error('SDK not initialized');
   }
 
-  // Create card fields instance
-  cardSession = sdkInstance.CardFields();
-  return cardSession;
+  // PayPal SDK v6 Card Fields API
+  // The correct way is to call CardFields() on the SDK instance
+  try {
+    // Try different possible API patterns
+    if (typeof sdkInstance.CardFields === 'function') {
+      cardSession = sdkInstance.CardFields();
+    } else if (typeof sdkInstance.cardFields === 'function') {
+      cardSession = sdkInstance.cardFields();
+    } else if (typeof sdkInstance.createCardFields === 'function') {
+      cardSession = sdkInstance.createCardFields();
+    } else {
+      // Log available methods for debugging
+      console.log('[PayPal Card Fields] Available methods:', Object.keys(sdkInstance));
+      throw new Error('CardFields method not found on SDK instance');
+    }
+    
+    return cardSession;
+  } catch (error) {
+    console.error('[PayPal Card Fields] Error creating card fields session:', error);
+    throw error;
+  }
 }
 
 /**
