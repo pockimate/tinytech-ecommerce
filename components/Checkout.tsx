@@ -4,6 +4,7 @@ import { TranslatedText } from './TranslatedText';
 import TranslatedInput from './TranslatedInput';
 import { useTranslatedText } from '../context/TranslationContext';
 import { createPayPalOrder, capturePayPalOrder, isPayPalConfigured } from '../services/paypal';
+import { processCardPayment, canProcessCard } from '../services/paypalCard';
 import { validateCreditCard, formatCardNumber as formatCard, detectCardType } from '../utils/cardValidation';
 
 interface CheckoutProps {
@@ -173,67 +174,57 @@ const Checkout: React.FC<CheckoutProps> = ({
     setIsProcessing(true);
     
     try {
-      // ⚠️ 重要提示：这是演示模式
-      // 在生产环境中，您需要集成真实的支付网关，例如：
-      // - Stripe (https://stripe.com)
-      // - Square (https://squareup.com)
-      // - Authorize.Net (https://www.authorize.net)
-      // - Braintree (https://www.braintreepayments.com)
+      console.log('[Checkout] Processing credit card payment via PayPal');
       
-      // 显示警告
-      const confirmPayment = window.confirm(
-        '⚠️ DEMO MODE WARNING\n\n' +
-        'This is a demonstration checkout. No real payment will be processed.\n\n' +
-        'In production, this would:\n' +
-        '1. Send card details to a payment gateway (Stripe, Square, etc.)\n' +
-        '2. Process the actual payment\n' +
-        '3. Return success/failure status\n' +
-        '4. Save order to database\n\n' +
-        'Click OK to simulate a successful order, or Cancel to abort.'
-      );
-      
-      if (!confirmPayment) {
-        setIsProcessing(false);
-        return;
+      // 检查 PayPal 是否配置
+      if (!canProcessCard()) {
+        throw new Error('PayPal payment processing is not configured');
       }
       
-      // 模拟支付处理延迟
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 1. 创建 PayPal 订单
+      const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Card Payment');
       
-      // 在真实环境中，这里应该：
-      // const paymentResult = await processCardPayment({
-      //   cardNumber: paymentInfo.cardNumber,
-      //   expiryDate: paymentInfo.expiryDate,
-      //   cvv: paymentInfo.cvv,
-      //   cardHolder: paymentInfo.cardHolder,
-      //   amount: actualTotal,
-      //   currency: currency
-      // });
-      //
-      // if (!paymentResult.success) {
-      //   alert('Payment failed: ' + paymentResult.error);
-      //   setIsProcessing(false);
-      //   return;
-      // }
+      if (!orderData || !orderData.id) {
+        throw new Error('Failed to create payment order');
+      }
       
-      // 生成订单ID（在真实环境中应该从后端返回）
-      const orderId = 'DEMO-' + Date.now();
+      console.log('[Checkout] Order created:', orderData.id);
       
-      console.log('[Checkout] Demo order created:', {
-        orderId,
-        amount: actualTotal,
-        currency,
-        shipping: shippingInfo,
-        payment: {
-          method: 'card',
-          last4: paymentInfo.cardNumber.slice(-4)
+      // 2. 处理信用卡支付
+      const paymentResult = await processCardPayment(orderData.id, {
+        number: paymentInfo.cardNumber,
+        expiry: paymentInfo.expiryDate,
+        cvv: paymentInfo.cvv,
+        name: paymentInfo.cardHolder,
+        billingAddress: {
+          addressLine1: shippingInfo.address,
+          adminArea2: shippingInfo.city,
+          adminArea1: shippingInfo.state,
+          postalCode: shippingInfo.zipCode,
+          countryCode: shippingInfo.country
         }
       });
       
-      onOrderComplete(orderId);
+      if (!paymentResult.success) {
+        throw new Error(paymentResult.error || 'Payment failed');
+      }
+      
+      console.log('[Checkout] Payment successful:', paymentResult.captureId);
+      
+      // 3. 完成订单
+      onOrderComplete(orderData.id);
+      
     } catch (error) {
-      console.error('[Checkout] Error processing order:', error);
-      alert('An error occurred while processing your order. Please try again.');
+      console.error('[Checkout] Payment error:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      alert(
+        '❌ Payment Failed\n\n' +
+        errorMessage + '\n\n' +
+        'Please check your card details and try again, or use PayPal/Google Pay as an alternative.'
+      );
+      
       setIsProcessing(false);
     }
   };
