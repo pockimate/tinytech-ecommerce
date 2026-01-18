@@ -3,12 +3,11 @@
  * Modern card payment integration using PayPal's hosted card fields
  */
 
-// SDK v6 types
+// SDK v6 types - Updated based on actual API
 interface PayPalSDKV6 {
   createInstance: (config: {
     clientToken: string;
     components: string[];
-    pageType?: string;
   }) => Promise<PayPalSDKInstance>;
 }
 
@@ -16,12 +15,35 @@ interface PayPalSDKInstance {
   findEligibleMethods: (options?: { currencyCode?: string }) => Promise<{
     isEligible: (method: string) => boolean;
   }>;
-  createCardFieldsOneTimePaymentSession: () => CardFieldsSession;
+  // Correct method name based on error message
+  CardFields: () => CardFieldsBuilder;
+}
+
+interface CardFieldsBuilder {
+  Render: (selector: string) => void;
+  submit: (options: {
+    orderId: string;
+    billingAddress?: {
+      postalCode?: string;
+      addressLine1?: string;
+      addressLine2?: string;
+      adminArea1?: string;
+      adminArea2?: string;
+      countryCode?: string;
+    };
+  }) => Promise<{
+    data: {
+      orderId: string;
+      liabilityShift?: string;
+      message?: string;
+    };
+    state: 'succeeded' | 'canceled' | 'failed';
+  }>;
 }
 
 interface CardFieldsSession {
   createCardFieldsComponent: (config: {
-    type: 'number' | 'expiry' | 'cvv' | 'name';
+    type: 'number' | 'expiry' | 'cvv';
     placeholder?: string;
     style?: any;
   }) => HTMLElement;
@@ -46,7 +68,7 @@ interface CardFieldsSession {
 
 declare global {
   interface Window {
-    paypal?: PayPalSDKV6;
+    paypal?: any; // Use any to avoid conflicts with Checkout.tsx
   }
 }
 
@@ -123,7 +145,7 @@ export function loadPayPalSDKV6(): Promise<void> {
 /**
  * Initialize PayPal SDK v6 and create instance
  */
-export async function initializePayPalSDKV6(): Promise<PayPalSDKInstance> {
+export async function initializePayPalSDKV6(): Promise<any> {
   if (sdkInstance) {
     console.log('[PayPal Card Fields] Using existing SDK instance');
     return sdkInstance;
@@ -143,8 +165,7 @@ export async function initializePayPalSDKV6(): Promise<PayPalSDKInstance> {
     // Create SDK instance
     sdkInstance = await window.paypal.createInstance({
       clientToken,
-      components: ['card-fields'],
-      pageType: 'checkout'
+      components: ['card-fields']
     });
 
     console.log('[PayPal Card Fields] SDK initialized successfully');
@@ -175,12 +196,13 @@ export async function isCardFieldsEligible(currencyCode: string = 'USD'): Promis
 /**
  * Create card fields session
  */
-export function createCardFieldsSession(): CardFieldsSession {
+export function createCardFieldsSession(): any {
   if (!sdkInstance) {
     throw new Error('SDK not initialized');
   }
 
-  cardSession = sdkInstance.createCardFieldsOneTimePaymentSession();
+  // Create card fields instance
+  cardSession = sdkInstance.CardFields();
   return cardSession;
 }
 
@@ -188,7 +210,7 @@ export function createCardFieldsSession(): CardFieldsSession {
  * Render card fields in containers
  */
 export function renderCardFields(
-  session: CardFieldsSession,
+  session: any,
   containers: {
     number: string | HTMLElement;
     expiry: string | HTMLElement;
@@ -212,25 +234,6 @@ export function renderCardFields(
 
   const fieldStyle = style || defaultStyle;
 
-  // Create card field components (only number, expiry, cvv are supported)
-  const numberField = session.createCardFieldsComponent({
-    type: 'number',
-    placeholder: 'Card number',
-    style: fieldStyle
-  });
-
-  const expiryField = session.createCardFieldsComponent({
-    type: 'expiry',
-    placeholder: 'MM/YY',
-    style: fieldStyle
-  });
-
-  const cvvField = session.createCardFieldsComponent({
-    type: 'cvv',
-    placeholder: 'CVV',
-    style: fieldStyle
-  });
-
   // Get container elements
   const numberContainer = typeof containers.number === 'string' 
     ? document.querySelector(containers.number) 
@@ -253,22 +256,38 @@ export function renderCardFields(
   expiryContainer.innerHTML = '';
   cvvContainer.innerHTML = '';
 
-  // Append fields
-  numberContainer.appendChild(numberField);
-  expiryContainer.appendChild(expiryField);
-  cvvContainer.appendChild(cvvField);
+  // Create card field components using the correct API
+  try {
+    const numberField = session.NumberField({
+      style: fieldStyle,
+      placeholder: 'Card number'
+    });
+    numberContainer.appendChild(numberField);
 
-  // Note: PayPal SDK v6 does not support 'name' field type
-  // Cardholder name should be collected separately if needed
+    const expiryField = session.ExpiryField({
+      style: fieldStyle,
+      placeholder: 'MM/YY'
+    });
+    expiryContainer.appendChild(expiryField);
 
-  console.log('[PayPal Card Fields] Fields rendered successfully');
+    const cvvField = session.CVVField({
+      style: fieldStyle,
+      placeholder: 'CVV'
+    });
+    cvvContainer.appendChild(cvvField);
+
+    console.log('[PayPal Card Fields] Fields rendered successfully');
+  } catch (error) {
+    console.error('[PayPal Card Fields] Render error:', error);
+    throw error;
+  }
 }
 
 /**
  * Submit card payment
  */
 export async function submitCardPayment(
-  session: CardFieldsSession,
+  session: any,
   orderId: string,
   billingAddress?: {
     postalCode?: string;
@@ -286,7 +305,8 @@ export async function submitCardPayment(
   state: 'succeeded' | 'canceled' | 'failed';
 }> {
   try {
-    const result = await session.submit(orderId, {
+    const result = await session.submit({
+      orderId,
       billingAddress
     });
 
@@ -333,14 +353,14 @@ export async function submitCardPayment(
 /**
  * Get current SDK instance
  */
-export function getSDKInstance(): PayPalSDKInstance | null {
+export function getSDKInstance(): any {
   return sdkInstance;
 }
 
 /**
  * Get current card session
  */
-export function getCardSession(): CardFieldsSession | null {
+export function getCardSession(): any {
   return cardSession;
 }
 
