@@ -6,6 +6,8 @@ import { useTranslatedText } from '../context/TranslationContext';
 import { createPayPalOrder, capturePayPalOrder, isPayPalConfigured } from '../services/paypal';
 import { processCardPayment, canProcessCard } from '../services/paypalCard';
 import { validateCreditCard, formatCardNumber as formatCard, detectCardType } from '../utils/cardValidation';
+import { usePayPalCardFields } from '../hooks/usePayPalCardFields';
+import { PayPalCardFields } from './PayPalCardFields';
 
 interface CheckoutProps {
   cart: CartItem[];
@@ -85,6 +87,16 @@ const Checkout: React.FC<CheckoutProps> = ({
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  // PayPal Card Fields v6 Hook
+  const {
+    isInitialized: cardFieldsInitialized,
+    isEligible: cardFieldsEligible,
+    isProcessing: cardFieldsProcessing,
+    setupCardFields,
+    submitPayment: submitCardFieldsPayment,
+    error: cardFieldsError
+  } = usePayPalCardFields(currency);
   
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     fullName: '',
