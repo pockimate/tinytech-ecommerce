@@ -4,6 +4,7 @@ import { TranslatedText } from './TranslatedText';
 import TranslatedInput from './TranslatedInput';
 import { useTranslatedText } from '../context/TranslationContext';
 import { createPayPalOrder, capturePayPalOrder, isPayPalConfigured } from '../services/paypal';
+import { validateCreditCard, formatCardNumber as formatCard, detectCardType } from '../utils/cardValidation';
 
 interface CheckoutProps {
   cart: CartItem[];
@@ -134,21 +135,32 @@ const Checkout: React.FC<CheckoutProps> = ({
   const validatePayment = (): boolean => {
     if (paymentMethod === 'paypal') return true;
 
-    const newErrors: Partial<PaymentInfo> = {};
+    // 使用增强的信用卡验证
+    const validation = validateCreditCard(
+      paymentInfo.cardNumber,
+      paymentInfo.expiryDate,
+      paymentInfo.cvv,
+      paymentInfo.cardHolder
+    );
     
-    if (!paymentInfo.cardNumber.replace(/\s/g, '').match(/^\d{16}$/)) {
-      newErrors.cardNumber = t('error.cardNumberInvalid', 'Invalid card number');
+    if (!validation.valid) {
+      const newErrors: Partial<PaymentInfo> = {};
+      if (validation.errors.cardNumber) newErrors.cardNumber = validation.errors.cardNumber;
+      if (validation.errors.cardholderName) newErrors.cardHolder = validation.errors.cardholderName;
+      if (validation.errors.expiryDate) newErrors.expiryDate = validation.errors.expiryDate;
+      if (validation.errors.cvv) newErrors.cvv = validation.errors.cvv;
+      
+      setErrors(newErrors);
+      return false;
     }
-    if (!paymentInfo.cardHolder.trim()) newErrors.cardHolder = t('error.cardholderRequired', 'Cardholder name is required');
-    if (!paymentInfo.expiryDate.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
-      newErrors.expiryDate = t('error.expiryInvalid', 'Format: MM/YY');
-    }
-    if (!paymentInfo.cvv.match(/^\d{3,4}$/)) {
-      newErrors.cvv = t('error.cvvInvalid', 'Invalid CVV');
+    
+    // 警告：检测到测试卡
+    if (validation.isTestCard) {
+      console.warn('[Checkout] Test card detected:', validation.cardType);
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors({});
+    return true;
   };
 
   const handlePlaceOrder = async () => {
@@ -164,16 +176,7 @@ const Checkout: React.FC<CheckoutProps> = ({
   };
 
   const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || '';
-    const parts = [];
-    
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    
-    return parts.length ? parts.join(' ') : value;
+    return formatCard(value);
   };
 
   const actualShippingCost = shippingMethod === 'express' ? 15 : shippingCost;
