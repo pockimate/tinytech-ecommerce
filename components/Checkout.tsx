@@ -1277,146 +1277,164 @@ const Checkout: React.FC<CheckoutProps> = ({
 
               {paymentMethod === 'card' && (
                 <div className="space-y-6">
-                  {/* 现代化的信用卡表单 */}
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <i className="fa-solid fa-credit-card text-indigo-600"></i>
-                      <TranslatedText fallback="Credit Card" />
-                    </h3>
-                    
-                    <div className="space-y-4">
-                      {/* 卡号 */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                          <TranslatedText fallback="Card Number" /> *
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            value={paymentInfo.cardNumber}
-                            onChange={(e) => setPaymentInfo({
-                              ...paymentInfo,
-                              cardNumber: formatCardNumber(e.target.value)
-                            })}
-                            maxLength={19}
-                            className={`w-full px-4 py-4 rounded-xl border-2 ${
-                              errors.cardNumber ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
-                            } focus:outline-none transition-colors text-lg font-mono`}
-                            placeholder="1234 5678 9012 3456"
-                          />
-                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex gap-1">
-                            <i className="fa-brands fa-cc-visa text-blue-600 text-xl"></i>
-                            <i className="fa-brands fa-cc-mastercard text-red-600 text-xl"></i>
-                            <i className="fa-brands fa-cc-amex text-blue-500 text-xl"></i>
+                  {/* PayPal Card Fields v6 或手动输入表单 */}
+                  {cardFieldsInitialized && cardFieldsEligible ? (
+                    /* 使用 PayPal Card Fields v6 (安全的 iframe 输入) */
+                    <PayPalCardFields
+                      onSetupComplete={setupCardFields}
+                      currency={currency}
+                    />
+                  ) : (
+                    /* 回退到手动输入表单 */
+                    <>
+                      {!cardFieldsInitialized && (
+                        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                          <i className="fa-solid fa-info-circle mr-2"></i>
+                          支付表单加载中，请稍候...
+                        </div>
+                      )}
+                      
+                      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                          <i className="fa-solid fa-credit-card text-indigo-600"></i>
+                          <TranslatedText fallback="Credit Card" />
+                        </h3>
+                        
+                        <div className="space-y-4">
+                          {/* 卡号 */}
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                              <TranslatedText fallback="Card Number" /> *
+                            </label>
+                            <div className="relative">
+                              <input
+                                type="text"
+                                value={paymentInfo.cardNumber}
+                                onChange={(e) => setPaymentInfo({
+                                  ...paymentInfo,
+                                  cardNumber: formatCardNumber(e.target.value)
+                                })}
+                                maxLength={19}
+                                className={`w-full px-4 py-4 rounded-xl border-2 ${
+                                  errors.cardNumber ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
+                                } focus:outline-none transition-colors text-lg font-mono`}
+                                placeholder="1234 5678 9012 3456"
+                              />
+                              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex gap-1">
+                                <i className="fa-brands fa-cc-visa text-blue-600 text-xl"></i>
+                                <i className="fa-brands fa-cc-mastercard text-red-600 text-xl"></i>
+                                <i className="fa-brands fa-cc-amex text-blue-500 text-xl"></i>
+                              </div>
+                            </div>
+                            {errors.cardNumber && (
+                              <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                <i className="fa-solid fa-exclamation-circle"></i>
+                                {errors.cardNumber}
+                              </p>
+                            )}
                           </div>
-                        </div>
-                        {errors.cardNumber && (
-                          <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                            <i className="fa-solid fa-exclamation-circle"></i>
-                            {errors.cardNumber}
-                          </p>
-                        )}
-                      </div>
 
-                      {/* 持卡人姓名 */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                          <TranslatedText fallback="Cardholder Name" /> *
-                        </label>
-                        <input
-                          type="text"
-                          value={paymentInfo.cardHolder}
-                          onChange={(e) => setPaymentInfo({ ...paymentInfo, cardHolder: e.target.value.toUpperCase() })}
-                          className={`w-full px-4 py-4 rounded-xl border-2 ${
-                            errors.cardHolder ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
-                          } focus:outline-none transition-colors text-lg uppercase`}
-                          placeholder="MARIO ROSSI"
-                        />
-                        {errors.cardHolder && (
-                          <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                            <i className="fa-solid fa-exclamation-circle"></i>
-                            {errors.cardHolder}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* 有效期和CVV */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">
-                            <TranslatedText fallback="Expiry" /> *
-                          </label>
-                          <input
-                            type="text"
-                            value={paymentInfo.expiryDate}
-                            onChange={(e) => {
-                              let value = e.target.value.replace(/\D/g, '');
-                              if (value.length >= 2) {
-                                value = value.slice(0, 2) + '/' + value.slice(2, 4);
-                              }
-                              setPaymentInfo({ ...paymentInfo, expiryDate: value });
-                            }}
-                            maxLength={5}
-                            className={`w-full px-4 py-4 rounded-xl border-2 ${
-                              errors.expiryDate ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
-                            } focus:outline-none transition-colors text-lg font-mono text-center`}
-                            placeholder="MM/YY"
-                          />
-                          {errors.expiryDate && (
-                            <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                              <i className="fa-solid fa-exclamation-circle"></i>
-                              {errors.expiryDate}
-                            </p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">
-                            <TranslatedText fallback="CVV" /> *
-                          </label>
-                          <div className="relative">
+                          {/* 持卡人姓名 */}
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                              <TranslatedText fallback="Cardholder Name" /> *
+                            </label>
                             <input
                               type="text"
-                              value={paymentInfo.cvv}
-                              onChange={(e) => {
-                                const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                                setPaymentInfo({ ...paymentInfo, cvv: value });
-                              }}
-                              maxLength={4}
+                              value={paymentInfo.cardHolder}
+                              onChange={(e) => setPaymentInfo({ ...paymentInfo, cardHolder: e.target.value.toUpperCase() })}
                               className={`w-full px-4 py-4 rounded-xl border-2 ${
-                                errors.cvv ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
-                              } focus:outline-none transition-colors text-lg font-mono text-center`}
-                              placeholder="123"
+                                errors.cardHolder ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
+                              } focus:outline-none transition-colors text-lg uppercase`}
+                              placeholder="MARIO ROSSI"
                             />
-                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                              <i className="fa-solid fa-question-circle text-gray-400 cursor-help" title="3-4 digit security code on the back of your card"></i>
+                            {errors.cardHolder && (
+                              <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                <i className="fa-solid fa-exclamation-circle"></i>
+                                {errors.cardHolder}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* 有效期和CVV */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <TranslatedText fallback="Expiry" /> *
+                              </label>
+                              <input
+                                type="text"
+                                value={paymentInfo.expiryDate}
+                                onChange={(e) => {
+                                  let value = e.target.value.replace(/\D/g, '');
+                                  if (value.length >= 2) {
+                                    value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                                  }
+                                  setPaymentInfo({ ...paymentInfo, expiryDate: value });
+                                }}
+                                maxLength={5}
+                                className={`w-full px-4 py-4 rounded-xl border-2 ${
+                                  errors.expiryDate ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
+                                } focus:outline-none transition-colors text-lg font-mono text-center`}
+                                placeholder="MM/YY"
+                              />
+                              {errors.expiryDate && (
+                                <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                  <i className="fa-solid fa-exclamation-circle"></i>
+                                  {errors.expiryDate}
+                                </p>
+                              )}
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <TranslatedText fallback="CVV" /> *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  value={paymentInfo.cvv}
+                                  onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                    setPaymentInfo({ ...paymentInfo, cvv: value });
+                                  }}
+                                  maxLength={4}
+                                  className={`w-full px-4 py-4 rounded-xl border-2 ${
+                                    errors.cvv ? 'border-red-500' : 'border-gray-200 focus:border-indigo-600'
+                                  } focus:outline-none transition-colors text-lg font-mono text-center`}
+                                  placeholder="123"
+                                />
+                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                                  <i className="fa-solid fa-question-circle text-gray-400 cursor-help" title="3-4 digit security code on the back of your card"></i>
+                                </div>
+                              </div>
+                              {errors.cvv && (
+                                <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                  <i className="fa-solid fa-exclamation-circle"></i>
+                                  {errors.cvv}
+                                </p>
+                              )}
                             </div>
                           </div>
-                          {errors.cvv && (
-                            <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                              <i className="fa-solid fa-exclamation-circle"></i>
-                              {errors.cvv}
-                            </p>
-                          )}
                         </div>
-                      </div>
-                    </div>
 
-                    {/* 安全提示 */}
-                    <div className="mt-6 p-4 bg-green-50 rounded-xl border border-green-200">
-                      <div className="flex items-center gap-3">
-                        <i className="fa-solid fa-shield-halved text-green-600 text-xl"></i>
-                        <div>
-                          <p className="text-sm font-bold text-green-800">
-                            <TranslatedText fallback="Secure Payment" />
-                          </p>
-                          <p className="text-xs text-green-600">
-                            <TranslatedText fallback="Your payment information is encrypted and secure" />
-                          </p>
+                        {/* 安全提示 */}
+                        <div className="mt-6 p-4 bg-green-50 rounded-xl border border-green-200">
+                          <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-shield-halved text-green-600 text-xl"></i>
+                            <div>
+                              <p className="text-sm font-bold text-green-800">
+                                <TranslatedText fallback="Secure Payment" />
+                              </p>
+                              <p className="text-xs text-green-600">
+                                <TranslatedText fallback="Your payment information is encrypted and secure" />
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               )}
 
