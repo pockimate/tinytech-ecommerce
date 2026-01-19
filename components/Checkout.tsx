@@ -258,6 +258,110 @@ const Checkout: React.FC<CheckoutProps> = ({
       statePlaceholder: 'Dublin',
       phonePrefix: '+353'
     },
+    'Finland': {
+      zipLabel: 'Postinumero',
+      zipPlaceholder: '00100',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Maakunta',
+      statePlaceholder: 'Uusimaa',
+      phonePrefix: '+358'
+    },
+    'Czech Republic': {
+      zipLabel: 'PSČ',
+      zipPlaceholder: '110 00',
+      zipPattern: '^\\d{3}\\s?\\d{2}$',
+      stateLabel: 'Kraj',
+      statePlaceholder: 'Praha',
+      phonePrefix: '+420'
+    },
+    'Hungary': {
+      zipLabel: 'Irányítószám',
+      zipPlaceholder: '1011',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Megye',
+      statePlaceholder: 'Budapest',
+      phonePrefix: '+36'
+    },
+    'Romania': {
+      zipLabel: 'Cod poștal',
+      zipPlaceholder: '010011',
+      zipPattern: '^\\d{6}$',
+      stateLabel: 'Județ',
+      statePlaceholder: 'București',
+      phonePrefix: '+40'
+    },
+    'Bulgaria': {
+      zipLabel: 'Пощенски код',
+      zipPlaceholder: '1000',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Област',
+      statePlaceholder: 'София',
+      phonePrefix: '+359'
+    },
+    'Croatia': {
+      zipLabel: 'Poštanski broj',
+      zipPlaceholder: '10000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Županija',
+      statePlaceholder: 'Zagreb',
+      phonePrefix: '+385'
+    },
+    'Slovakia': {
+      zipLabel: 'PSČ',
+      zipPlaceholder: '811 01',
+      zipPattern: '^\\d{3}\\s?\\d{2}$',
+      stateLabel: 'Kraj',
+      statePlaceholder: 'Bratislava',
+      phonePrefix: '+421'
+    },
+    'Slovenia': {
+      zipLabel: 'Poštna številka',
+      zipPlaceholder: '1000',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Regija',
+      statePlaceholder: 'Ljubljana',
+      phonePrefix: '+386'
+    },
+    'Estonia': {
+      zipLabel: 'Postiindeks',
+      zipPlaceholder: '10111',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Maakond',
+      statePlaceholder: 'Harju',
+      phonePrefix: '+372'
+    },
+    'Latvia': {
+      zipLabel: 'Pasta indekss',
+      zipPlaceholder: 'LV-1010',
+      zipPattern: '^LV-\\d{4}$',
+      stateLabel: 'Novads',
+      statePlaceholder: 'Rīga',
+      phonePrefix: '+371'
+    },
+    'Lithuania': {
+      zipLabel: 'Pašto kodas',
+      zipPlaceholder: 'LT-01001',
+      zipPattern: '^LT-\\d{5}$',
+      stateLabel: 'Apskritis',
+      statePlaceholder: 'Vilnius',
+      phonePrefix: '+370'
+    },
+    'Luxembourg': {
+      zipLabel: 'Code postal',
+      zipPlaceholder: 'L-1009',
+      zipPattern: '^L?-?\\d{4}$',
+      stateLabel: 'Canton',
+      statePlaceholder: 'Luxembourg',
+      phonePrefix: '+352'
+    },
+    'Iceland': {
+      zipLabel: 'Póstnúmer',
+      zipPlaceholder: '101',
+      zipPattern: '^\\d{3}$',
+      stateLabel: 'Sveitarfélag',
+      statePlaceholder: 'Reykjavík',
+      phonePrefix: '+354'
+    },
     // Americas
     'US': {
       zipLabel: 'ZIP Code',
@@ -305,6 +409,61 @@ const Checkout: React.FC<CheckoutProps> = ({
       stateLabel: 'Región',
       statePlaceholder: 'Metropolitana',
       phonePrefix: '+56'
+    },
+    'Colombia': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '110111',
+      zipPattern: '^\\d{6}$',
+      stateLabel: 'Departamento',
+      statePlaceholder: 'Bogotá',
+      phonePrefix: '+57'
+    },
+    'Peru': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: 'Lima 01',
+      stateLabel: 'Departamento',
+      statePlaceholder: 'Lima',
+      phonePrefix: '+51'
+    },
+    'Venezuela': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '1010',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Estado',
+      statePlaceholder: 'Distrito Capital',
+      phonePrefix: '+58'
+    },
+    'Ecuador': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '170150',
+      zipPattern: '^\\d{6}$',
+      stateLabel: 'Provincia',
+      statePlaceholder: 'Pichincha',
+      phonePrefix: '+593'
+    },
+    'Uruguay': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '11000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Departamento',
+      statePlaceholder: 'Montevideo',
+      phonePrefix: '+598'
+    },
+    'Costa Rica': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '10101',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Provincia',
+      statePlaceholder: 'San José',
+      phonePrefix: '+506'
+    },
+    'Panama': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '0801',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Provincia',
+      statePlaceholder: 'Panamá',
+      phonePrefix: '+507'
     },
     // Asia
     'CN': {
@@ -402,6 +561,69 @@ const Checkout: React.FC<CheckoutProps> = ({
       statePlaceholder: 'Hong Kong Island',
       phonePrefix: '+852'
     },
+    'Bangladesh': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '1000',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Division',
+      statePlaceholder: 'Dhaka',
+      phonePrefix: '+880'
+    },
+    'Pakistan': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '44000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'Punjab',
+      phonePrefix: '+92'
+    },
+    'Sri Lanka': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '00100',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'Western',
+      phonePrefix: '+94'
+    },
+    'Myanmar': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '11181',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Region',
+      statePlaceholder: 'Yangon',
+      phonePrefix: '+95'
+    },
+    'Cambodia': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '12000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'Phnom Penh',
+      phonePrefix: '+855'
+    },
+    'Laos': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '01000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'Vientiane',
+      phonePrefix: '+856'
+    },
+    'Nepal': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '44600',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'Bagmati',
+      phonePrefix: '+977'
+    },
+    'Macao': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: 'Macau',
+      stateLabel: 'District',
+      statePlaceholder: 'Macau Peninsula',
+      phonePrefix: '+853'
+    },
     // Oceania
     'Australia': {
       zipLabel: 'Postcode',
@@ -418,6 +640,13 @@ const Checkout: React.FC<CheckoutProps> = ({
       stateLabel: 'Region',
       statePlaceholder: 'Auckland',
       phonePrefix: '+64'
+    },
+    'Fiji': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: 'Suva',
+      stateLabel: 'Division',
+      statePlaceholder: 'Central',
+      phonePrefix: '+679'
     },
     // Middle East
     'UAE': {
@@ -443,6 +672,52 @@ const Checkout: React.FC<CheckoutProps> = ({
       statePlaceholder: 'תל אביב',
       phonePrefix: '+972'
     },
+    'Qatar': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: 'Doha',
+      stateLabel: 'Municipality',
+      statePlaceholder: 'Doha',
+      phonePrefix: '+974'
+    },
+    'Kuwait': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '13001',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Governorate',
+      statePlaceholder: 'Al Asimah',
+      phonePrefix: '+965'
+    },
+    'Bahrain': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '317',
+      zipPattern: '^\\d{3,4}$',
+      stateLabel: 'Governorate',
+      statePlaceholder: 'Capital',
+      phonePrefix: '+973'
+    },
+    'Oman': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '100',
+      zipPattern: '^\\d{3}$',
+      stateLabel: 'Governorate',
+      statePlaceholder: 'Muscat',
+      phonePrefix: '+968'
+    },
+    'Jordan': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '11118',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Governorate',
+      statePlaceholder: 'Amman',
+      phonePrefix: '+962'
+    },
+    'Lebanon': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '1107 2020',
+      stateLabel: 'Governorate',
+      statePlaceholder: 'Beirut',
+      phonePrefix: '+961'
+    },
     // Africa
     'South Africa': {
       zipLabel: 'Postal Code',
@@ -459,6 +734,76 @@ const Checkout: React.FC<CheckoutProps> = ({
       stateLabel: 'Governorate',
       statePlaceholder: 'Cairo',
       phonePrefix: '+20'
+    },
+    'Nigeria': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '100001',
+      zipPattern: '^\\d{6}$',
+      stateLabel: 'State',
+      statePlaceholder: 'Lagos',
+      phonePrefix: '+234'
+    },
+    'Kenya': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '00100',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'County',
+      statePlaceholder: 'Nairobi',
+      phonePrefix: '+254'
+    },
+    'Morocco': {
+      zipLabel: 'Code Postal',
+      zipPlaceholder: '10000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Région',
+      statePlaceholder: 'Casablanca-Settat',
+      phonePrefix: '+212'
+    },
+    'Ghana': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: 'GA-001-0001',
+      stateLabel: 'Region',
+      statePlaceholder: 'Greater Accra',
+      phonePrefix: '+233'
+    },
+    'Tunisia': {
+      zipLabel: 'Code Postal',
+      zipPlaceholder: '1000',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Gouvernorat',
+      statePlaceholder: 'Tunis',
+      phonePrefix: '+216'
+    },
+    'Algeria': {
+      zipLabel: 'Code Postal',
+      zipPlaceholder: '16000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Wilaya',
+      statePlaceholder: 'Alger',
+      phonePrefix: '+213'
+    },
+    'Ethiopia': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '1000',
+      zipPattern: '^\\d{4}$',
+      stateLabel: 'Region',
+      statePlaceholder: 'Addis Ababa',
+      phonePrefix: '+251'
+    },
+    'Tanzania': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: '11101',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Region',
+      statePlaceholder: 'Dar es Salaam',
+      phonePrefix: '+255'
+    },
+    'Uganda': {
+      zipLabel: 'Postal Code',
+      zipPlaceholder: 'Kampala',
+      stateLabel: 'District',
+      statePlaceholder: 'Kampala',
+      phonePrefix: '+256'
     },
     // Other
     'Turkey': {
@@ -1887,6 +2232,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                       <option value="Portugal">🇵🇹 Portugal</option>
                       <option value="Greece">🇬🇷 Greece</option>
                       <option value="Ireland">🇮🇪 Ireland</option>
+                      <option value="Finland">🇫🇮 Finland</option>
+                      <option value="Czech Republic">🇨🇿 Czech Republic</option>
+                      <option value="Hungary">🇭🇺 Hungary</option>
+                      <option value="Romania">🇷🇴 Romania</option>
+                      <option value="Bulgaria">🇧🇬 Bulgaria</option>
+                      <option value="Croatia">🇭🇷 Croatia</option>
+                      <option value="Slovakia">🇸🇰 Slovakia</option>
+                      <option value="Slovenia">🇸🇮 Slovenia</option>
+                      <option value="Estonia">🇪🇪 Estonia</option>
+                      <option value="Latvia">🇱🇻 Latvia</option>
+                      <option value="Lithuania">🇱🇹 Lithuania</option>
+                      <option value="Luxembourg">🇱🇺 Luxembourg</option>
+                      <option value="Iceland">🇮🇸 Iceland</option>
                     </optgroup>
                     
                     {/* Americas */}
@@ -1897,6 +2255,13 @@ const Checkout: React.FC<CheckoutProps> = ({
                       <option value="Brazil">🇧🇷 Brazil</option>
                       <option value="Argentina">🇦🇷 Argentina</option>
                       <option value="Chile">🇨🇱 Chile</option>
+                      <option value="Colombia">🇨🇴 Colombia</option>
+                      <option value="Peru">🇵🇪 Peru</option>
+                      <option value="Venezuela">🇻🇪 Venezuela</option>
+                      <option value="Ecuador">🇪🇨 Ecuador</option>
+                      <option value="Uruguay">🇺🇾 Uruguay</option>
+                      <option value="Costa Rica">🇨🇷 Costa Rica</option>
+                      <option value="Panama">🇵🇦 Panama</option>
                     </optgroup>
                     
                     {/* Asia */}
@@ -1913,12 +2278,21 @@ const Checkout: React.FC<CheckoutProps> = ({
                       <option value="Philippines">🇵🇭 Philippines</option>
                       <option value="Taiwan">🇹🇼 Taiwan</option>
                       <option value="Hong Kong">🇭🇰 Hong Kong</option>
+                      <option value="Bangladesh">🇧🇩 Bangladesh</option>
+                      <option value="Pakistan">🇵🇰 Pakistan</option>
+                      <option value="Sri Lanka">🇱🇰 Sri Lanka</option>
+                      <option value="Myanmar">🇲🇲 Myanmar</option>
+                      <option value="Cambodia">🇰🇭 Cambodia</option>
+                      <option value="Laos">🇱🇦 Laos</option>
+                      <option value="Nepal">🇳🇵 Nepal</option>
+                      <option value="Macao">🇲🇴 Macao</option>
                     </optgroup>
                     
                     {/* Oceania */}
                     <optgroup label="🌏 Oceania">
                       <option value="Australia">🇦🇺 Australia</option>
                       <option value="New Zealand">🇳🇿 New Zealand</option>
+                      <option value="Fiji">🇫🇯 Fiji</option>
                     </optgroup>
                     
                     {/* Middle East */}
@@ -1926,12 +2300,27 @@ const Checkout: React.FC<CheckoutProps> = ({
                       <option value="UAE">🇦🇪 United Arab Emirates</option>
                       <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
                       <option value="Israel">🇮🇱 Israel</option>
+                      <option value="Qatar">🇶🇦 Qatar</option>
+                      <option value="Kuwait">🇰🇼 Kuwait</option>
+                      <option value="Bahrain">🇧🇭 Bahrain</option>
+                      <option value="Oman">🇴🇲 Oman</option>
+                      <option value="Jordan">🇯🇴 Jordan</option>
+                      <option value="Lebanon">🇱🇧 Lebanon</option>
                     </optgroup>
                     
                     {/* Africa */}
                     <optgroup label="🌍 Africa">
                       <option value="South Africa">🇿🇦 South Africa</option>
                       <option value="Egypt">🇪🇬 Egypt</option>
+                      <option value="Nigeria">🇳🇬 Nigeria</option>
+                      <option value="Kenya">🇰🇪 Kenya</option>
+                      <option value="Morocco">🇲🇦 Morocco</option>
+                      <option value="Ghana">🇬🇭 Ghana</option>
+                      <option value="Tunisia">🇹🇳 Tunisia</option>
+                      <option value="Algeria">🇩🇿 Algeria</option>
+                      <option value="Ethiopia">🇪🇹 Ethiopia</option>
+                      <option value="Tanzania">🇹🇿 Tanzania</option>
+                      <option value="Uganda">🇺🇬 Uganda</option>
                     </optgroup>
                     
                     {/* Other */}
