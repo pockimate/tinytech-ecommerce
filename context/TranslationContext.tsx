@@ -731,8 +731,6 @@ const localDict: Record<string, TranslationDict> = {
     'product.onlyLeft': 'Nur noch {count} verfügbar',
     'product.color': 'Farbe',
     'product.save': 'Sparen Sie €{amount}',
-    'product.addToCart': 'In den Warenkorb',
-    'product.viewDetails': 'Details anzeigen',
     // FAQ
     'faq.anythingElse': 'Noch etwas?',
     'faq.questionsWeGotYou': 'Fragen? Wir haben Sie abgedeckt!',
@@ -2861,11 +2859,27 @@ export function useTranslatedText(fallback: string): string {
     }
 
     let mounted = true;
-    translate(fallback).then(result => {
-      if (mounted) setTranslated(result);
-    });
+    
+    // Use async function to handle translation
+    const doTranslate = async () => {
+      try {
+        const result = await translate(fallback);
+        if (mounted) {
+          setTranslated(result);
+        }
+      } catch (error) {
+        console.error('[useTranslatedText] Translation error:', error);
+        if (mounted) {
+          setTranslated(fallback);
+        }
+      }
+    };
+    
+    doTranslate();
 
-    return () => { mounted = false; };
+    return () => { 
+      mounted = false; 
+    };
   }, [fallback, language, translate]);
 
   return translated;

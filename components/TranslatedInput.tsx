@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslatedText } from '../context/TranslationContext';
 
 interface TranslatedInputProps {
@@ -7,6 +7,7 @@ interface TranslatedInputProps {
   className: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   [key: string]: any; // Allow other props to be passed through
 }
 
@@ -15,10 +16,16 @@ const TranslatedInput: React.FC<TranslatedInputProps> = ({
   placeholderFallback, 
   className, 
   value, 
-  onChange, 
+  onChange,
+  onBlur,
   ...otherProps 
 }) => {
   const translatedPlaceholder = useTranslatedText(placeholderFallback);
+  
+  // Memoize the onBlur handler to prevent recreation
+  const handleBlur = useMemo(() => {
+    return onBlur || undefined;
+  }, [onBlur]);
   
   return (
     <input 
@@ -27,6 +34,7 @@ const TranslatedInput: React.FC<TranslatedInputProps> = ({
       className={className}
       value={value}
       onChange={onChange}
+      onBlur={handleBlur}
       {...otherProps}
     />
   );
