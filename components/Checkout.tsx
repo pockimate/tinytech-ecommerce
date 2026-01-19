@@ -119,6 +119,91 @@ const Checkout: React.FC<CheckoutProps> = ({
   const [errors, setErrors] = useState<Partial<ShippingInfo & PaymentInfo>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof (ShippingInfo & PaymentInfo), boolean>>>({});
 
+  // Country-specific configuration
+  const countryConfig: Record<string, {
+    zipLabel: string;
+    zipPlaceholder: string;
+    zipPattern?: string;
+    stateLabel: string;
+    statePlaceholder: string;
+    phonePrefix: string;
+  }> = {
+    'Italy': {
+      zipLabel: 'CAP',
+      zipPlaceholder: '20100',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Province',
+      statePlaceholder: 'MI',
+      phonePrefix: '+39'
+    },
+    'US': {
+      zipLabel: 'ZIP Code',
+      zipPlaceholder: '10001',
+      zipPattern: '^\\d{5}(-\\d{4})?$',
+      stateLabel: 'State',
+      statePlaceholder: 'NY',
+      phonePrefix: '+1'
+    },
+    'UK': {
+      zipLabel: 'Postcode',
+      zipPlaceholder: 'SW1A 1AA',
+      zipPattern: '^[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}$',
+      stateLabel: 'County',
+      statePlaceholder: 'London',
+      phonePrefix: '+44'
+    },
+    'Germany': {
+      zipLabel: 'PLZ',
+      zipPlaceholder: '10115',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Bundesland',
+      statePlaceholder: 'Berlin',
+      phonePrefix: '+49'
+    },
+    'France': {
+      zipLabel: 'Code Postal',
+      zipPlaceholder: '75001',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Région',
+      statePlaceholder: 'Île-de-France',
+      phonePrefix: '+33'
+    },
+    'Spain': {
+      zipLabel: 'Código Postal',
+      zipPlaceholder: '28001',
+      zipPattern: '^\\d{5}$',
+      stateLabel: 'Provincia',
+      statePlaceholder: 'Madrid',
+      phonePrefix: '+34'
+    },
+    'CN': {
+      zipLabel: '邮政编码',
+      zipPlaceholder: '100000',
+      zipPattern: '^\\d{6}$',
+      stateLabel: '省/直辖市',
+      statePlaceholder: '北京市',
+      phonePrefix: '+86'
+    },
+    'JP': {
+      zipLabel: '郵便番号',
+      zipPlaceholder: '100-0001',
+      zipPattern: '^\\d{3}-?\\d{4}$',
+      stateLabel: '都道府県',
+      statePlaceholder: '東京都',
+      phonePrefix: '+81'
+    },
+    'KR': {
+      zipLabel: '우편번호',
+      zipPlaceholder: '03000',
+      zipPattern: '^\\d{5}$',
+      stateLabel: '시/도',
+      statePlaceholder: '서울특별시',
+      phonePrefix: '+82'
+    }
+  };
+
+  const currentCountryConfig = countryConfig[shippingInfo.country] || countryConfig['Italy'];
+
   // Real-time validation function
   const validateField = (field: keyof ShippingInfo, value: string): string | undefined => {
     switch (field) {
@@ -147,6 +232,11 @@ const Checkout: React.FC<CheckoutProps> = ({
         break;
       case 'zipCode':
         if (!value.trim()) return t('error.zipRequired', 'ZIP code is required');
+        // Country-specific ZIP validation
+        const zipPattern = countryConfig[shippingInfo.country]?.zipPattern;
+        if (zipPattern && !new RegExp(zipPattern, 'i').test(value.trim())) {
+          return t('error.zipInvalid', `Invalid ${currentCountryConfig.zipLabel} format`);
+        }
         break;
       case 'country':
         if (!value.trim()) return t('error.countryRequired', 'Country is required');
@@ -1304,6 +1394,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       onChange={(e) => handleShippingChange('fullName', e.target.value)}
                       onBlur={() => handleFieldBlur('fullName')}
                       required
+                      autoComplete="name"
                       className={`w-full px-4 py-3 rounded-xl border ${
                         errors.fullName ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1327,6 +1418,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       onChange={(e) => handleShippingChange('email', e.target.value)}
                       onBlur={() => handleFieldBlur('email')}
                       required
+                      autoComplete="email"
                       className={`w-full px-4 py-3 rounded-xl border ${
                         errors.email ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1351,6 +1443,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                     onChange={(e) => handleShippingChange('phone', e.target.value)}
                     onBlur={() => handleFieldBlur('phone')}
                     required
+                    autoComplete="tel"
                     className={`w-full px-4 py-3 rounded-xl border ${
                       errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'
                     } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1374,6 +1467,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                     onChange={(e) => handleShippingChange('address', e.target.value)}
                     onBlur={() => handleFieldBlur('address')}
                     required
+                    autoComplete="street-address"
                     className={`w-full px-4 py-3 rounded-xl border ${
                       errors.address ? 'border-red-500 bg-red-50' : 'border-gray-200'
                     } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1398,6 +1492,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       onChange={(e) => handleShippingChange('city', e.target.value)}
                       onBlur={() => handleFieldBlur('city')}
                       required
+                      autoComplete="address-level2"
                       className={`w-full px-4 py-3 rounded-xl border ${
                         errors.city ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1413,20 +1508,21 @@ const Checkout: React.FC<CheckoutProps> = ({
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                      <TranslatedText fallback="State" />
+                      {currentCountryConfig.stateLabel}
                     </label>
                     <input
                       type="text"
                       value={shippingInfo.state}
                       onChange={(e) => setShippingInfo({ ...shippingInfo, state: e.target.value })}
+                      autoComplete="address-level1"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors"
-                      placeholder="MI"
+                      placeholder={currentCountryConfig.statePlaceholder}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                      <TranslatedText fallback="ZIP" /> *
+                      {currentCountryConfig.zipLabel} *
                     </label>
                     <input
                       type="text"
@@ -1434,10 +1530,11 @@ const Checkout: React.FC<CheckoutProps> = ({
                       onChange={(e) => handleShippingChange('zipCode', e.target.value)}
                       onBlur={() => handleFieldBlur('zipCode')}
                       required
+                      autoComplete="postal-code"
                       className={`w-full px-4 py-3 rounded-xl border ${
                         errors.zipCode ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
-                      placeholder="20100"
+                      placeholder={currentCountryConfig.zipPlaceholder}
                     />
                     {errors.zipCode && (
                       <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -1454,22 +1551,38 @@ const Checkout: React.FC<CheckoutProps> = ({
                   </label>
                   <select
                     value={shippingInfo.country}
-                    onChange={(e) => handleShippingChange('country', e.target.value)}
+                    onChange={(e) => {
+                      const newCountry = e.target.value;
+                      handleShippingChange('country', newCountry);
+                      // Clear ZIP and state errors when country changes
+                      setErrors(prev => ({
+                        ...prev,
+                        zipCode: undefined,
+                        state: undefined
+                      }));
+                      // Update phone prefix hint
+                      const config = countryConfig[newCountry];
+                      if (config && !shippingInfo.phone.startsWith('+')) {
+                        // Optionally auto-add country code prefix
+                        // setShippingInfo(prev => ({ ...prev, phone: config.phonePrefix + ' ' }));
+                      }
+                    }}
                     onBlur={() => handleFieldBlur('country')}
                     required
+                    autoComplete="country-name"
                     className={`w-full px-4 py-3 rounded-xl border ${
                       errors.country ? 'border-red-500 bg-red-50' : 'border-gray-200'
                     } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                   >
-                    <option value="Italy">Italy</option>
-                    <option value="Germany">Germany</option>
-                    <option value="France">France</option>
-                    <option value="Spain">Spain</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="US">United States</option>
-                    <option value="CN">China</option>
-                    <option value="JP">Japan</option>
-                    <option value="KR">South Korea</option>
+                    <option value="Italy">🇮🇹 Italy</option>
+                    <option value="Germany">🇩🇪 Germany</option>
+                    <option value="France">🇫🇷 France</option>
+                    <option value="Spain">🇪🇸 Spain</option>
+                    <option value="UK">🇬🇧 United Kingdom</option>
+                    <option value="US">🇺🇸 United States</option>
+                    <option value="CN">🇨🇳 China</option>
+                    <option value="JP">🇯🇵 Japan</option>
+                    <option value="KR">🇰🇷 South Korea</option>
                   </select>
                   {errors.country && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -1477,6 +1590,11 @@ const Checkout: React.FC<CheckoutProps> = ({
                       {errors.country}
                     </p>
                   )}
+                  {/* Phone prefix hint */}
+                  <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i className="fa-solid fa-phone text-indigo-600"></i>
+                    Phone prefix: <span className="font-bold">{currentCountryConfig.phonePrefix}</span>
+                  </p>
                 </div>
               </div>
             </div>
