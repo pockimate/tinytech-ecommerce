@@ -748,8 +748,9 @@ const Checkout: React.FC<CheckoutProps> = ({
       
       // 创建 PayPal 按钮 - 使用官方样式
       const button = document.createElement('button');
-      button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
+      button.className = 'flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
       button.style.height = '48px';
+      button.style.width = '100%';
       button.style.borderRadius = '8px';
       button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
       button.innerHTML = `
@@ -827,8 +828,9 @@ const Checkout: React.FC<CheckoutProps> = ({
       
       // 创建 Google Pay 按钮 - 统一样式
       const button = document.createElement('button');
-      button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
+      button.className = 'flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
       button.style.height = '48px';
+      button.style.width = '100%';
       button.style.borderRadius = '8px';
       button.style.fontFamily = '"Google Sans", "Roboto", Arial, sans-serif';
       button.innerHTML = `
@@ -887,8 +889,9 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     const button = document.createElement('button');
     button.id = 'paypal-express-button';
-    button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
+    button.className = 'flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
     button.style.height = '48px';
+    button.style.width = '100%';
     button.style.borderRadius = '8px';
     button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
     button.innerHTML = `
@@ -968,8 +971,9 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     const button = document.createElement('button');
     button.id = 'google-pay-express-button';
-    button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
+    button.className = 'flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
     button.style.height = '48px';
+    button.style.width = '100%';
     button.style.borderRadius = '8px';
     button.style.fontFamily = '"Google Sans", "Roboto", Arial, sans-serif';
     button.innerHTML = `
@@ -1360,20 +1364,20 @@ const Checkout: React.FC<CheckoutProps> = ({
               
               <div className="flex gap-4 mb-6">
                 {/* PayPal Express Button */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div
                     ref={paypalContainerRef}
                     className="w-full"
-                    style={{ minHeight: '48px' }}
+                    style={{ minHeight: '48px', maxHeight: '48px' }}
                   />
                 </div>
                 
                 {/* Google Pay Express Button */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div
                     ref={googlePayContainerRef}
                     className="w-full"
-                    style={{ minHeight: '48px' }}
+                    style={{ minHeight: '48px', maxHeight: '48px' }}
                   />
                 </div>
               </div>
