@@ -1292,7 +1292,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'Welcome',
     // Page Titles
     'page.contact': 'Contact Us',
-    'page.about': 'About TinyTech',
+    'page.about': 'About Pockimate',
     'page.privacy': 'Privacy Policy',
     'page.terms': 'Terms of Service',
     'page.refund': 'Returns & Refunds',
@@ -1435,7 +1435,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': '환영합니다',
     // Page Titles
     'page.contact': '문의하기',
-    'page.about': 'TinyTech 소개',
+    'page.about': 'Pockimate 소개',
     'page.privacy': '개인정보 처리방침',
     'page.terms': '서비스 약관',
     'page.refund': '환불 및 반품',
