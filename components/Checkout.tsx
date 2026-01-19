@@ -183,20 +183,24 @@ const Checkout: React.FC<CheckoutProps> = ({
   };
 
   const handlePlaceOrder = async () => {
-    if (!validateShipping() || !validatePayment()) return;
+    // 验证配送信息
+    if (!validateShipping()) {
+      alert('请填写完整的配送信息');
+      return;
+    }
+    
+    // 如果使用 Card Fields v6，跳过手动卡片验证
+    if (!cardFieldsInitialized || !cardFieldsEligible) {
+      if (!validatePayment()) return;
+    }
     
     setIsProcessing(true);
     
     try {
-      console.log('[Checkout] Processing credit card payment via PayPal');
-      
-      // 检查 PayPal 是否配置
-      if (!canProcessCard()) {
-        throw new Error('PayPal payment processing is not configured');
-      }
+      console.log('[Checkout] Starting payment process');
       
       // 1. 创建 PayPal 订单
-      const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Card Payment');
+      const orderData = await createPayPalOrder(actualTotal, currency, 'Pockimate Order');
       
       if (!orderData || !orderData.id) {
         throw new Error('Failed to create payment order');
@@ -204,29 +208,71 @@ const Checkout: React.FC<CheckoutProps> = ({
       
       console.log('[Checkout] Order created:', orderData.id);
       
-      // 2. 处理信用卡支付
-      const paymentResult = await processCardPayment(orderData.id, {
-        number: paymentInfo.cardNumber,
-        expiry: paymentInfo.expiryDate,
-        cvv: paymentInfo.cvv,
-        name: paymentInfo.cardHolder,
-        billingAddress: {
-          addressLine1: shippingInfo.address,
-          adminArea2: shippingInfo.city,
-          adminArea1: shippingInfo.state,
+      // 2. 使用 Card Fields v6 提交支付
+      if (cardFieldsInitialized && cardFieldsEligible) {
+        console.log('[Checkout] Submitting payment with Card Fields v6');
+        
+        const paymentResult = await submitCardFieldsPayment(orderData.id, {
           postalCode: shippingInfo.zipCode,
+          addressLine1: shippingInfo.address,
+          adminArea1: shippingInfo.state,
+          adminArea2: shippingInfo.city,
           countryCode: shippingInfo.country
+        });
+        
+        console.log('[Checkout] Payment result:', paymentResult);
+        
+        if (paymentResult.success) {
+          // 支付成功，捕获订单
+          console.log('[Checkout] Payment successful, capturing order');
+          
+          const captureResult = await capturePayPalOrder(orderData.id);
+          
+          if (captureResult.success) {
+            console.log('[Checkout] Order captured successfully');
+            onOrderComplete(orderData.id);
+          } else {
+            throw new Error('Failed to capture payment');
+          }
+        } else {
+          // 支付失败或取消
+          if (paymentResult.state === 'canceled') {
+            alert('❌ 支付已取消\n\n您取消了身份验证。请重试。');
+          } else {
+            alert(`❌ 支付失败\n\n${paymentResult.error || '请检查您的卡片信息并重试。'}`);
+          }
+          
+          setIsProcessing(false);
         }
-      });
-      
-      if (!paymentResult.success) {
-        throw new Error(paymentResult.error || 'Payment failed');
+      } else {
+        // 回退到旧的卡片处理方式
+        console.log('[Checkout] Using legacy card processing');
+        
+        if (!canProcessCard()) {
+          throw new Error('PayPal payment processing is not configured');
+        }
+        
+        const paymentResult = await processCardPayment(orderData.id, {
+          number: paymentInfo.cardNumber,
+          expiry: paymentInfo.expiryDate,
+          cvv: paymentInfo.cvv,
+          name: paymentInfo.cardHolder,
+          billingAddress: {
+            addressLine1: shippingInfo.address,
+            adminArea2: shippingInfo.city,
+            adminArea1: shippingInfo.state,
+            postalCode: shippingInfo.zipCode,
+            countryCode: shippingInfo.country
+          }
+        });
+        
+        if (!paymentResult.success) {
+          throw new Error(paymentResult.error || 'Payment failed');
+        }
+        
+        console.log('[Checkout] Payment successful:', paymentResult.captureId);
+        onOrderComplete(orderData.id);
       }
-      
-      console.log('[Checkout] Payment successful:', paymentResult.captureId);
-      
-      // 3. 完成订单
-      onOrderComplete(orderData.id);
       
     } catch (error) {
       console.error('[Checkout] Payment error:', error);
