@@ -44,7 +44,25 @@ import { useContent, useProducts } from './hooks/useDatabase';
 
 const App: React.FC = () => {
   type View = 'home' | 'products' | 'blog' | 'blog-detail' | 'product-detail' | 'track' | 'checkout' | 'order-success' | 'account' | 'admin' | 'contact' | 'refund' | 'privacy' | 'about' | 'lifestyle' | 'wishlist' | 'privacy-policy' | 'refund-policy' | 'terms-of-service';
-  const [view, setView] = useState<View>('home');
+  
+  // Initialize view based on URL path
+  const getInitialView = (): View => {
+    const path = window.location.pathname;
+    if (path === '/checkout') return 'checkout';
+    if (path === '/products') return 'products';
+    if (path === '/blog') return 'blog';
+    if (path === '/track') return 'track';
+    if (path === '/account') return 'account';
+    if (path === '/contact') return 'contact';
+    if (path === '/about') return 'about';
+    if (path === '/wishlist') return 'wishlist';
+    if (path === '/privacy-policy') return 'privacy-policy';
+    if (path === '/refund-policy') return 'refund-policy';
+    if (path === '/terms-of-service') return 'terms-of-service';
+    return 'home';
+  };
+  
+  const [view, setView] = useState<View>(getInitialView());
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<any>(null);
   const [activeImage, setActiveImage] = useState<string>('');
@@ -787,6 +805,31 @@ const App: React.FC = () => {
     return () => window.removeEventListener('hashchange', checkHash);
   }, [isAdminAuthenticated]);
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      let newView: View = 'home';
+      
+      if (path === '/checkout') newView = 'checkout';
+      else if (path === '/products') newView = 'products';
+      else if (path === '/blog') newView = 'blog';
+      else if (path === '/track') newView = 'track';
+      else if (path === '/account') newView = 'account';
+      else if (path === '/contact') newView = 'contact';
+      else if (path === '/about') newView = 'about';
+      else if (path === '/wishlist') newView = 'wishlist';
+      else if (path === '/privacy-policy') newView = 'privacy-policy';
+      else if (path === '/refund-policy') newView = 'refund-policy';
+      else if (path === '/terms-of-service') newView = 'terms-of-service';
+      
+      setView(newView);
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Handle PayPal return
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1022,6 +1065,28 @@ const App: React.FC = () => {
 
   const navigate = (newView: View) => {
     setView(newView);
+    
+    // Update URL to match the view
+    const pathMap: { [key in View]?: string } = {
+      'home': '/',
+      'products': '/products',
+      'blog': '/blog',
+      'checkout': '/checkout',
+      'track': '/track',
+      'account': '/account',
+      'contact': '/contact',
+      'about': '/about',
+      'wishlist': '/wishlist',
+      'privacy-policy': '/privacy-policy',
+      'refund-policy': '/refund-policy',
+      'terms-of-service': '/terms-of-service'
+    };
+    
+    const newPath = pathMap[newView] || '/';
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({}, '', newPath);
+    }
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
