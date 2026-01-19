@@ -748,8 +748,9 @@ const Checkout: React.FC<CheckoutProps> = ({
       
       // 创建 PayPal 按钮 - 使用官方样式
       const button = document.createElement('button');
-      button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 rounded-lg font-bold transition-all shadow-sm border border-[#FFC439]';
+      button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
       button.style.height = '48px';
+      button.style.borderRadius = '8px';
       button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
       button.innerHTML = `
         <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -826,8 +827,9 @@ const Checkout: React.FC<CheckoutProps> = ({
       
       // 创建 Google Pay 按钮 - 统一样式
       const button = document.createElement('button');
-      button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
+      button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
       button.style.height = '48px';
+      button.style.borderRadius = '8px';
       button.style.fontFamily = '"Google Sans", "Roboto", Arial, sans-serif';
       button.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -885,8 +887,9 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     const button = document.createElement('button');
     button.id = 'paypal-express-button';
-    button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 rounded-lg font-bold transition-all shadow-sm border border-[#FFC439]';
+    button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 font-bold transition-all shadow-sm border border-[#FFC439]';
     button.style.height = '48px';
+    button.style.borderRadius = '8px';
     button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
     button.innerHTML = `
       <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -965,8 +968,9 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     const button = document.createElement('button');
     button.id = 'google-pay-express-button';
-    button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
+    button.className = 'w-full flex items-center justify-center gap-2 bg-black text-white px-6 py-3 font-bold hover:bg-gray-800 transition-all shadow-sm border border-black';
     button.style.height = '48px';
+    button.style.borderRadius = '8px';
     button.style.fontFamily = '"Google Sans", "Roboto", Arial, sans-serif';
     button.innerHTML = `
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
