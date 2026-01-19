@@ -250,48 +250,83 @@ export function renderCardFields(
   },
   style?: any
 ): void {
-  // Get container elements
-  const numberContainer = typeof containers.number === 'string' 
-    ? document.querySelector(containers.number) 
-    : containers.number;
-  
-  const expiryContainer = typeof containers.expiry === 'string'
-    ? document.querySelector(containers.expiry)
-    : containers.expiry;
-  
-  const cvvContainer = typeof containers.cvv === 'string'
-    ? document.querySelector(containers.cvv)
-    : containers.cvv;
+  try {
+    // Get container elements
+    const numberContainer = typeof containers.number === 'string' 
+      ? document.querySelector(containers.number) 
+      : containers.number;
+    
+    const expiryContainer = typeof containers.expiry === 'string'
+      ? document.querySelector(containers.expiry)
+      : containers.expiry;
+    
+    const cvvContainer = typeof containers.cvv === 'string'
+      ? document.querySelector(containers.cvv)
+      : containers.cvv;
 
-  if (!numberContainer || !expiryContainer || !cvvContainer) {
-    throw new Error('Card field containers not found');
+    if (!numberContainer || !expiryContainer || !cvvContainer) {
+      throw new Error('Card field containers not found');
+    }
+
+    // Clear containers
+    numberContainer.innerHTML = '';
+    expiryContainer.innerHTML = '';
+    cvvContainer.innerHTML = '';
+
+    console.log('[PayPal Card Fields] Creating card field components...');
+    console.log('[PayPal Card Fields] Session type:', typeof session);
+    console.log('[PayPal Card Fields] Session methods:', Object.keys(session));
+
+    // Check if createCardFieldsComponent exists
+    if (typeof session.createCardFieldsComponent !== 'function') {
+      console.error('[PayPal Card Fields] createCardFieldsComponent is not a function');
+      console.error('[PayPal Card Fields] Available methods:', Object.keys(session));
+      throw new Error('createCardFieldsComponent method not found on session');
+    }
+
+    // Create card field components without custom styles (use defaults)
+    console.log('[PayPal Card Fields] Creating number field...');
+    const numberField = session.createCardFieldsComponent({
+      type: 'number',
+      placeholder: 'Card number'
+    });
+    
+    if (!numberField) {
+      throw new Error('Failed to create number field');
+    }
+    
+    console.log('[PayPal Card Fields] Number field created, type:', typeof numberField);
+    numberContainer.appendChild(numberField);
+
+    console.log('[PayPal Card Fields] Creating expiry field...');
+    const expiryField = session.createCardFieldsComponent({
+      type: 'expiry',
+      placeholder: 'MM/YY'
+    });
+    
+    if (!expiryField) {
+      throw new Error('Failed to create expiry field');
+    }
+    
+    expiryContainer.appendChild(expiryField);
+
+    console.log('[PayPal Card Fields] Creating CVV field...');
+    const cvvField = session.createCardFieldsComponent({
+      type: 'cvv',
+      placeholder: 'CVV'
+    });
+    
+    if (!cvvField) {
+      throw new Error('Failed to create CVV field');
+    }
+    
+    cvvContainer.appendChild(cvvField);
+
+    console.log('[PayPal Card Fields] Fields rendered successfully');
+  } catch (error) {
+    console.error('[PayPal Card Fields] Error rendering fields:', error);
+    throw error;
   }
-
-  // Clear containers
-  numberContainer.innerHTML = '';
-  expiryContainer.innerHTML = '';
-  cvvContainer.innerHTML = '';
-
-  // Create card field components without custom styles (use defaults)
-  const numberField = session.createCardFieldsComponent({
-    type: 'number',
-    placeholder: 'Card number'
-  });
-  numberContainer.appendChild(numberField);
-
-  const expiryField = session.createCardFieldsComponent({
-    type: 'expiry',
-    placeholder: 'MM/YY'
-  });
-  expiryContainer.appendChild(expiryField);
-
-  const cvvField = session.createCardFieldsComponent({
-    type: 'cvv',
-    placeholder: 'CVV'
-  });
-  cvvContainer.appendChild(cvvField);
-
-  console.log('[PayPal Card Fields] Fields rendered successfully');
 }
 
 /**
