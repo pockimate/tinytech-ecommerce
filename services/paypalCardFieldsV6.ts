@@ -209,27 +209,9 @@ export function createCardFieldsSession(): any {
     throw new Error('SDK not initialized');
   }
 
-  // PayPal SDK v6 Card Fields API
-  // The correct way is to call CardFields() on the SDK instance
-  try {
-    // Try different possible API patterns
-    if (typeof sdkInstance.CardFields === 'function') {
-      cardSession = sdkInstance.CardFields();
-    } else if (typeof sdkInstance.cardFields === 'function') {
-      cardSession = sdkInstance.cardFields();
-    } else if (typeof sdkInstance.createCardFields === 'function') {
-      cardSession = sdkInstance.createCardFields();
-    } else {
-      // Log available methods for debugging
-      console.log('[PayPal Card Fields] Available methods:', Object.keys(sdkInstance));
-      throw new Error('CardFields method not found on SDK instance');
-    }
-    
-    return cardSession;
-  } catch (error) {
-    console.error('[PayPal Card Fields] Error creating card fields session:', error);
-    throw error;
-  }
+  // Correct method from official PayPal SDK v6 documentation
+  cardSession = sdkInstance.createCardFieldsOneTimePaymentSession();
+  return cardSession;
 }
 
 /**
@@ -282,31 +264,29 @@ export function renderCardFields(
   expiryContainer.innerHTML = '';
   cvvContainer.innerHTML = '';
 
-  // Create card field components using the correct API
-  try {
-    const numberField = session.NumberField({
-      style: fieldStyle,
-      placeholder: 'Card number'
-    });
-    numberContainer.appendChild(numberField);
+  // Create card field components using the correct API from official docs
+  const numberField = session.createCardFieldsComponent({
+    type: 'number',
+    placeholder: 'Card number',
+    style: fieldStyle
+  });
+  numberContainer.appendChild(numberField);
 
-    const expiryField = session.ExpiryField({
-      style: fieldStyle,
-      placeholder: 'MM/YY'
-    });
-    expiryContainer.appendChild(expiryField);
+  const expiryField = session.createCardFieldsComponent({
+    type: 'expiry',
+    placeholder: 'MM/YY',
+    style: fieldStyle
+  });
+  expiryContainer.appendChild(expiryField);
 
-    const cvvField = session.CVVField({
-      style: fieldStyle,
-      placeholder: 'CVV'
-    });
-    cvvContainer.appendChild(cvvField);
+  const cvvField = session.createCardFieldsComponent({
+    type: 'cvv',
+    placeholder: 'CVV',
+    style: fieldStyle
+  });
+  cvvContainer.appendChild(cvvField);
 
-    console.log('[PayPal Card Fields] Fields rendered successfully');
-  } catch (error) {
-    console.error('[PayPal Card Fields] Render error:', error);
-    throw error;
-  }
+  console.log('[PayPal Card Fields] Fields rendered successfully');
 }
 
 /**
