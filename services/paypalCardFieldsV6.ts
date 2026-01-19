@@ -15,8 +15,11 @@ interface PayPalSDKInstance {
   findEligibleMethods: (options?: { currencyCode?: string }) => Promise<{
     isEligible: (method: string) => boolean;
   }>;
-  // Correct method name based on error message
-  CardFields: () => CardFieldsBuilder;
+  // Support multiple possible method names
+  createCardFieldsOneTimePaymentSession?: () => CardFieldsSession;
+  createCardFields3avePaymentSession?: () => CardFieldsSession;
+  CardFields?: () => CardFieldsBuilder;
+  [key: string]: any; // Allow dynamic access for debugging
 }
 
 interface CardFieldsBuilder {
@@ -66,11 +69,7 @@ interface CardFieldsSession {
   }>;
 }
 
-declare global {
-  interface Window {
-    paypal?: any; // Use any to avoid conflicts with Checkout.tsx
-  }
-}
+// Note: window.paypal type is declared in Checkout.tsx to avoid conflicts
 
 let sdkInstance: PayPalSDKInstance | null = null;
 let cardSession: CardFieldsSession | null = null;
@@ -209,9 +208,26 @@ export function createCardFieldsSession(): any {
     throw new Error('SDK not initialized');
   }
 
-  // Correct method from official PayPal SDK v6 documentation
-  cardSession = sdkInstance.createCardFieldsOneTimePaymentSession();
-  return cardSession;
+  try {
+    // Try to use the correct method name based on SDK documentation
+    // The SDK expects either createCardFieldsOneTimePaymentSession or createCardFields3avePaymentSession
+    // We use one-time payment for checkout
+    if (typeof sdkInstance.createCardFieldsOneTimePaymentSession === 'function') {
+      console.log('[PayPal Card Fields] Using createCardFieldsOneTimePaymentSession');
+      cardSession = sdkInstance.createCardFieldsOneTimePaymentSession();
+    } else if (typeof (sdkInstance as any).CardFields === 'function') {
+      console.log('[PayPal Card Fields] Using CardFields() method');
+      cardSession = (sdkInstance as any).CardFields();
+    } else {
+      console.error('[PayPal Card Fields] Available methods:', Object.keys(sdkInstance));
+      throw new Error('Card Fields method not found in SDK instance');
+    }
+    
+    return cardSession;
+  } catch (error) {
+    console.error('[PayPal Card Fields] Error creating card session:', error);
+    throw error;
+  }
 }
 
 /**
