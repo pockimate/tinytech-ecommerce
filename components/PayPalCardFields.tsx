@@ -24,9 +24,11 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
   const expiryRef = useRef<HTMLDivElement>(null);
   const cvvRef = useRef<HTMLDivElement>(null);
   const [isSetup, setIsSetup] = React.useState(false);
+  const setupAttemptedRef = useRef(false); // Prevent multiple setup attempts
 
   useEffect(() => {
-    if (isSetup) return;
+    // Prevent multiple setup attempts
+    if (isSetup || setupAttemptedRef.current) return;
 
     const setupFields = async () => {
       try {
@@ -36,6 +38,7 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
         }
 
         console.log('[PayPalCardFields] Setting up card fields...');
+        setupAttemptedRef.current = true;
 
         // Only pass number, expiry, cvv (no name field)
         await onSetupComplete({
@@ -48,13 +51,16 @@ export const PayPalCardFields: React.FC<PayPalCardFieldsProps> = ({
         console.log('[PayPalCardFields] Card fields setup complete');
       } catch (error) {
         console.error('[PayPalCardFields] Setup error:', error);
+        setupAttemptedRef.current = false; // Allow retry on error
       }
     };
 
     // Delay setup to ensure DOM is ready
     const timer = setTimeout(setupFields, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [onSetupComplete, isSetup]);
 
   return (

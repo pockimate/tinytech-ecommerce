@@ -208,6 +208,12 @@ export function createCardFieldsSession(): any {
     throw new Error('SDK not initialized');
   }
 
+  // Return existing session if already created
+  if (cardSession) {
+    console.log('[PayPal Card Fields] Reusing existing card session');
+    return cardSession;
+  }
+
   try {
     // Try to use the correct method name based on SDK documentation
     // The SDK expects either createCardFieldsOneTimePaymentSession or createCardFields3avePaymentSession
@@ -223,6 +229,7 @@ export function createCardFieldsSession(): any {
       throw new Error('Card Fields method not found in SDK instance');
     }
     
+    console.log('[PayPal Card Fields] Card session created successfully');
     return cardSession;
   } catch (error) {
     console.error('[PayPal Card Fields] Error creating card session:', error);
@@ -375,6 +382,14 @@ export function isSDKInitialized(): boolean {
   return !!sdkInstance;
 }
 
+/**
+ * Reset card session (cleanup)
+ */
+export function resetCardSession(): void {
+  console.log('[PayPal Card Fields] Resetting card session');
+  cardSession = null;
+}
+
 export default {
   initializePayPalSDKV6,
   isCardFieldsEligible,
@@ -383,5 +398,6 @@ export default {
   submitCardPayment,
   getSDKInstance,
   getCardSession,
-  isSDKInitialized
+  isSDKInitialized,
+  resetCardSession
 };

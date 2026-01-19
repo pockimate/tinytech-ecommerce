@@ -3,7 +3,7 @@
  * Manages Card Fields SDK initialization and state
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   initializePayPalSDKV6,
   isCardFieldsEligible,
@@ -49,6 +49,7 @@ export function usePayPalCardFields(currency: string = 'USD'): UsePayPalCardFiel
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cardSession, setCardSession] = useState<any>(null);
+  const sessionCreatedRef = useRef(false); // Track if session was already created
 
   // Initialize SDK on mount
   useEffect(() => {
@@ -59,7 +60,7 @@ export function usePayPalCardFields(currency: string = 'USD'): UsePayPalCardFiel
         console.log('[usePayPalCardFields] Initializing SDK...');
         
         // Initialize SDK
-        const sdkInstance = await initializePayPalSDKV6();
+        await initializePayPalSDKV6();
         
         if (!mounted) return;
 
@@ -89,6 +90,8 @@ export function usePayPalCardFields(currency: string = 'USD'): UsePayPalCardFiel
 
     return () => {
       mounted = false;
+      // Reset session flag on unmount
+      sessionCreatedRef.current = false;
     };
   }, [currency]);
 
@@ -102,9 +105,18 @@ export function usePayPalCardFields(currency: string = 'USD'): UsePayPalCardFiel
     try {
       console.log('[usePayPalCardFields] Setting up card fields...');
 
-      // Create session
+      // Prevent creating multiple sessions
+      if (sessionCreatedRef.current && cardSession) {
+        console.log('[usePayPalCardFields] Session already exists, reusing...');
+        // Just re-render fields with existing session
+        renderCardFields(cardSession, containers);
+        return;
+      }
+
+      // Create session only once
       const session = createCardFieldsSession();
       setCardSession(session);
+      sessionCreatedRef.current = true;
 
       // Render fields
       renderCardFields(session, containers);
@@ -116,7 +128,7 @@ export function usePayPalCardFields(currency: string = 'USD'): UsePayPalCardFiel
       setError(errorMessage);
       throw err;
     }
-  }, []);
+  }, [cardSession]);
 
   // Submit payment
   const submitPayment = useCallback(async (
