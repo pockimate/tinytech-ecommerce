@@ -261,18 +261,81 @@ const Checkout: React.FC<CheckoutProps> = ({
   };
 
   const handlePlaceOrder = async () => {
-    // 验证配送信息
-    if (!validateShipping()) {
-      alert('请填写完整的配送信息');
+    // 先验证配送信息
+    const shippingValid = validateShipping();
+    
+    if (!shippingValid) {
+      // 显示友好的错误提示
+      const errorFields = Object.keys(errors).filter(key => errors[key as keyof typeof errors]);
+      const errorCount = errorFields.length;
+      
+      // 创建错误提示消息
+      const errorMessage = errorCount === 1 
+        ? `Please fix the error in the ${errorFields[0]} field.`
+        : `Please fix ${errorCount} errors in the form before proceeding.`;
+      
+      // 显示错误提示（使用更友好的方式）
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 animate-bounce';
+      errorDiv.innerHTML = `
+        <i class="fa-solid fa-circle-exclamation text-2xl"></i>
+        <div>
+          <p class="font-bold">${errorMessage}</p>
+          <p class="text-sm opacity-90">Please check the highlighted fields above.</p>
+        </div>
+      `;
+      document.body.appendChild(errorDiv);
+      
+      // 3秒后自动移除
+      setTimeout(() => {
+        errorDiv.style.opacity = '0';
+        errorDiv.style.transition = 'opacity 0.3s';
+        setTimeout(() => errorDiv.remove(), 300);
+      }, 3000);
+      
       return;
     }
     
     // 如果使用 Card Fields v6，跳过手动卡片验证
     if (!cardFieldsInitialized || !cardFieldsEligible) {
-      if (!validatePayment()) return;
+      const paymentValid = validatePayment();
+      if (!paymentValid) {
+        // 显示支付信息错误提示
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 animate-bounce';
+        errorDiv.innerHTML = `
+          <i class="fa-solid fa-credit-card text-2xl"></i>
+          <div>
+            <p class="font-bold">Invalid payment information</p>
+            <p class="text-sm opacity-90">Please check your card details.</p>
+          </div>
+        `;
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => {
+          errorDiv.style.opacity = '0';
+          errorDiv.style.transition = 'opacity 0.3s';
+          setTimeout(() => errorDiv.remove(), 300);
+        }, 3000);
+        
+        return;
+      }
     }
     
     setIsProcessing(true);
+    
+    // 显示处理中提示
+    const processingDiv = document.createElement('div');
+    processingDiv.id = 'processing-indicator';
+    processingDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+    processingDiv.innerHTML = `
+      <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
+      <div>
+        <p class="font-bold">Processing your payment...</p>
+        <p class="text-sm opacity-90">Please wait, do not close this page.</p>
+      </div>
+    `;
+    document.body.appendChild(processingDiv);
     
     try {
       console.log('[Checkout] Starting payment process');
@@ -308,17 +371,59 @@ const Checkout: React.FC<CheckoutProps> = ({
           
           if (captureResult.success) {
             console.log('[Checkout] Order captured successfully');
-            onOrderComplete(orderData.id);
+            
+            // 移除处理中提示
+            document.getElementById('processing-indicator')?.remove();
+            
+            // 显示成功提示
+            const successDiv = document.createElement('div');
+            successDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+            successDiv.innerHTML = `
+              <i class="fa-solid fa-circle-check text-2xl"></i>
+              <div>
+                <p class="font-bold">Payment successful!</p>
+                <p class="text-sm opacity-90">Redirecting to confirmation page...</p>
+              </div>
+            `;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+              onOrderComplete(orderData.id);
+            }, 1500);
           } else {
             throw new Error('Failed to capture payment');
           }
         } else {
           // 支付失败或取消
+          document.getElementById('processing-indicator')?.remove();
+          
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+          
           if (paymentResult.state === 'canceled') {
-            alert('❌ 支付已取消\n\n您取消了身份验证。请重试。');
+            errorDiv.innerHTML = `
+              <i class="fa-solid fa-circle-xmark text-2xl"></i>
+              <div>
+                <p class="font-bold">Payment canceled</p>
+                <p class="text-sm opacity-90">You canceled the authentication. Please try again.</p>
+              </div>
+            `;
           } else {
-            alert(`❌ 支付失败\n\n${paymentResult.error || '请检查您的卡片信息并重试。'}`);
+            errorDiv.innerHTML = `
+              <i class="fa-solid fa-circle-xmark text-2xl"></i>
+              <div>
+                <p class="font-bold">Payment failed</p>
+                <p class="text-sm opacity-90">${paymentResult.error || 'Please check your card information and try again.'}</p>
+              </div>
+            `;
           }
+          
+          document.body.appendChild(errorDiv);
+          setTimeout(() => {
+            errorDiv.style.opacity = '0';
+            errorDiv.style.transition = 'opacity 0.3s';
+            setTimeout(() => errorDiv.remove(), 300);
+          }, 5000);
           
           setIsProcessing(false);
         }
@@ -349,19 +454,53 @@ const Checkout: React.FC<CheckoutProps> = ({
         }
         
         console.log('[Checkout] Payment successful:', paymentResult.captureId);
-        onOrderComplete(orderData.id);
+        
+        // 移除处理中提示
+        document.getElementById('processing-indicator')?.remove();
+        
+        // 显示成功提示
+        const successDiv = document.createElement('div');
+        successDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+        successDiv.innerHTML = `
+          <i class="fa-solid fa-circle-check text-2xl"></i>
+          <div>
+            <p class="font-bold">Payment successful!</p>
+            <p class="text-sm opacity-90">Redirecting to confirmation page...</p>
+          </div>
+        `;
+        document.body.appendChild(successDiv);
+        
+        setTimeout(() => {
+          onOrderComplete(orderData.id);
+        }, 1500);
       }
       
     } catch (error) {
       console.error('[Checkout] Payment error:', error);
       
+      // 移除处理中提示
+      document.getElementById('processing-indicator')?.remove();
+      
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
-      alert(
-        '❌ Payment Failed\n\n' +
-        errorMessage + '\n\n' +
-        'Please check your card details and try again, or use PayPal/Google Pay as an alternative.'
-      );
+      // 显示错误提示
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 max-w-md';
+      errorDiv.innerHTML = `
+        <i class="fa-solid fa-circle-xmark text-2xl"></i>
+        <div>
+          <p class="font-bold">Payment Failed</p>
+          <p class="text-sm opacity-90">${errorMessage}</p>
+          <p class="text-xs opacity-75 mt-1">Please check your card details and try again, or use PayPal/Google Pay.</p>
+        </div>
+      `;
+      document.body.appendChild(errorDiv);
+      
+      setTimeout(() => {
+        errorDiv.style.opacity = '0';
+        errorDiv.style.transition = 'opacity 0.3s';
+        setTimeout(() => errorDiv.remove(), 300);
+      }, 5000);
       
       setIsProcessing(false);
     }
