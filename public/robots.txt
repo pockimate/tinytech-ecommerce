@@ -1,4 +1,4 @@
-# robots.txt for TinyTech
+# robots.txt for Pockimate
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -6,7 +6,7 @@ Disallow: /checkout
 Disallow: /order-success
 
 # Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://www.pockimate.com/sitemap.xml
 
 # Crawl-delay for specific bots
 User-agent: Googlebot

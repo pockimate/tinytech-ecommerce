@@ -1578,7 +1578,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'Добро пожаловать',
     // Page Titles
     'page.contact': 'Свяжитесь с нами',
-    'page.about': 'О TinyTech',
+    'page.about': 'О Pockimate',
     'page.privacy': 'Политика конфиденциальности',
     'page.terms': 'Условия использования',
     'page.refund': 'Возврат и возмещение',
@@ -1721,7 +1721,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'Hoş geldin',
     // Page Titles
     'page.contact': 'Bize ulaşın',
-    'page.about': 'TinyTech Hakkında',
+    'page.about': 'Pockimate Hakkında',
     'page.privacy': 'Gizlilik politikası',
     'page.terms': 'Kullanım şartları',
     'page.refund': 'İade ve geri ödeme',
@@ -1864,7 +1864,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'مرحباً',
     // Page Titles
     'page.contact': 'اتصل بنا',
-    'page.about': 'عن TinyTech',
+    'page.about': 'عن Pockimate',
     'page.privacy': 'سياسة الخصوصية',
     'page.terms': 'شروط الخدمة',
     'page.refund': 'الإرجاع والاسترداد',
@@ -2007,7 +2007,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'स्वागत हे',
     // Page Titles
     'page.contact': 'संपर्क करें',
-    'page.about': 'TinyTech के बारे में',
+    'page.about': 'Pockimate के बारे में',
     'page.privacy': 'गोपनीयता नीति',
     'page.terms': 'सेवा की शर्तें',
     'page.refund': 'वापसी और धनवापसी',
@@ -2150,7 +2150,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': '欢迎',
     // Page Titles
     'page.contact': '联系我们',
-    'page.about': '关于TinyTech',
+    'page.about': '关于Pockimate',
     'page.privacy': '隐私政策',
     'page.terms': '服务条款',
     'page.refund': '退换货政策',
@@ -2293,7 +2293,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': '歡迎',
     // Page Titles
     'page.contact': '聯繫我們',
-    'page.about': '關於TinyTech',
+    'page.about': '關於Pockimate',
     'page.privacy': '隱私政策',
     'page.terms': '服務條款',
     'page.refund': '退換貨政策',
@@ -2436,7 +2436,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'Welkom',
     // Page Titles
     'page.contact': 'Neem contact op',
-    'page.about': 'Over TinyTech',
+    'page.about': 'Over Pockimate',
     'page.privacy': 'Privacybeleid',
     'page.terms': 'Gebruiksvoorwaarden',
     'page.refund': 'Retours en restituties',
@@ -2579,7 +2579,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'Witaj',
     // Page Titles
     'page.contact': 'Skontaktuj się z nami',
-    'page.about': 'O TinyTech',
+    'page.about': 'O Pockimate',
     'page.privacy': 'Polityka prywatności',
     'page.terms': 'Regulamin',
     'page.refund': 'Zwroty i reklamacje',
@@ -2722,7 +2722,7 @@ const localDict: Record<string, TranslationDict> = {
     'account.welcome': 'ยินดีต้อนรับ',
     // Page Titles
     'page.contact': 'ติดต่อเรา',
-    'page.about': 'เกี่ยวกับ TinyTech',
+    'page.about': 'เกี่ยวกับ Pockimate',
     'page.privacy': 'นโยบายความเป็นส่วนตัว',
     'page.terms': 'เงื่อนไขการใช้บริการ',
     'page.refund': 'การคืนเงินและการส่งคืน',

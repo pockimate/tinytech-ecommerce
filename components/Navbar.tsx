@@ -60,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     const translateNavLabels = async () => {
       const labels: Record<string, string> = {};
-      const keys = ['home', 'products', 'blog', 'track order'];
+      const keys = ['home', 'products', 'blog', 'track order', 'shopping cart', 'my account', 'login', 'wishlist', 'contact us', 'about us', 'quick actions', 'browse', 'account', 'support'];
       
       for (const key of keys) {
         const translated = await translate(key);
@@ -76,7 +76,17 @@ const Navbar: React.FC<NavbarProps> = ({
         'home': 'Home',
         'products': 'Products',
         'blog': 'Blog',
-        'track order': 'Track Order'
+        'track order': 'Track Order',
+        'shopping cart': 'Shopping Cart',
+        'my account': 'My Account',
+        'login': 'Login',
+        'wishlist': 'Wishlist',
+        'contact us': 'Contact Us',
+        'about us': 'About Us',
+        'quick actions': 'Quick Actions',
+        'browse': 'Browse',
+        'account': 'Account',
+        'support': 'Support'
       });
     }
   }, [language, translate]);
@@ -115,9 +125,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 className="object-contain transition-all"
               />
             ) : (
-              <div className="bg-indigo-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl font-bold text-lg sm:text-xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg shadow-indigo-200">TT</div>
+              <div className="bg-indigo-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl font-bold text-lg sm:text-xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg shadow-indigo-200">PM</div>
             )}
-            <span className="font-black text-xl sm:text-2xl tracking-tighter block">{logoSettings?.headerLogo?.text || 'TinyTech'}</span>
+            <span className="font-black text-xl sm:text-2xl tracking-tighter block">{logoSettings?.headerLogo?.text || 'Pockimate'}</span>
           </div>
           
           <div className="hidden lg:flex items-center gap-10">
@@ -280,10 +290,10 @@ const Navbar: React.FC<NavbarProps> = ({
       )}
 
       {/* Mobile Menu Panel */}
-      <div className={`lg:hidden fixed top-0 left-0 w-72 bg-white shadow-2xl z-[101] transform transition-transform duration-300 ease-in-out ${showMobileMenu ? 'translate-x-0' : '-translate-x-full'} rounded-br-3xl`}>
-        <div className="bg-white rounded-br-3xl">
+      <div className={`lg:hidden fixed top-0 left-0 bottom-0 w-80 bg-white shadow-2xl z-[101] transform transition-transform duration-300 ease-in-out ${showMobileMenu ? 'translate-x-0' : '-translate-x-full'} rounded-br-3xl overflow-y-auto`}>
+        <div className="bg-white rounded-br-3xl min-h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-6 border-b border-gray-100">
             <div className="flex items-center gap-2">
               {logoSettings?.headerLogo?.image ? (
                 <img 
@@ -293,9 +303,9 @@ const Navbar: React.FC<NavbarProps> = ({
                   className="object-contain"
                 />
               ) : (
-                <div className="bg-indigo-600 text-white w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center">TT</div>
+                <div className="bg-indigo-600 text-white w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center">PM</div>
               )}
-              <span className="font-black text-xl tracking-tighter">{logoSettings?.headerLogo?.text || 'TinyTech'}</span>
+              <span className="font-black text-xl tracking-tighter">{logoSettings?.headerLogo?.text || 'Pockimate'}</span>
             </div>
             <button
               onClick={() => setShowMobileMenu(false)}
@@ -307,67 +317,164 @@ const Navbar: React.FC<NavbarProps> = ({
 
           {/* Navigation Links */}
           <div className="p-4">
-            <div className="space-y-1">
-              {navItems.map((item) => (
+            {/* High-Frequency Actions - Prominent */}
+            <div className="mb-4">
+              <p className="text-xs font-black uppercase tracking-widest text-gray-400 px-4 mb-2">{navLabels['quick actions'] || 'Quick Actions'}</p>
+              <div className="space-y-1">
                 <button
-                  key={item.view}
                   onClick={() => {
-                    onNavigate(item.view as any);
+                    onNavigate('track');
                     setShowMobileMenu(false);
                   }}
-                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                  className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition-colors group shadow-lg shadow-indigo-200"
                 >
-                  <i className={`fa-solid ${
-                    item.key === 'home' ? 'fa-house' :
-                    item.key === 'products' ? 'fa-box' :
-                    item.key === 'blog' ? 'fa-newspaper' :
-                    'fa-truck'
-                  } text-indigo-600 w-5`}></i>
-                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
-                    {navLabels[item.key] || item.key.charAt(0).toUpperCase() + item.key.slice(1)}
+                  <i className="fa-solid fa-truck-fast text-white w-5 text-lg"></i>
+                  <span className="font-black text-white">
+                    {navLabels['track order'] || 'Track Order'}
                   </span>
+                  <i className="fa-solid fa-arrow-right text-white ml-auto text-sm"></i>
                 </button>
-              ))}
+                <button
+                  onClick={() => {
+                    onCartClick();
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+                >
+                  <i className="fa-solid fa-bag-shopping text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['shopping cart'] || 'Shopping Cart'}
+                  </span>
+                  {cartCount > 0 && (
+                    <span className="ml-auto bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Divider */}
             <div className="my-4 border-t border-gray-200"></div>
 
-            {/* Account & Wishlist */}
-            <div className="space-y-1">
-              <button
-                onClick={() => {
-                  if (userLoggedIn) {
-                    onNavigate('account');
-                  } else {
-                    onLoginClick();
-                  }
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
-              >
-                <i className={`fa-regular ${userLoggedIn ? 'fa-circle-user' : 'fa-user'} text-indigo-600 w-5`}></i>
-                <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
-                  {userLoggedIn ? 'Account' : 'Login'}
-                </span>
-              </button>
-              <button
-                onClick={() => {
-                  onNavigate('wishlist');
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
-              >
-                <i className="fa-regular fa-heart text-indigo-600 w-5"></i>
-                <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
-                  Wishlist
-                </span>
-                {wishlistCount > 0 && (
-                  <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                    {wishlistCount}
+            {/* Main Navigation */}
+            <div className="mb-4">
+              <p className="text-xs font-black uppercase tracking-widest text-gray-400 px-4 mb-2">{navLabels['browse'] || 'Browse'}</p>
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    onNavigate('home');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-solid fa-house text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['home'] || 'Home'}
                   </span>
-                )}
-              </button>
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate('products');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-solid fa-box text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['products'] || 'Products'}
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate('blog');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-solid fa-newspaper text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['blog'] || 'Blog'}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="my-4 border-t border-gray-200"></div>
+
+            {/* Account & More */}
+            <div className="mb-4">
+              <p className="text-xs font-black uppercase tracking-widest text-gray-400 px-4 mb-2">{navLabels['account'] || 'Account'}</p>
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    if (userLoggedIn) {
+                      onNavigate('account');
+                    } else {
+                      onLoginClick();
+                    }
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className={`fa-regular ${userLoggedIn ? 'fa-circle-user' : 'fa-user'} text-indigo-600 w-5`}></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {userLoggedIn ? (navLabels['my account'] || 'My Account') : (navLabels['login'] || 'Login')}
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate('wishlist');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-regular fa-heart text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['wishlist'] || 'Wishlist'}
+                  </span>
+                  {wishlistCount > 0 && (
+                    <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="my-4 border-t border-gray-200"></div>
+
+            {/* Support & Info */}
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-gray-400 px-4 mb-2">{navLabels['support'] || 'Support'}</p>
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    onNavigate('contact');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-solid fa-envelope text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['contact us'] || 'Contact Us'}
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate('about');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-indigo-50 transition-colors group"
+                >
+                  <i className="fa-solid fa-circle-info text-indigo-600 w-5"></i>
+                  <span className="font-bold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    {navLabels['about us'] || 'About Us'}
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

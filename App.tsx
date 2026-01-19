@@ -469,7 +469,7 @@ const App: React.FC = () => {
     id: 'brand-story-1',
     subtitle: 'Who We Are',
     title: 'Minimalist Design.\nMaximum Power.',
-    description: 'TinyTech was born from a passion for essential technology. We create ultra-compact devices that combine flagship performance with revolutionary dimensions.',
+    description: 'Pockimate was born from a passion for essential technology. We create ultra-compact devices that combine flagship performance with revolutionary dimensions.',
     secondDescription: 'Every millimeter is designed with meticulous care. Zero compromises on specs, maximum attention to detail. For those seeking the best in the smallest format.',
     image1: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=600',
     image2: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600',
@@ -581,7 +581,7 @@ const App: React.FC = () => {
       id: 'faq-3',
       icon: 'fa-cloud-arrow-down',
       question: 'How to download iOS?',
-      answer: 'TinyTech devices run on a highly customized version of Android 13 designed to look and feel minimalist. We do not support iOS as it is proprietary to Apple, but we offer full Google Play Support.',
+      answer: 'Pockimate devices run on a highly customized version of Android 13 designed to look and feel minimalist. We do not support iOS as it is proprietary to Apple, but we offer full Google Play Support.',
       order: 2,
       isActive: true
     },
@@ -694,13 +694,13 @@ const App: React.FC = () => {
     safeGetLocalStorage('tinytech_logoSettings', {
       headerLogo: {
         image: '',
-        text: 'TinyTech',
+        text: 'Pockimate',
         width: 40,
         height: 40
       },
       footerLogo: {
         image: '',
-        text: 'TinyTech',
+        text: 'Pockimate',
         width: 40,
         height: 40
       }
@@ -1473,14 +1473,14 @@ const App: React.FC = () => {
       {/* SEO优化 */}
       <SEO 
         title={
-          selectedProduct ? `${selectedProduct.name} | TinyTech` :
-          selectedBlogPost ? `${selectedBlogPost.title} | TinyTech 博客` :
-          'TinyTech | 精致迷你电子产品 - 小巧强大的科技生活'
+          selectedProduct ? `${selectedProduct.name} | Pockimate` :
+          selectedBlogPost ? `${selectedBlogPost.title} | Pockimate 博客` :
+          'Pockimate | 精致迷你电子产品 - 小巧强大的科技生活'
         }
         description={
           selectedProduct ? selectedProduct.description :
           selectedBlogPost ? selectedBlogPost.excerpt :
-          'TinyTech专注于打造精致、实用、时尚的迷你电子产品。包括超小手机、智能手表、迷你平板等，为追求品质生活的你提供完美的数字伴侣。'
+          'Pockimate专注于打造精致、实用、时尚的迷你电子产品。包括超小手机、智能手表、迷你平板等，为追求品质生活的你提供完美的数字伴侣。'
         }
         image={selectedProduct?.image || selectedBlogPost?.image}
         jsonLd={
@@ -1673,7 +1673,7 @@ const App: React.FC = () => {
                 </button>
               </div>
               
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 lg:pb-20 mb-20 lg:mb-0">
                 <div className="flex flex-col lg:flex-row gap-16">
                   {/* Left Column - Sticky Images */}
                   <div className="w-full lg:w-1/2">
@@ -1807,7 +1807,7 @@ const App: React.FC = () => {
                         </div>
                       </div>
 
-                      <button onClick={() => addToCart(selectedProduct)} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-5 sm:py-6 rounded-2xl sm:rounded-[28px] font-black text-base sm:text-lg uppercase tracking-widest hover:from-indigo-700 hover:to-purple-700 transition-all shadow-2xl active:scale-[0.98] flex items-center justify-center gap-3 mb-6 group">
+                      <button onClick={() => addToCart(selectedProduct)} className="hidden lg:flex w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-5 sm:py-6 rounded-2xl sm:rounded-[28px] font-black text-base sm:text-lg uppercase tracking-widest hover:from-indigo-700 hover:to-purple-700 transition-all shadow-2xl active:scale-[0.98] items-center justify-center gap-3 mb-6 group">
                         <i className="fa-solid fa-cart-shopping group-hover:animate-bounce"></i>
                         <span><TranslatedText fallback="Add to Cart" /></span>
                         <i className="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -1949,6 +1949,48 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Mobile Sticky Add to Cart Button */}
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-2xl">
+            <div className="px-4 py-3 flex items-center gap-3">
+              {/* Price Summary */}
+              <div className="flex flex-col">
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Total</span>
+                <span className="text-xl font-black text-gray-900">
+                  {formatPrice((() => {
+                    // Check if bundle is selected
+                    if (selectedBundleId && selectedProduct.bundles) {
+                      const selectedBundle = selectedProduct.bundles.find(b => b.id === selectedBundleId);
+                      if (selectedBundle) {
+                        return selectedBundle.price;
+                      }
+                    }
+                    
+                    // Otherwise calculate base price + variants
+                    let price = selectedProduct.price;
+                    if (selectedProduct.variants) {
+                      selectedProduct.variants.forEach(variant => {
+                        const selectedOptionId = selectedVariants[variant.type];
+                        const option = variant.options.find(o => o.id === selectedOptionId);
+                        if (option?.price) price += option.price;
+                      });
+                    }
+                    return price;
+                  })())}
+                </span>
+              </div>
+
+              {/* Add to Cart Button */}
+              <button 
+                onClick={() => addToCart(selectedProduct)} 
+                className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
+              >
+                <i className="fa-solid fa-cart-shopping text-base"></i>
+                <span><TranslatedText fallback="Add to Cart" /></span>
+                <i className="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+              </button>
+            </div>
+          </div>
           </>
         )}
 
@@ -2080,8 +2122,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                       <h3 className="font-black text-lg mb-2"><TranslatedText fallback="Email" /></h3>
-                      <p className="text-gray-600">support@tinytech.com</p>
-                      <p className="text-gray-600">sales@tinytech.com</p>
+                      <p className="text-gray-600">pockimate@gmail.com</p>
                     </div>
                   </div>
                   
@@ -2152,7 +2193,7 @@ const App: React.FC = () => {
                 <div>
                   <h2 className="text-2xl font-black mb-4"><TranslatedText fallback="Return Process" /></h2>
                   <ol className="space-y-3 text-gray-700">
-                    <li className="flex gap-3"><span className="font-black text-indigo-600">1.</span><span>Contact our support team at support@tinytech.com</span></li>
+                    <li className="flex gap-3"><span className="font-black text-indigo-600">1.</span><span>Contact our support team at pockimate@gmail.com</span></li>
                     <li className="flex gap-3"><span className="font-black text-indigo-600">2.</span><span>Receive your RMA (Return Merchandise Authorization) number</span></li>
                     <li className="flex gap-3"><span className="font-black text-indigo-600">3.</span><span>Pack your item securely with the RMA number visible</span></li>
                     <li className="flex gap-3"><span className="font-black text-indigo-600">4.</span><span>Ship to our returns center (free return shipping)</span></li>
@@ -2188,7 +2229,7 @@ const App: React.FC = () => {
               <div className="prose prose-lg max-w-none space-y-8">
                 <div>
                   <h2 className="text-2xl font-black mb-4"><TranslatedText fallback="Privacy Policy" /></h2>
-                  <p className="text-gray-700 mb-4">At TinyTech, we take your privacy seriously. This policy outlines how we collect, use, and protect your personal information.</p>
+                  <p className="text-gray-700 mb-4">At Pockimate, we take your privacy seriously. This policy outlines how we collect, use, and protect your personal information.</p>
                   
                   <h3 className="text-xl font-black mb-3 mt-6">Information We Collect</h3>
                   <ul className="space-y-2 text-gray-700">
@@ -2215,7 +2256,7 @@ const App: React.FC = () => {
                   <h2 className="text-2xl font-black mb-4"><TranslatedText fallback="Terms of Service" /></h2>
                   
                   <h3 className="text-xl font-black mb-3 mt-6">Use of Our Website</h3>
-                  <p className="text-gray-700">By accessing TinyTech.com, you agree to these terms. You must be at least 18 years old to make purchases. All content on this site is protected by copyright and intellectual property laws.</p>
+                  <p className="text-gray-700">By accessing Pockimate.com, you agree to these terms. You must be at least 18 years old to make purchases. All content on this site is protected by copyright and intellectual property laws.</p>
                   
                   <h3 className="text-xl font-black mb-3 mt-6">Product Information</h3>
                   <p className="text-gray-700">We strive to provide accurate product descriptions and pricing. However, we do not warrant that product descriptions, pricing, or other content is error-free. We reserve the right to correct errors and update information at any time.</p>
@@ -2224,15 +2265,15 @@ const App: React.FC = () => {
                   <p className="text-gray-700">All orders are subject to acceptance and availability. We reserve the right to refuse or cancel any order for any reason, including product unavailability or pricing errors.</p>
                   
                   <h3 className="text-xl font-black mb-3 mt-6">Warranty</h3>
-                  <p className="text-gray-700">All TinyTech products come with a standard 1-year manufacturer's warranty covering defects in materials and workmanship. This warranty does not cover accidental damage or normal wear and tear.</p>
+                  <p className="text-gray-700">All Pockimate products come with a standard 1-year manufacturer's warranty covering defects in materials and workmanship. This warranty does not cover accidental damage or normal wear and tear.</p>
                   
                   <h3 className="text-xl font-black mb-3 mt-6">Limitation of Liability</h3>
-                  <p className="text-gray-700">TinyTech shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.</p>
+                  <p className="text-gray-700">Pockimate shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.</p>
                 </div>
                 
                 <div className="bg-gray-50 rounded-2xl p-6 mt-8">
                   <h3 className="text-xl font-black mb-3">Contact Us</h3>
-                  <p className="text-gray-700">If you have any questions about our Privacy Policy or Terms of Service, please contact us at legal@tinytech.com</p>
+                  <p className="text-gray-700">If you have any questions about our Privacy Policy or Terms of Service, please contact us at pockimate@gmail.com</p>
                 </div>
               </div>
             </div>
@@ -2247,7 +2288,7 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-arrow-left"></i> <TranslatedText fallback="Back to Home" />
               </button>
               
-              <h1 className="text-4xl sm:text-5xl font-black mb-6"><TranslatedText fallback="About TinyTech" /></h1>
+              <h1 className="text-4xl sm:text-5xl font-black mb-6"><TranslatedText fallback="About Pockimate" /></h1>
               <p className="text-xl text-gray-500 mb-12"><TranslatedText fallback="Redefining technology for the modern minimalist" /></p>
               
               <div className="space-y-12">
@@ -2258,7 +2299,7 @@ const App: React.FC = () => {
                 <div>
                   <h2 className="text-3xl font-black mb-4"><TranslatedText fallback="Our Story" /></h2>
                   <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                    Founded in 2020, TinyTech was born from a simple observation: technology keeps getting bigger, heavier, and more complicated. We asked ourselves—does it have to be this way?
+                    Founded in 2020, Pockimate was born from a simple observation: technology keeps getting bigger, heavier, and more complicated. We asked ourselves—does it have to be this way?
                   </p>
                   <p className="text-lg text-gray-700 leading-relaxed">
                     Our mission is to create powerful, beautifully designed devices that fit seamlessly into your minimalist lifestyle. Every product we make is engineered to maximize performance while minimizing size and complexity.
@@ -2655,9 +2696,9 @@ const App: React.FC = () => {
                     className="object-contain"
                   />
                 ) : (
-                  <div className="bg-white text-indigo-600 w-10 h-10 rounded-xl font-bold text-xl flex items-center justify-center">TT</div>
+                  <div className="bg-white text-indigo-600 w-10 h-10 rounded-xl font-bold text-xl flex items-center justify-center">PM</div>
                 )}
-                <span className="font-black text-2xl tracking-tighter">{logoSettings?.footerLogo?.text || 'TinyTech'}</span>
+                <span className="font-black text-2xl tracking-tighter">{logoSettings?.footerLogo?.text || 'Pockimate'}</span>
               </div>
               <p className="text-gray-400 max-w-sm text-lg leading-relaxed"><TranslatedText fallback="Designing micro-tech for the modern minimalist. Reclaim your time and pocket space with flagship performance." /></p>
             </div>
@@ -2691,7 +2732,7 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-widest text-gray-500">
-            <p><TranslatedText fallback="© 2024 TinyTech Electronics. Handcrafted for minimalists." /></p>
+            <p><TranslatedText fallback="© 2024 Pockimate Electronics. Handcrafted for minimalists." /></p>
           </div>
         </div>
       </footer>
