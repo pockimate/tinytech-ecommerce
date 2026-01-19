@@ -36,7 +36,7 @@ const SizeComparison: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold"><TranslatedText fallback="Ultra Lightweight" /></h4>
-                <p className="text-gray-400 text-sm"><TranslatedText fallback="Weights as low as 80g. You'll forget it's there." /></p>
+                <p className="text-gray-400 text-sm"><TranslatedText fallback="Weighs as low as 80g. You'll forget it's there." /></p>
               </div>
             </div>
             <div className="flex items-center gap-4">

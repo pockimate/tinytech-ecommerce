@@ -23,9 +23,9 @@ const FAQ: React.FC = () => {
       answer: 'The current models come with 128GB of high-speed UFS 2.2 storage. While there is no SD card slot to maintain the micro-size, 128GB is optimized for thousands of photos and essential apps.'
     },
     {
-      icon: 'fa-cloud-arrow-down',
-      question: 'How to download iOS?',
-      answer: 'TinyTech devices run on a highly customized version of Android 13 designed to look and feel minimalist. We do not support iOS as it is proprietary to Apple, but we offer full Google Play Support.'
+      icon: 'fa-mobile-screen',
+      question: 'What operating system does it use?',
+      answer: 'Pockimate devices run on a highly customized version of Android 13 designed to look and feel minimalist. We offer full Google Play Support with an optimized interface for small screens.'
     },
     {
       icon: 'fa-credit-card',

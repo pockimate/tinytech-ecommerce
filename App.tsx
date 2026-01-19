@@ -550,7 +550,7 @@ const App: React.FC = () => {
     button2Value: 'watch',
     feature1Icon: 'fa-weight-hanging',
     feature1Title: 'Ultra Lightweight',
-    feature1Description: 'Weights as low as 80g. You\'ll forget it\'s there.',
+    feature1Description: 'Weighs as low as 80g. You\'ll forget it\'s there.',
     feature2Icon: 'fa-expand',
     feature2Title: 'One-Hand Operation',
     feature2Description: 'Reach every corner of the screen effortlessly.',
@@ -579,9 +579,9 @@ const App: React.FC = () => {
     },
     {
       id: 'faq-3',
-      icon: 'fa-cloud-arrow-down',
-      question: 'How to download iOS?',
-      answer: 'Pockimate devices run on a highly customized version of Android 13 designed to look and feel minimalist. We do not support iOS as it is proprietary to Apple, but we offer full Google Play Support.',
+      icon: 'fa-mobile-screen',
+      question: 'What operating system does it use?',
+      answer: 'Pockimate devices run on a highly customized version of Android 13 designed to look and feel minimalist. We offer full Google Play Support with an optimized interface for small screens.',
       order: 2,
       isActive: true
     },
