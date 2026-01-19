@@ -227,21 +227,6 @@ export function renderCardFields(
   },
   style?: any
 ): void {
-  // Default style for compact fields
-  const defaultStyle = {
-    input: {
-      'font-size': '16px',
-      'font-family': 'monospace',
-      'padding': '12px',
-      'color': '#1f2937'
-    },
-    ':focus': {
-      'color': '#1f2937'
-    }
-  };
-
-  const fieldStyle = style || defaultStyle;
-
   // Get container elements
   const numberContainer = typeof containers.number === 'string' 
     ? document.querySelector(containers.number) 
@@ -264,25 +249,22 @@ export function renderCardFields(
   expiryContainer.innerHTML = '';
   cvvContainer.innerHTML = '';
 
-  // Create card field components using the correct API from official docs
+  // Create card field components without custom styles (use defaults)
   const numberField = session.createCardFieldsComponent({
     type: 'number',
-    placeholder: 'Card number',
-    style: fieldStyle
+    placeholder: 'Card number'
   });
   numberContainer.appendChild(numberField);
 
   const expiryField = session.createCardFieldsComponent({
     type: 'expiry',
-    placeholder: 'MM/YY',
-    style: fieldStyle
+    placeholder: 'MM/YY'
   });
   expiryContainer.appendChild(expiryField);
 
   const cvvField = session.createCardFieldsComponent({
     type: 'cvv',
-    placeholder: 'CVV',
-    style: fieldStyle
+    placeholder: 'CVV'
   });
   cvvContainer.appendChild(cvvField);
 
