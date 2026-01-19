@@ -746,15 +746,18 @@ const Checkout: React.FC<CheckoutProps> = ({
         },
       });
       
-      // 创建 PayPal 按钮
+      // 创建 PayPal 按钮 - 使用官方样式
       const button = document.createElement('button');
-      button.className = 'w-full flex items-center justify-center gap-3 bg-[#0070ba] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#005ea6] transition-all shadow-sm';
+      button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 rounded-lg font-bold transition-all shadow-sm border border-[#FFC439]';
       button.style.height = '48px';
+      button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
       button.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h8.418c2.508 0 4.514.893 5.835 2.607 1.285 1.666 1.666 4.019 1.115 6.807-.617 3.123-2.029 5.421-4.148 6.729C16.185 16.735 14.793 17.1 13.3 17.1H9.672a.641.641 0 0 0-.633.74l-.29 1.836-.133.842-.29 1.836a.641.641 0 0 1-.633.74H7.076z" fill="white"/>
+        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5.897 19.778H1.975a.534.534 0 0 1-.528-.617L4.12.751C4.188.318 4.562 0 4.998 0h7.015c2.09 0 3.762.744 4.863 2.173 1.071 1.388 1.388 3.349.929 5.672-.514 2.603-1.691 4.518-3.457 5.608-1.01.623-2.161.917-3.416.917H8.06a.534.534 0 0 0-.528.617l-.242 1.53-.111.702-.242 1.53a.534.534 0 0 1-.528.617H5.897z" fill="#003087"/>
+          <path d="M13.84 5.532c-.514 2.603-1.691 4.518-3.457 5.608-1.01.623-2.161.917-3.416.917H4.095l-1.12 7.104H5.897c.436 0 .81-.318.878-.751l.036-.186.242-1.53.031-.17c.068-.433.442-.751.878-.751h.553c2.09 0 3.762-.744 4.863-2.173 1.071-1.388 1.388-3.349.929-5.672-.111-.558-.286-1.074-.533-1.544-.247-.47-.565-.897-.944-1.28z" fill="#0070E0"/>
+          <path d="M12.896 5.162c-.111-.031-.222-.062-.333-.093a6.67 6.67 0 0 0-.442-.093 10.8 10.8 0 0 0-1.691-.124H6.841a.534.534 0 0 0-.528.617l-.878 5.579-.036.186c.068-.433.442-.751.878-.751h1.83c2.09 0 3.762-.744 4.863-2.173 1.071-1.388 1.388-3.349.929-5.672-.111-.558-.286-1.074-.533-1.544-.247-.47-.565-.897-.944-1.28-.111.031-.222.062-.333.093z" fill="#003087"/>
         </svg>
-        <span>PayPal</span>
+        <span style="font-size: 16px; font-weight: 600;">PayPal</span>
       `;
       
       button.onclick = async () => {
@@ -881,13 +884,16 @@ const Checkout: React.FC<CheckoutProps> = ({
     
     const button = document.createElement('button');
     button.id = 'paypal-express-button';
-    button.className = 'w-full flex items-center justify-center gap-3 bg-[#0070ba] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#005ea6] transition-all shadow-sm';
+    button.className = 'w-full flex items-center justify-center gap-2 bg-[#FFC439] hover:bg-[#FFB900] text-[#003087] px-6 py-3 rounded-lg font-bold transition-all shadow-sm border border-[#FFC439]';
     button.style.height = '48px';
+    button.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
     button.innerHTML = `
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h8.418c2.508 0 4.514.893 5.835 2.607 1.285 1.666 1.666 4.019 1.115 6.807-.617 3.123-2.029 5.421-4.148 6.729C16.185 16.735 14.793 17.1 13.3 17.1H9.672a.641.641 0 0 0-.633.74l-.29 1.836-.133.842-.29 1.836a.641.641 0 0 1-.633.74H7.076z" fill="white"/>
+      <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.897 19.778H1.975a.534.534 0 0 1-.528-.617L4.12.751C4.188.318 4.562 0 4.998 0h7.015c2.09 0 3.762.744 4.863 2.173 1.071 1.388 1.388 3.349.929 5.672-.514 2.603-1.691 4.518-3.457 5.608-1.01.623-2.161.917-3.416.917H8.06a.534.534 0 0 0-.528.617l-.242 1.53-.111.702-.242 1.53a.534.534 0 0 1-.528.617H5.897z" fill="#003087"/>
+        <path d="M13.84 5.532c-.514 2.603-1.691 4.518-3.457 5.608-1.01.623-2.161.917-3.416.917H4.095l-1.12 7.104H5.897c.436 0 .81-.318.878-.751l.036-.186.242-1.53.031-.17c.068-.433.442-.751.878-.751h.553c2.09 0 3.762-.744 4.863-2.173 1.071-1.388 1.388-3.349.929-5.672-.111-.558-.286-1.074-.533-1.544-.247-.47-.565-.897-.944-1.28z" fill="#0070E0"/>
+        <path d="M12.896 5.162c-.111-.031-.222-.062-.333-.093a6.67 6.67 0 0 0-.442-.093 10.8 10.8 0 0 0-1.691-.124H6.841a.534.534 0 0 0-.528.617l-.878 5.579-.036.186c.068-.433.442-.751.878-.751h1.83c2.09 0 3.762-.744 4.863-2.173 1.071-1.388 1.388-3.349.929-5.672-.111-.558-.286-1.074-.533-1.544-.247-.47-.565-.897-.944-1.28-.111.031-.222.062-.333.093z" fill="#003087"/>
       </svg>
-      <span>PayPal</span>
+      <span style="font-size: 16px; font-weight: 600;">PayPal</span>
     `;
     
     // 使用快捷PayPal支付（无需地址验证）
