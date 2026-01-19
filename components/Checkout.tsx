@@ -1444,6 +1444,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                     onBlur={() => handleFieldBlur('phone')}
                     required
                     autoComplete="tel"
+                    inputMode="tel"
                     className={`w-full px-4 py-3 rounded-xl border ${
                       errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'
                     } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1531,6 +1532,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       onBlur={() => handleFieldBlur('zipCode')}
                       required
                       autoComplete="postal-code"
+                      inputMode="numeric"
                       className={`w-full px-4 py-3 rounded-xl border ${
                         errors.zipCode ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
@@ -1608,56 +1610,56 @@ const Checkout: React.FC<CheckoutProps> = ({
               <div className="space-y-3">
                 <div
                   onClick={() => setShippingMethod('standard')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all active:scale-[0.98] ${
                     shippingMethod === 'standard'
-                      ? 'border-indigo-600 bg-indigo-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-indigo-600 bg-indigo-50 shadow-md'
+                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    <div className="flex items-center gap-4">
+                      <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                         shippingMethod === 'standard' ? 'border-indigo-600' : 'border-gray-300'
                       }`}>
                         {shippingMethod === 'standard' && (
-                          <div className="w-3 h-3 rounded-full bg-indigo-600"></div>
+                          <div className="w-3.5 h-3.5 sm:w-3 sm:h-3 rounded-full bg-indigo-600"></div>
                         )}
                       </div>
                       <div>
-                        <p className="font-bold text-gray-900"><TranslatedText fallback="Standard Shipping" /></p>
-                        <p className="text-sm text-gray-500">5-7 <TranslatedText fallback="business days" /></p>
+                        <p className="font-bold text-gray-900 text-base sm:text-sm"><TranslatedText fallback="Standard Shipping" /></p>
+                        <p className="text-sm sm:text-xs text-gray-500 mt-0.5">5-7 <TranslatedText fallback="business days" /></p>
                       </div>
                     </div>
-                    <p className="font-black text-gray-900"><TranslatedText fallback="Free" /></p>
+                    <p className="font-black text-gray-900 text-base sm:text-sm"><TranslatedText fallback="Free" /></p>
                   </div>
                 </div>
 
                 <div
                   onClick={() => setShippingMethod('express')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all active:scale-[0.98] ${
                     shippingMethod === 'express'
-                      ? 'border-indigo-600 bg-indigo-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-indigo-600 bg-indigo-50 shadow-md'
+                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    <div className="flex items-center gap-4">
+                      <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                         shippingMethod === 'express' ? 'border-indigo-600' : 'border-gray-300'
                       }`}>
                         {shippingMethod === 'express' && (
-                          <div className="w-3 h-3 rounded-full bg-indigo-600"></div>
+                          <div className="w-3.5 h-3.5 sm:w-3 sm:h-3 rounded-full bg-indigo-600"></div>
                         )}
                       </div>
                       <div>
-                        <p className="font-bold text-gray-900 flex items-center gap-2">
+                        <p className="font-bold text-gray-900 flex items-center gap-2 text-base sm:text-sm">
                           <TranslatedText fallback="Express Shipping" />
                           <span className="bg-indigo-600 text-white text-[9px] px-2 py-0.5 rounded-full"><TranslatedText fallback="FAST" /></span>
                         </p>
-                        <p className="text-sm text-gray-500">2-3 <TranslatedText fallback="business days" /></p>
+                        <p className="text-sm sm:text-xs text-gray-500 mt-0.5">2-3 <TranslatedText fallback="business days" /></p>
                       </div>
                     </div>
-                    <p className="font-black text-gray-900">{currencySymbol}15.00</p>
+                    <p className="font-black text-gray-900 text-base sm:text-sm">{currencySymbol}15.00</p>
                   </div>
                 </div>
               </div>
@@ -1670,28 +1672,28 @@ const Checkout: React.FC<CheckoutProps> = ({
                 <TranslatedText fallback="Payment Method" />
               </h2>
 
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8">
                 <button
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-6 rounded-2xl border-2 font-bold transition-all ${
+                  className={`p-6 sm:p-5 rounded-2xl border-2 font-bold transition-all active:scale-[0.98] min-h-[120px] sm:min-h-[100px] ${
                     paymentMethod === 'card'
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                      : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-md'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-sm'
                   }`}
                 >
-                  <i className="fa-solid fa-credit-card text-3xl mb-3 block"></i>
+                  <i className="fa-solid fa-credit-card text-4xl sm:text-3xl mb-3 block"></i>
                   <p className="text-sm"><TranslatedText fallback="Credit Card" /></p>
                 </button>
 
                 <button
                   onClick={() => setPaymentMethod('paypal')}
-                  className={`p-6 rounded-2xl border-2 font-bold transition-all ${
+                  className={`p-6 sm:p-5 rounded-2xl border-2 font-bold transition-all active:scale-[0.98] min-h-[120px] sm:min-h-[100px] ${
                     paymentMethod === 'paypal'
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                      : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-md'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-sm'
                   }`}
                 >
-                  <i className="fa-brands fa-paypal text-3xl mb-3 block"></i>
+                  <i className="fa-brands fa-paypal text-4xl sm:text-3xl mb-3 block"></i>
                   <p className="text-sm">PayPal</p>
                 </button>
               </div>
