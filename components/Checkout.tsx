@@ -117,21 +117,99 @@ const Checkout: React.FC<CheckoutProps> = ({
   });
 
   const [errors, setErrors] = useState<Partial<ShippingInfo & PaymentInfo>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof (ShippingInfo & PaymentInfo), boolean>>>({});
+
+  // Real-time validation function
+  const validateField = (field: keyof ShippingInfo, value: string): string | undefined => {
+    switch (field) {
+      case 'fullName':
+        if (!value.trim()) return t('error.fullNameRequired', 'Full name is required');
+        if (value.trim().length < 2) return t('error.fullNameTooShort', 'Name must be at least 2 characters');
+        break;
+      case 'email':
+        if (!value.trim()) return t('error.emailRequired', 'Email is required');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return t('error.emailInvalid', 'Invalid email format');
+        }
+        break;
+      case 'phone':
+        if (!value.trim()) return t('error.phoneRequired', 'Phone is required');
+        if (!/^[\d\s\+\-\(\)]+$/.test(value)) {
+          return t('error.phoneInvalid', 'Invalid phone format');
+        }
+        break;
+      case 'address':
+        if (!value.trim()) return t('error.addressRequired', 'Address is required');
+        if (value.trim().length < 5) return t('error.addressTooShort', 'Address must be at least 5 characters');
+        break;
+      case 'city':
+        if (!value.trim()) return t('error.cityRequired', 'City is required');
+        break;
+      case 'zipCode':
+        if (!value.trim()) return t('error.zipRequired', 'ZIP code is required');
+        break;
+      case 'country':
+        if (!value.trim()) return t('error.countryRequired', 'Country is required');
+        break;
+    }
+    return undefined;
+  };
+
+  // Handle field change with real-time validation
+  const handleShippingChange = (field: keyof ShippingInfo, value: string) => {
+    setShippingInfo({ ...shippingInfo, [field]: value });
+    
+    // Only validate if field has been touched
+    if (touched[field]) {
+      const error = validateField(field, value);
+      setErrors(prev => ({
+        ...prev,
+        [field]: error
+      }));
+    }
+  };
+
+  // Handle field blur
+  const handleFieldBlur = (field: keyof ShippingInfo) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const error = validateField(field, shippingInfo[field]);
+    setErrors(prev => ({
+      ...prev,
+      [field]: error
+    }));
+  };
 
   const validateShipping = (): boolean => {
     const newErrors: Partial<ShippingInfo> = {};
     
     if (!shippingInfo.fullName.trim()) newErrors.fullName = t('error.fullNameRequired', 'Full name is required');
+    else if (shippingInfo.fullName.trim().length < 2) newErrors.fullName = t('error.fullNameTooShort', 'Name must be at least 2 characters');
+    
     if (!shippingInfo.email.trim()) newErrors.email = t('error.emailRequired', 'Email is required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shippingInfo.email)) {
       newErrors.email = t('error.emailInvalid', 'Invalid email format');
     }
+    
     if (!shippingInfo.phone.trim()) newErrors.phone = t('error.phoneRequired', 'Phone is required');
+    else if (!/^[\d\s\+\-\(\)]+$/.test(shippingInfo.phone)) {
+      newErrors.phone = t('error.phoneInvalid', 'Invalid phone format');
+    }
+    
     if (!shippingInfo.address.trim()) newErrors.address = t('error.addressRequired', 'Address is required');
+    else if (shippingInfo.address.trim().length < 5) newErrors.address = t('error.addressTooShort', 'Address must be at least 5 characters');
+    
     if (!shippingInfo.city.trim()) newErrors.city = t('error.cityRequired', 'City is required');
     if (!shippingInfo.zipCode.trim()) newErrors.zipCode = t('error.zipRequired', 'ZIP code is required');
+    if (!shippingInfo.country.trim()) newErrors.country = t('error.countryRequired', 'Country is required');
 
     setErrors(newErrors);
+    
+    // Mark all fields as touched
+    const allTouched: Partial<Record<keyof ShippingInfo, boolean>> = {};
+    Object.keys(shippingInfo).forEach(key => {
+      allTouched[key as keyof ShippingInfo] = true;
+    });
+    setTouched(allTouched);
     
     // If there are errors, scroll to the first error field
     if (Object.keys(newErrors).length > 0) {
@@ -1084,14 +1162,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                     <TranslatedInput
                       type="text"
                       value={shippingInfo.fullName}
-                      onChange={(e) => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
+                      onChange={(e) => handleShippingChange('fullName', e.target.value)}
+                      onBlur={() => handleFieldBlur('fullName')}
+                      required
                       className={`w-full px-4 py-3 rounded-xl border ${
-                        errors.fullName ? 'border-red-500' : 'border-gray-200'
-                      } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                        errors.fullName ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                       placeholderFallback="John Doe"
                     />
                     {errors.fullName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation"></i>
+                        {errors.fullName}
+                      </p>
                     )}
                   </div>
 
@@ -1102,14 +1185,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                     <TranslatedInput
                       type="email"
                       value={shippingInfo.email}
-                      onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
+                      onChange={(e) => handleShippingChange('email', e.target.value)}
+                      onBlur={() => handleFieldBlur('email')}
+                      required
                       className={`w-full px-4 py-3 rounded-xl border ${
-                        errors.email ? 'border-red-500' : 'border-gray-200'
-                      } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                        errors.email ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                       placeholderFallback="john@example.com"
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation"></i>
+                        {errors.email}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -1121,14 +1209,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                   <input
                     type="tel"
                     value={shippingInfo.phone}
-                    onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
+                    onChange={(e) => handleShippingChange('phone', e.target.value)}
+                    onBlur={() => handleFieldBlur('phone')}
+                    required
                     className={`w-full px-4 py-3 rounded-xl border ${
-                      errors.phone ? 'border-red-500' : 'border-gray-200'
-                    } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                      errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                    } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                     placeholder="+39 123 456 7890"
                   />
                   {errors.phone && (
-                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <i className="fa-solid fa-circle-exclamation"></i>
+                      {errors.phone}
+                    </p>
                   )}
                 </div>
 
@@ -1139,14 +1232,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                   <input
                     type="text"
                     value={shippingInfo.address}
-                    onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
+                    onChange={(e) => handleShippingChange('address', e.target.value)}
+                    onBlur={() => handleFieldBlur('address')}
+                    required
                     className={`w-full px-4 py-3 rounded-xl border ${
-                      errors.address ? 'border-red-500' : 'border-gray-200'
-                    } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                      errors.address ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                    } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                     placeholder="Via Roma 123"
                   />
                   {errors.address && (
-                    <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <i className="fa-solid fa-circle-exclamation"></i>
+                      {errors.address}
+                    </p>
                   )}
                 </div>
 
@@ -1158,14 +1256,19 @@ const Checkout: React.FC<CheckoutProps> = ({
                     <input
                       type="text"
                       value={shippingInfo.city}
-                      onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
+                      onChange={(e) => handleShippingChange('city', e.target.value)}
+                      onBlur={() => handleFieldBlur('city')}
+                      required
                       className={`w-full px-4 py-3 rounded-xl border ${
-                        errors.city ? 'border-red-500' : 'border-gray-200'
-                      } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                        errors.city ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                       placeholder="Milano"
                     />
                     {errors.city && (
-                      <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation"></i>
+                        {errors.city}
+                      </p>
                     )}
                   </div>
 
@@ -1177,7 +1280,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       type="text"
                       value={shippingInfo.state}
                       onChange={(e) => setShippingInfo({ ...shippingInfo, state: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors"
                       placeholder="MI"
                     />
                   </div>
@@ -1189,26 +1292,35 @@ const Checkout: React.FC<CheckoutProps> = ({
                     <input
                       type="text"
                       value={shippingInfo.zipCode}
-                      onChange={(e) => setShippingInfo({ ...shippingInfo, zipCode: e.target.value })}
+                      onChange={(e) => handleShippingChange('zipCode', e.target.value)}
+                      onBlur={() => handleFieldBlur('zipCode')}
+                      required
                       className={`w-full px-4 py-3 rounded-xl border ${
-                        errors.zipCode ? 'border-red-500' : 'border-gray-200'
-                      } focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+                        errors.zipCode ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                       placeholder="20100"
                     />
                     {errors.zipCode && (
-                      <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation"></i>
+                        {errors.zipCode}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">
-                    <TranslatedText fallback="Country" />
+                    <TranslatedText fallback="Country" /> *
                   </label>
                   <select
                     value={shippingInfo.country}
-                    onChange={(e) => setShippingInfo({ ...shippingInfo, country: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    onChange={(e) => handleShippingChange('country', e.target.value)}
+                    onBlur={() => handleFieldBlur('country')}
+                    required
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.country ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                    } focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors`}
                   >
                     <option value="Italy">Italy</option>
                     <option value="Germany">Germany</option>
@@ -1220,6 +1332,12 @@ const Checkout: React.FC<CheckoutProps> = ({
                     <option value="JP">Japan</option>
                     <option value="KR">South Korea</option>
                   </select>
+                  {errors.country && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <i className="fa-solid fa-circle-exclamation"></i>
+                      {errors.country}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
