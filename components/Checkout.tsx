@@ -83,7 +83,9 @@ const Checkout: React.FC<CheckoutProps> = ({
   onBack,
   onOrderComplete
 }) => {
-  const t = useTranslatedText();
+  // For validation errors, we use fallback directly since validation must be synchronous
+  const getErrorMessage = (fallback: string) => fallback;
+  
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -208,38 +210,38 @@ const Checkout: React.FC<CheckoutProps> = ({
   const validateField = (field: keyof ShippingInfo, value: string): string | undefined => {
     switch (field) {
       case 'fullName':
-        if (!value.trim()) return t('error.fullNameRequired', 'Full name is required');
-        if (value.trim().length < 2) return t('error.fullNameTooShort', 'Name must be at least 2 characters');
+        if (!value.trim()) return getErrorMessage('Full name is required');
+        if (value.trim().length < 2) return getErrorMessage('Name must be at least 2 characters');
         break;
       case 'email':
-        if (!value.trim()) return t('error.emailRequired', 'Email is required');
+        if (!value.trim()) return getErrorMessage('Email is required');
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          return t('error.emailInvalid', 'Invalid email format');
+          return getErrorMessage('Invalid email format');
         }
         break;
       case 'phone':
-        if (!value.trim()) return t('error.phoneRequired', 'Phone is required');
+        if (!value.trim()) return getErrorMessage('Phone is required');
         if (!/^[\d\s\+\-\(\)]+$/.test(value)) {
-          return t('error.phoneInvalid', 'Invalid phone format');
+          return getErrorMessage('Invalid phone format');
         }
         break;
       case 'address':
-        if (!value.trim()) return t('error.addressRequired', 'Address is required');
-        if (value.trim().length < 5) return t('error.addressTooShort', 'Address must be at least 5 characters');
+        if (!value.trim()) return getErrorMessage('Address is required');
+        if (value.trim().length < 5) return getErrorMessage('Address must be at least 5 characters');
         break;
       case 'city':
-        if (!value.trim()) return t('error.cityRequired', 'City is required');
+        if (!value.trim()) return getErrorMessage('City is required');
         break;
       case 'zipCode':
-        if (!value.trim()) return t('error.zipRequired', 'ZIP code is required');
+        if (!value.trim()) return getErrorMessage('ZIP code is required');
         // Country-specific ZIP validation
         const zipPattern = countryConfig[shippingInfo.country]?.zipPattern;
         if (zipPattern && !new RegExp(zipPattern, 'i').test(value.trim())) {
-          return t('error.zipInvalid', `Invalid ${currentCountryConfig.zipLabel} format`);
+          return getErrorMessage(`Invalid ${currentCountryConfig.zipLabel} format`);
         }
         break;
       case 'country':
-        if (!value.trim()) return t('error.countryRequired', 'Country is required');
+        if (!value.trim()) return getErrorMessage('Country is required');
         break;
     }
     return undefined;
@@ -272,25 +274,25 @@ const Checkout: React.FC<CheckoutProps> = ({
   const validateShipping = (): boolean => {
     const newErrors: Partial<ShippingInfo> = {};
     
-    if (!shippingInfo.fullName.trim()) newErrors.fullName = t('error.fullNameRequired', 'Full name is required');
-    else if (shippingInfo.fullName.trim().length < 2) newErrors.fullName = t('error.fullNameTooShort', 'Name must be at least 2 characters');
+    if (!shippingInfo.fullName.trim()) newErrors.fullName = getErrorMessage('Full name is required');
+    else if (shippingInfo.fullName.trim().length < 2) newErrors.fullName = getErrorMessage('Name must be at least 2 characters');
     
-    if (!shippingInfo.email.trim()) newErrors.email = t('error.emailRequired', 'Email is required');
+    if (!shippingInfo.email.trim()) newErrors.email = getErrorMessage('Email is required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shippingInfo.email)) {
-      newErrors.email = t('error.emailInvalid', 'Invalid email format');
+      newErrors.email = getErrorMessage('Invalid email format');
     }
     
-    if (!shippingInfo.phone.trim()) newErrors.phone = t('error.phoneRequired', 'Phone is required');
+    if (!shippingInfo.phone.trim()) newErrors.phone = getErrorMessage('Phone is required');
     else if (!/^[\d\s\+\-\(\)]+$/.test(shippingInfo.phone)) {
-      newErrors.phone = t('error.phoneInvalid', 'Invalid phone format');
+      newErrors.phone = getErrorMessage('Invalid phone format');
     }
     
-    if (!shippingInfo.address.trim()) newErrors.address = t('error.addressRequired', 'Address is required');
-    else if (shippingInfo.address.trim().length < 5) newErrors.address = t('error.addressTooShort', 'Address must be at least 5 characters');
+    if (!shippingInfo.address.trim()) newErrors.address = getErrorMessage('Address is required');
+    else if (shippingInfo.address.trim().length < 5) newErrors.address = getErrorMessage('Address must be at least 5 characters');
     
-    if (!shippingInfo.city.trim()) newErrors.city = t('error.cityRequired', 'City is required');
-    if (!shippingInfo.zipCode.trim()) newErrors.zipCode = t('error.zipRequired', 'ZIP code is required');
-    if (!shippingInfo.country.trim()) newErrors.country = t('error.countryRequired', 'Country is required');
+    if (!shippingInfo.city.trim()) newErrors.city = getErrorMessage('City is required');
+    if (!shippingInfo.zipCode.trim()) newErrors.zipCode = getErrorMessage('ZIP code is required');
+    if (!shippingInfo.country.trim()) newErrors.country = getErrorMessage('Country is required');
 
     setErrors(newErrors);
     
